@@ -1,0 +1,43 @@
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { getUserById } from '@/services/userService';
+import { UserForm } from '../../components/user-form';
+import { PageTransition } from '@/components/page-transition';
+
+type Props = {
+  params: { id: string };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const id = Number(params.id);
+  try {
+    const user = await getUserById(id);
+    return {
+      title: `Edit User: ${user.name}`,
+    };
+  } catch (error) {
+    return {
+      title: 'User Not Found',
+    };
+  }
+}
+
+export default async function EditUserPage({ params }: Props) {
+  const id = Number(params.id);
+  if (isNaN(id)) {
+    notFound();
+  }
+
+  let user;
+  try {
+    user = await getUserById(id);
+  } catch (error) {
+    notFound();
+  }
+
+  return (
+    <PageTransition>
+      <UserForm initialData={user} />
+    </PageTransition>
+  );
+}
