@@ -30,3 +30,7 @@ export const updateRole = async (id: number, roleData: any): Promise<Role> => {
 export const deleteRole = async (id: number): Promise<void> => {
   await api.delete(`/roles/${id}`);
 };
+
+export const syncRolePermissions = async (id: number, permissionIds: number[]): Promise<void> => {
+  await api.put(`/roles/${id}/permissions`, { permissionIds });
+};

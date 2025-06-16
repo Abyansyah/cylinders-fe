@@ -1,13 +1,15 @@
 'use client';
 
 import type { ColumnDef } from '@tanstack/react-table';
-import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { MoreHorizontal, Pencil, ShieldCheck, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuLabel } from '@/components/ui/dropdown-menu';
 import type { Role } from '@/types/role';
+import { usePermission } from '@/hooks/use-permission';
+import { PERMISSIONS } from '@/config/permissions';
 
 export const getColumns = (onDelete: (role: Role) => void): ColumnDef<Role>[] => [
   {
@@ -34,6 +36,10 @@ export const getColumns = (onDelete: (role: Role) => void): ColumnDef<Role>[] =>
     id: 'actions',
     cell: ({ row }) => {
       const role = row.original;
+      const { checkPermission } = usePermission();
+      const canManagePermissions = checkPermission(PERMISSIONS.roles.update);
+      const canEdit = checkPermission(PERMISSIONS.roles.update);
+      const canDelete = checkPermission(PERMISSIONS.roles.delete);
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -44,17 +50,31 @@ export const getColumns = (onDelete: (role: Role) => void): ColumnDef<Role>[] =>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem asChild>
-              <Link href={`/role/${role.id}/edit`}>
-                <Pencil className="mr-2 h-4 w-4" />
-                Edit
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-red-600" onClick={() => onDelete(role)}>
-              <Trash2 className="mr-2 h-4 w-4" />
-              Delete
-            </DropdownMenuItem>
+            {canEdit && (
+              <DropdownMenuItem asChild>
+                <Link href={`/role/${role.id}/edit`}>
+                  <Pencil className="mr-2 h-4 w-4" />
+                  Edit Role
+                </Link>
+              </DropdownMenuItem>
+            )}
+            {canManagePermissions && (
+              <DropdownMenuItem asChild>
+                <Link href={`/role/${role.id}/permissions`}>
+                  <ShieldCheck className="mr-2 h-4 w-4" />
+                  Manage Permissions
+                </Link>
+              </DropdownMenuItem>
+            )}
+            {canDelete && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="text-red-600" onClick={() => onDelete(role)}>
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete
+                </DropdownMenuItem>
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       );

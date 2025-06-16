@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
-import { createRole, deleteRole, updateRole } from '@/services/roleService';
+import { createRole, deleteRole, syncRolePermissions, updateRole } from '@/services/roleService';
 
 const roleSchema = z.object({
   role_name: z.string().min(3, 'Role name must be at least 3 characters long'),
@@ -80,5 +80,21 @@ export async function deleteRoleAction(id: number) {
     return { success: true, message: 'Role deleted successfully.' };
   } catch (error: any) {
     return { success: false, message: error.response?.data?.message || 'Failed to delete role.' };
+  }
+}
+
+export async function syncPermissionsAction(roleId: number, permissionIds: number[]): Promise<FormState> {
+  try {
+    await syncRolePermissions(roleId, permissionIds);
+    revalidatePath('/role');
+    revalidatePath(`/role/${roleId}/permissions`);
+
+    return { success: true, message: 'Permissions updated successfully!' };
+  } catch (error: any) {
+    console.error('Sync Permission Error:', error);
+    return {
+      success: false,
+      message: error?.response?.data?.message || 'Failed to update permissions.',
+    };
   }
 }

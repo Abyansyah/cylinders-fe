@@ -1,8 +1,11 @@
+import { Permission } from "./permission";
+
 export interface Role {
   id: number;
   role_name: string;
   permission_count?: string;
   updatedAt?: string;
+  permissions?: Permission[];
 }
 
 export interface RolesApiResponse {
