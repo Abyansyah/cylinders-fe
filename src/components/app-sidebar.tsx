@@ -3,7 +3,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, Triangle } from 'lucide-react';
-
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar, useSidebarMenu } from '@/components/ui/sidebar';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
@@ -13,8 +12,12 @@ import { usePathname, useRouter } from 'next/navigation';
 import { SIDEBAR_ITEMS } from '@/constants/sidebar';
 import { useAuthStore } from '@/stores/authStore';
 import { logoutAction } from '@/lib/actions';
+import type { SidebarItem } from '@/types/sidebar';
+import { usePermission } from '@/hooks/use-permission';
+import { PERMISSIONS } from '@/config/permissions';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { checkPermission } = usePermission();
   const pathname = usePathname();
   const router = useRouter();
   const { state } = useSidebar();
@@ -48,6 +51,36 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return pathname === url || (pathname.startsWith(url + '/') && url !== '/');
   };
 
+  const accessibleMenuItems = React.useMemo(() => {
+    return (
+      SIDEBAR_ITEMS.map((item) => {
+        if (item.items) {
+          const accessibleSubItems = item.items.filter((subItem) => {
+            if (!subItem.permissionKey) return true;
+
+            const permissionConfig: any = PERMISSIONS[subItem.permissionKey as keyof typeof PERMISSIONS];
+
+            return checkPermission(permissionConfig?.view);
+          });
+
+          return { ...item, items: accessibleSubItems };
+        }
+
+        if (item.permissionKey) {
+          const permissionConfig: any = PERMISSIONS[item.permissionKey as keyof typeof PERMISSIONS];
+          return checkPermission(permissionConfig?.view) ? item : null;
+        }
+
+        return item;
+      })
+        .filter((item): item is SidebarItem => {
+          if (!item) return false;
+          if (item.items && item.items.length === 0) return false;
+          return true;
+        })
+    );
+  }, [checkPermission]);
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader className="border-b border-sidebar-border">
@@ -74,7 +107,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent className="custom-scrollbar">
         <SidebarGroup>
           <SidebarMenu>
-            {SIDEBAR_ITEMS.map((item) => (
+            {accessibleMenuItems.map((item) => (
               <SidebarMenuItem key={item.title}>
                 {item.items ? (
                   state === 'collapsed' ? (

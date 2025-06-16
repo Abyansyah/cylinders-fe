@@ -1,6 +1,6 @@
 import { AppSidebar } from '@/components/app-sidebar';
 import { CommandPalette } from '@/components/command-palette';
-import AuthProvider from '@/components/pages/auth/auth-provider';
+import AuthProvider from '@/components/auth/auth-provider';
 import { TopNavigation } from '@/components/top-navigation';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { CommandPaletteProvider } from '@/hooks/use-command-palette';

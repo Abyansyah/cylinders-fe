@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getUserById } from '@/services/userService';
-import { UserForm } from '../../components/user-form';
+import { getRoleById } from '@/services/roleService';
+import { RoleForm } from '../../components/role-form';
 import { PageTransition } from '@/components/page-transition';
 import { PermissionGuard } from '@/components/guards/permission-guard';
 import { PERMISSIONS } from '@/config/permissions';
@@ -14,37 +14,37 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
   try {
     const id = Number(params.id);
-    const user = await getUserById(id);
+    const role = await getRoleById(id);
     return {
-      title: `Edit User: ${user.name}`,
+      title: `Edit Role: ${role.role_name}`,
     };
   } catch (error) {
     console.error('Failed to generate metadata:', error);
     return {
-      title: 'User Not Found',
+      title: 'Role Not Found',
     };
   }
 }
 
-export default async function EditUserPage(props: Props) {
+export default async function EditRolePage(props: Props) {
   const params = await props.params;
   const id = Number(params.id);
   if (isNaN(id)) {
     notFound();
   }
 
-  let user;
+  let role;
   try {
-    user = await getUserById(id);
+    role = await getRoleById(id);
   } catch (error) {
-    console.error(`Failed to fetch user with ID ${id}:`, error);
+    console.error(`Failed to fetch role with ID ${id}:`, error);
     notFound();
   }
 
   return (
-    <PermissionGuard requiredPermission={PERMISSIONS.users.update}>
+    <PermissionGuard requiredPermission={PERMISSIONS.roles.update}>
       <PageTransition>
-        <UserForm initialData={user} />
+        <RoleForm initialData={role} />
       </PageTransition>
     </PermissionGuard>
   );

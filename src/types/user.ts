@@ -58,3 +58,7 @@ export interface UsersApiResponse {
   totalPages: number;
   currentPage: number;
 }
+
+export interface UserData {
+  user: User;
+}

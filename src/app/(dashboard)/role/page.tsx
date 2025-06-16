@@ -1,20 +1,20 @@
 import { Metadata } from 'next';
 import React from 'react';
-import UserTable from './components/user-table';
+import RoleTable from './components/role-table';
 import { PermissionGuard } from '@/components/guards/permission-guard';
 import { PERMISSIONS } from '@/config/permissions';
 
 export const metadata: Metadata = {
-  title: 'User Management',
-  description: 'Manage all users in the system.',
+  title: 'Role Management',
+  description: 'Manage all roles in the system.',
 };
 
-const UsersPage = () => {
+const RolesPage = () => {
   return (
-    <PermissionGuard requiredPermission={PERMISSIONS.users.view}>
-      <UserTable />
+    <PermissionGuard requiredPermission={PERMISSIONS.roles.view}>
+      <RoleTable />
     </PermissionGuard>
   );
 };
 
-export default UsersPage;
+export default RolesPage;

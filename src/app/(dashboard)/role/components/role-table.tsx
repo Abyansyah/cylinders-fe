@@ -12,37 +12,22 @@ import { Button } from '@/components/ui/button';
 import { DeleteAlertDialog } from '@/components/ui/alert-dialog-custom';
 import { PageTransition } from '@/components/page-transition';
 import { getColumns } from './columns';
-import { getUsers } from '@/services/userService';
+import { getRoles } from '@/services/roleService';
 import { useDebounce } from '@/hooks/use-debounce';
-import type { ApiUser } from '@/types/user';
-import { deleteUserAction } from '../actions/userActions';
+import type { Role } from '@/types/role';
+import { deleteRoleAction } from '../actions/roleActions';
 
-const roleOptions = [
-  { label: 'Admin', value: '2' },
-  { label: 'Sales', value: '3' },
-  { label: 'Petugas Gudang', value: '4' },
-  { label: 'Driver', value: '5' },
-  { label: 'Customer', value: '6' },
-];
-
-const statusOptions = [
-  { label: 'Active', value: 'true' },
-  { label: 'Inactive', value: 'false' },
-];
-
-export default function UserTable() {
+export default function RoleTable() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [userToDelete, setUserToDelete] = useState<ApiUser | null>(null);
+  const [roleToDelete, setRoleToDelete] = useState<Role | null>(null);
 
   const page = Number(searchParams.get('page')) || 1;
   const limit = Number(searchParams.get('limit')) || 10;
   const searchTerm = searchParams.get('search') || '';
-  const roleId = searchParams.get('role_id') || '';
-  const isActive = searchParams.get('is_active') || '';
 
   const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
   const debouncedSearchTerm = useDebounce(localSearchTerm, 500);
@@ -73,30 +58,28 @@ export default function UserTable() {
   const queryParams = useMemo(() => {
     const params: any = { page, limit };
     if (searchTerm) params.search = searchTerm;
-    if (roleId) params.role_id = Number(roleId);
-    if (isActive) params.is_active = isActive === 'true';
     return params;
-  }, [page, limit, searchTerm, roleId, isActive]);
+  }, [page, limit, searchTerm]);
 
-  const swrKey = useMemo(() => ['/users', JSON.stringify(queryParams)], [queryParams]);
+  const swrKey = useMemo(() => ['/roles', JSON.stringify(queryParams)], [queryParams]);
 
   const {
     data: apiResponse,
     error,
     isLoading,
-  } = useSWR(swrKey, () => getUsers(queryParams), {
+  } = useSWR(swrKey, () => getRoles(queryParams), {
     keepPreviousData: true,
   });
 
-  const handleDeleteClick = (user: ApiUser) => {
-    setUserToDelete(user);
+  const handleDeleteClick = (role: Role) => {
+    setRoleToDelete(role);
     setDeleteDialogOpen(true);
   };
 
   const handleDeleteConfirm = async () => {
-    if (!userToDelete) return;
+    if (!roleToDelete) return;
 
-    const result = await deleteUserAction(userToDelete.id);
+    const result = await deleteRoleAction(roleToDelete.id);
 
     if (result.success) {
       toast.success(result.message);
@@ -104,7 +87,7 @@ export default function UserTable() {
     } else {
       toast.error(result.message);
     }
-    setUserToDelete(null);
+    setRoleToDelete(null);
   };
 
   const pagination = useMemo<PaginationState>(
@@ -123,26 +106,21 @@ export default function UserTable() {
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  const columns = useMemo(() => getColumns(handleDeleteClick), [handleDeleteClick]);
+  const columns = useMemo(() => getColumns(handleDeleteClick), []);
 
   const dataToShow = apiResponse?.data ?? [];
   const totalPages = apiResponse?.totalPages ?? 0;
 
-  const filterableColumns = [
-    { id: 'is_active', title: 'Status', options: statusOptions },
-    { id: 'role_id', title: 'Role', options: roleOptions },
-  ];
-
-  if (error) return <div>Failed to load users.</div>;
+  if (error) return <div>Failed to load roles.</div>;
 
   return (
     <PageTransition>
       <div className="space-y-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold">User Management</h1>
-          <Button onClick={() => router.push('/users/create')}>
+          <h1 className="text-xl font-bold">Role Management</h1>
+          <Button onClick={() => router.push('/role/create')}>
             <Plus className="mr-2 h-4 w-4" />
-            Add User
+            Add Role
           </Button>
         </div>
         <DataTable
@@ -157,15 +135,14 @@ export default function UserTable() {
             value: localSearchTerm,
             onChange: setLocalSearchTerm,
           }}
-          filterableColumns={filterableColumns}
           onFilterChange={handleFilterChange}
         />
-        {userToDelete && (
+        {roleToDelete && (
           <DeleteAlertDialog
             open={deleteDialogOpen}
             onOpenChange={setDeleteDialogOpen}
-            title="Delete User"
-            description={`Are you sure you want to delete ${userToDelete?.name}? This action cannot be undone.`}
+            title="Delete Role"
+            description={`Are you sure you want to delete ${roleToDelete?.role_name}? This action cannot be undone.`}
             onConfirm={handleDeleteConfirm}
           />
         )}

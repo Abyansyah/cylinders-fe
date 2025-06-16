@@ -1,4 +1,4 @@
-import { BarChart3, Component, FileText, HelpCircle, LayoutDashboard, Monitor, Settings, Shield, ShoppingCart, Users } from 'lucide-react';
+import { LayoutDashboard, Users } from 'lucide-react';
 import type { SidebarItem } from '@/types/sidebar';
 
 export const SIDEBAR_ITEMS: SidebarItem[] = [
@@ -29,11 +29,13 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
         title: 'Users',
         url: '/users',
         id: 'users-list',
+        permissionKey: 'users',
       },
       {
         title: 'Roles',
-        url: '/roles',
+        url: '/role',
         id: 'users-roles',
+        permissionKey: 'roles'
       },
     ],
   },

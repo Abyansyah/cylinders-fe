@@ -9,10 +9,12 @@ export interface SidebarItem {
   iconColor?: string
   iconBg?: string
   items?: SidebarSubItem[]
+  permissionKey?: string
 }
 
 export interface SidebarSubItem {
   title: string
   url: string
   id: string
+  permissionKey?: string
 }

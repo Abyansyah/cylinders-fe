@@ -25,6 +25,9 @@ export function TopNavigation() {
   const pathname = usePathname();
   const { user } = useAuthStore();
 
+  console.log(user);
+  
+
   const getBreadcrumbs = () => {
     const paths = pathname.split('/').filter(Boolean);
     if (paths.length === 0) return [{ title: 'Dashboard', path: '/' }];

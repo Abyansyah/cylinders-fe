@@ -1,19 +1,19 @@
 import type { Metadata } from 'next';
-import { UserForm } from '../components/user-form';
+import { RoleForm } from '../components/role-form';
 import { PageTransition } from '@/components/page-transition';
 import { PermissionGuard } from '@/components/guards/permission-guard';
 import { PERMISSIONS } from '@/config/permissions';
 
 export const metadata: Metadata = {
-  title: 'Create User',
-  description: 'Add a new user to the system.',
+  title: 'Create Role',
+  description: 'Add a new role to the system.',
 };
 
-export default function CreateUserPage() {
+export default function CreateRolePage() {
   return (
-    <PermissionGuard requiredPermission={PERMISSIONS.users.create}>
+    <PermissionGuard requiredPermission={PERMISSIONS.roles.create}>
       <PageTransition>
-        <UserForm />
+        <RoleForm />
       </PageTransition>
     </PermissionGuard>
   );
