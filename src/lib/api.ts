@@ -9,14 +9,11 @@ const api = axios.create({
   },
 });
 
-// Interceptor untuk request
 api.interceptors.request.use(
   async (config) => {
     let token;
 
-    // Cek apakah kode berjalan di server atau client
     if (typeof window === 'undefined') {
-      // Server-side: Gunakan 'next/headers' untuk mengambil cookie
       const { cookies } = await import('next/headers');
       token = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
     } else {
@@ -38,6 +35,8 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response && error.response.status === 401 && typeof window !== 'undefined') {
+      const Cookies = (await import('js-cookie')).default;
+      Cookies.remove(SESSION_COOKIE_NAME);
       window.location.href = '/login';
     }
     return Promise.reject(error);

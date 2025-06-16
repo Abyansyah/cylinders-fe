@@ -47,7 +47,7 @@ export const getColumns = (onDelete: (user: ApiUser) => void): ColumnDef<ApiUser
       const isActive = row.getValue('is_active') as boolean;
       const status = isActive ? 'active' : 'inactive';
       return (
-        <Badge variant={isActive ? 'default' : 'secondary'} className={isActive ? 'bg-green-500' : 'bg-gray-500'}>
+        <Badge className={isActive ? 'bg-green-500' : 'bg-red-500'}>
           {status.charAt(0).toUpperCase() + status.slice(1)}
         </Badge>
       );

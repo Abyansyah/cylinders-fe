@@ -32,6 +32,11 @@ export interface UserRole {
   role_name: string;
 }
 
+export interface Warehouse {
+  id: number;
+  name: string;
+}
+
 export interface ApiUser {
   id: number;
   username: string;
@@ -44,7 +49,7 @@ export interface ApiUser {
   updatedAt: string;
   role: UserRole;
   avatar?: string;
-  warehouse_id?: number;
+  warehouse?: Warehouse | null;
 }
 
 export interface UsersApiResponse {

@@ -7,11 +7,11 @@ export default function UsersLoading() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">User Management</h1>
+        {/* <h1 className="text-xl font-bold">User Management</h1>
         <Button disabled>
           <Plus className="mr-2 h-4 w-4" />
           Add User
-        </Button>
+        </Button> */}
       </div>
       <div className="space-y-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

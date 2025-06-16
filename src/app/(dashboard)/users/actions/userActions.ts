@@ -2,9 +2,7 @@
 
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import { createUser, deleteUser, updateUser } from '@/services/userService';
-import { toast } from 'sonner';
 
 const baseUserSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters long'),
@@ -14,6 +12,7 @@ const baseUserSchema = z.object({
   address: z.string().min(5, 'Address is required'),
   role_id: z.coerce.number().min(1, 'Role is required'),
   warehouse_id: z.coerce.number().optional(),
+  is_active: z.coerce.boolean().optional(),
 });
 
 const createUserSchema = baseUserSchema.extend({

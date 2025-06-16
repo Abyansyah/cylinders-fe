@@ -17,6 +17,7 @@ import type { ApiUser } from '@/types/user';
 import type { Role } from '@/types/role';
 import type { Warehouse } from '@/types/warehouse';
 import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface UserFormProps {
   initialData?: ApiUser | null;
@@ -43,6 +44,9 @@ function SubmitButton({ isEdit }: { isEdit: boolean }) {
 export function UserForm({ initialData }: UserFormProps) {
   const router = useRouter();
   const isEdit = !!initialData;
+
+  console.log(initialData);
+  
 
   const [selectedRoleId, setSelectedRoleId] = useState<string | undefined>(initialData?.role.id.toString());
 
@@ -125,7 +129,7 @@ export function UserForm({ initialData }: UserFormProps) {
             {selectedRoleId === '4' && (
               <div className="space-y-2">
                 <Label htmlFor="warehouse_id">Warehouse</Label>
-                <Select name="warehouse_id" defaultValue={initialData?.warehouse_id?.toString()} required>
+                <Select name="warehouse_id" defaultValue={initialData?.warehouse ? initialData.warehouse.id.toString() : ''} required>
                   <SelectTrigger id="warehouse_id">
                     <SelectValue placeholder="Select a warehouse" />
                   </SelectTrigger>
@@ -154,6 +158,19 @@ export function UserForm({ initialData }: UserFormProps) {
               <Label htmlFor="password">Password</Label>
               <Input id="password" name="password" type="password" placeholder={isEdit ? 'Leave blank to keep current password' : '••••••••'} />
               {getError('password') && <p className="text-sm text-red-500">{getError('password')}</p>}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="is_active">Status</Label>
+              <Select name="is_active" defaultValue={initialData?.is_active ? 'true' : 'false'}>
+                <SelectTrigger id="is_active">
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="true">Active</SelectItem>
+                  <SelectItem value="false">Inactive</SelectItem>
+                </SelectContent>
+              </Select>
+              {getError('is_active') && <p className="text-sm text-red-500">{getError('is_active')}</p>}
             </div>
             <div className="space-y-2 sm:col-span-2">
               <Label htmlFor="address">Address</Label>
