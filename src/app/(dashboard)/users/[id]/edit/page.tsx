@@ -5,10 +5,11 @@ import { UserForm } from '../../components/user-form';
 import { PageTransition } from '@/components/page-transition';
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
   try {
     const id = Number(params.id);
     const user = await getUserById(id);
@@ -23,7 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function EditUserPage({ params }: Props) {
+export default async function EditUserPage(props: Props) {
+  const params = await props.params;
   const id = Number(params.id);
   if (isNaN(id)) {
     notFound();

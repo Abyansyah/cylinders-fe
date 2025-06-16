@@ -137,7 +137,7 @@ export default function UserTable() {
 
   return (
     <PageTransition>
-      <div className="space-y-4">
+      <div className="space-y-8">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">User Management</h1>
           <Button onClick={() => router.push('/users/create')}>

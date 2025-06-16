@@ -45,9 +45,6 @@ export function UserForm({ initialData }: UserFormProps) {
   const router = useRouter();
   const isEdit = !!initialData;
 
-  console.log(initialData);
-  
-
   const [selectedRoleId, setSelectedRoleId] = useState<string | undefined>(initialData?.role.id.toString());
 
   const action = isEdit ? updateUserAction.bind(null, initialData.id) : createUserAction;
@@ -161,7 +158,7 @@ export function UserForm({ initialData }: UserFormProps) {
             </div>
             <div className="space-y-2">
               <Label htmlFor="is_active">Status</Label>
-              <Select name="is_active" defaultValue={initialData?.is_active ? 'true' : 'false'}>
+              <Select name="is_active" defaultValue={initialData ? String(initialData.is_active) : 'true'} required>
                 <SelectTrigger id="is_active">
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>

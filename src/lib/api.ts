@@ -14,7 +14,8 @@ api.interceptors.request.use(
     let token;
 
     if (typeof window === 'undefined') {
-      const { cookies } = await import('next/headers');
+      const { cookies } = await
+      import('next/headers');
       token = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
     } else {
       const Cookies = (await import('js-cookie')).default;

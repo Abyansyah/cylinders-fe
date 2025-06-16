@@ -12,7 +12,11 @@ const baseUserSchema = z.object({
   address: z.string().min(5, 'Address is required'),
   role_id: z.coerce.number().min(1, 'Role is required'),
   warehouse_id: z.coerce.number().optional(),
-  is_active: z.coerce.boolean().optional(),
+  is_active: z
+    .enum(['true', 'false'], {
+      errorMap: () => ({ message: 'Please select a valid status.' }),
+    })
+    .transform((value) => value === 'true'),
 });
 
 const createUserSchema = baseUserSchema.extend({
