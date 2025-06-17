@@ -1,0 +1,194 @@
+'use client';
+
+import { useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { toast } from 'sonner';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { createCylinderPropertyAction, updateCylinderPropertyAction } from '../actions/cylinderPropertyActions';
+import type { CylinderProperty } from '@/types/cylinder-property';
+import { Separator } from '@/components/ui/separator';
+import { ChevronLeft } from 'lucide-react';
+
+const formSchema = z.object({
+  name: z.string().min(3, { message: 'Name must be at least 3 characters.' }),
+  size_cubic_meter: z.coerce.number({ invalid_type_error: 'Size must be a number.' }).positive({ message: 'Size must be a positive number.' }),
+  material: z.string().optional(),
+  max_age_years: z.coerce.number({ invalid_type_error: 'Max age must be a number.' }).int({ message: 'Max age must be a whole number.' }).positive({ message: 'Max age must be positive.' }),
+  notes: z.string().optional(),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+interface CylinderPropertyFormProps {
+  initialData?: CylinderProperty | null;
+}
+
+const RequiredFormLabel = ({ children }: { children: React.ReactNode }) => (
+  <FormLabel>
+    {children}
+    <span className="text-red-500 ml-1">*</span>
+  </FormLabel>
+);
+
+export function CylinderPropertyForm({ initialData }: CylinderPropertyFormProps) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const isEditMode = !!initialData;
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: initialData?.name || '',
+      size_cubic_meter: Number(initialData?.size_cubic_meter) || undefined,
+      material: initialData?.material || '',
+      max_age_years: initialData?.max_age_years || undefined,
+      notes: initialData?.notes || '',
+    },
+  });
+
+  const onSubmit = (values: FormValues) => {
+    startTransition(async () => {
+      const action = isEditMode ? updateCylinderPropertyAction(initialData.id, values) : createCylinderPropertyAction(values);
+
+      const result = await action;
+
+      console.log(result);
+
+      if (result.success) {
+        toast.success(result.message);
+        router.push('/cylinder-properties');
+      } else {
+        toast.error(result.message);
+      }
+    });
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        <Button variant="outline" size="icon" onClick={() => router.push('/cylinder-properties')}>
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+        <h1 className="text-xl font-bold">{isEditMode ? 'Cylinder Property Details' : 'Create Cylinder Property'}</h1>
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>{isEditMode ? 'Edit Cylinder Property' : 'Create New Cylinder Property'}</CardTitle>
+          <CardDescription>Fill in the form below to {isEditMode ? 'update the' : 'add a new'} cylinder property.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <div>
+                <h3 className="text-lg font-medium">Main Specifications</h3>
+                <p className="text-sm text-muted-foreground">Core details of the cylinder property.</p>
+                <Separator className="my-4" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <RequiredFormLabel>Property Name</RequiredFormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g., Tabung Baja 6m³" {...field} />
+                        </FormControl>
+                        <FormDescription>A unique name for this cylinder type.</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="material"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Material</FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g., Baja (Steel)" {...field} />
+                        </FormControl>
+                        <FormDescription>The primary material of the cylinder.</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-medium">Technical Details</h3>
+                <p className="text-sm text-muted-foreground">Size and lifetime information.</p>
+                <Separator className="my-4" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="size_cubic_meter"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Size (m³)</FormLabel>
+                        <FormControl>
+                          <Input type="number" step="0.01" placeholder="e.g., 6.0" {...field} value={field.value ?? ''} />
+                        </FormControl>
+                        <FormDescription>Volume capacity in cubic meters.</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="max_age_years"
+                    render={({ field }) => (
+                      <FormItem>
+                        <RequiredFormLabel>Max Age (Years)</RequiredFormLabel>
+                        <FormControl>
+                          <Input type="number" placeholder="e.g., 10" {...field} value={field.value ?? ''} />
+                        </FormControl>
+                        <FormDescription>Recommended maximum usage life in years.</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-medium">Additional Information</h3>
+                <Separator className="my-2" />
+                <FormField
+                  control={form.control}
+                  name="notes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Notes</FormLabel>
+                      <FormControl>
+                        <Textarea rows={4} placeholder="Enter any additional notes..." {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="flex justify-end gap-2 pt-4">
+                <Button type="button" variant="outline" onClick={() => router.back()}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isPending}>
+                  {isPending ? 'Saving...' : 'Save Changes'}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

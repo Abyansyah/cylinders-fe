@@ -27,8 +27,14 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
       {
         title: 'Tipe Gas',
         url: '/gas-type',
-        id: 'users-list',
-        permissionKey: 'gastype',
+        id: 'gas-type-list',
+        permissionKey: 'gasType',
+      },
+      {
+        title: 'Tabung',
+        url: '/cylinder-properties',
+        id: 'gas-type-cylinder-properties',
+        permissionKey: 'cylinderProperty',
       },
     ],
   },

@@ -21,7 +21,15 @@ async function handleApiAction(promise: Promise<any>, successMessage: string): P
     revalidatePath('/gas-type');
     return { success: true, message: successMessage };
   } catch (error: any) {
-    return { success: false, message: error.response?.data?.message || 'An unknown error occurred.' };
+    const responseData = error.response?.data;
+    let errorMessage = responseData?.message || 'An unknown error occurred.';
+
+    if (responseData?.errors && Array.isArray(responseData.errors)) {
+      const details = responseData.errors.map((err: { field: string; message: string }) => `${err.field}: ${err.message}`).join(', ');
+      errorMessage = `${errorMessage}: ${details}`;
+    }
+
+    return { success: false, message: errorMessage };
   }
 }
 

@@ -15,4 +15,7 @@ export const PERMISSIONS = {
   gasType: {
     manage: 'gastype:manage',
   },
+  cylinderProperty: {
+    manage: 'cylinderproperty:manage',
+  },
 } as const;
