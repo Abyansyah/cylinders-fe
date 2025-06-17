@@ -12,7 +12,7 @@ export const PERMISSIONS = {
     update: 'role:update',
     delete: 'role:delete',
   },
-  gastype: {
+  gasType: {
     manage: 'gastype:manage',
   },
 } as const;

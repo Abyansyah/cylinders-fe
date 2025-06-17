@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users } from 'lucide-react';
+import { Flame, LayoutDashboard, Users } from 'lucide-react';
 import type { SidebarItem } from '@/types/sidebar';
 
 export const SIDEBAR_ITEMS: SidebarItem[] = [
@@ -14,6 +14,21 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
         title: 'Console',
         url: '/',
         id: 'console',
+      },
+    ],
+  },
+  {
+    title: 'Gas Management',
+    url: '/gas-type',
+    id: 'gas-type',
+    iconColor: 'text-orange-600',
+    icon: Flame,
+    items: [
+      {
+        title: 'Tipe Gas',
+        url: '/gas-type',
+        id: 'users-list',
+        permissionKey: 'gastype',
       },
     ],
   },
@@ -35,7 +50,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
         title: 'Roles',
         url: '/role',
         id: 'users-roles',
-        permissionKey: 'roles'
+        permissionKey: 'roles',
       },
     ],
   },

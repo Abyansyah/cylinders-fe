@@ -6,7 +6,7 @@ import type { Metadata } from 'next';
 import { PageTransition } from '@/components/page-transition';
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 export async function generateMetadata(props: Props): Promise<Metadata> {

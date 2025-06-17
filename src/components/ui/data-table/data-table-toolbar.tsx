@@ -65,12 +65,20 @@ export function DataTableToolbar<TData>({ table, search, filterableColumns = [],
               </div>
             )
         )}
-        {isFiltered && (
-          <Button variant="ghost" onClick={() => router.push(pathname)} className="h-8 px-2 lg:px-3">
+        {/* {isFiltered && (
+          <Button
+            variant="ghost"
+            onClick={() => {
+              const params = new URLSearchParams(searchParams.toString());
+              params.delete('search');
+              router.push(`${pathname}?${params.toString()}`);
+            }}
+            className="h-8 px-2 lg:px-3"
+          >
             Reset
             <Cross2Icon className="ml-2 h-4 w-4" />
           </Button>
-        )}
+        )} */}
       </div>
       <div className="flex items-center space-x-2">
         <DropdownMenu>
