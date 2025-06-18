@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function GasTypePage() {
   return (
-    <PermissionGuard requiredPermission={PERMISSIONS.gasType.manage}>
+    <PermissionGuard requiredPermission={PERMISSIONS.gasType.view}>
       <PageTransition>
         <GasTypeTable />
       </PageTransition>

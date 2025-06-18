@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function CylinderPropertiesPage() {
   return (
-    <PermissionGuard requiredPermission={PERMISSIONS.cylinderProperty.manage}>
+    <PermissionGuard requiredPermission={PERMISSIONS.cylinderProperty.view}>
       <PageTransition>
         <CylinderPropertyTable />
       </PageTransition>

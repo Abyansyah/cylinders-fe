@@ -41,9 +41,9 @@ export const getColumns = (onDelete: (item: Product) => void): ColumnDef<Product
     id: 'actions',
     cell: ({ row }) => {
       const { checkPermission } = usePermission();
-      const canUpdate = checkPermission(PERMISSIONS.product.manage);
-      const canDelete = checkPermission(PERMISSIONS.product.manage);
-      const canView = checkPermission(PERMISSIONS.product.manage);
+      const canUpdate = checkPermission(PERMISSIONS.products.view);
+      const canDelete = checkPermission(PERMISSIONS.products.view);
+      const canView = checkPermission(PERMISSIONS.products.view);
 
       return (
         <div className="text-right">

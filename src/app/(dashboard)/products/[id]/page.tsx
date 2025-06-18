@@ -38,7 +38,7 @@ export default async function ProductDetailPage(props: Props) {
   if (!product) return notFound();
 
   return (
-    <PermissionGuard requiredPermission={PERMISSIONS.product.manage}>
+    <PermissionGuard requiredPermission={PERMISSIONS.products.view}>
       <PageTransition>
         <div className="">
           <div className="flex items-center justify-between mb-6">

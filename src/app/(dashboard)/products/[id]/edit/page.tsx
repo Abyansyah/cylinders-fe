@@ -27,7 +27,7 @@ export default async function EditProductPage(props: Props) {
   if (!product) notFound();
 
   return (
-    <PermissionGuard requiredPermission={PERMISSIONS.product.manage}>
+    <PermissionGuard requiredPermission={PERMISSIONS.products.view}>
       <PageTransition>
         <ProductForm initialData={product} gasTypes={gasTypes} cylinderProperties={cylinderProperties} />
       </PageTransition>

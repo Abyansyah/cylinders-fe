@@ -13,12 +13,18 @@ export const PERMISSIONS = {
     delete: 'role:delete',
   },
   gasType: {
-    manage: 'gastype:manage',
+    view: 'gastype:manage',
   },
   cylinderProperty: {
-    manage: 'cylinderproperty:manage',
+    view: 'cylinderproperty:manage',
   },
-  product: {
-    manage: 'product:manage',
+  products: {
+    view: 'product:manage',
   },
+  warehouse: {
+    view: 'warehouse:view_all',
+    create: 'warehouse:create',
+    update: 'warehouse:update',
+    delete: 'warehouse:delete',
+  }
 } as const;

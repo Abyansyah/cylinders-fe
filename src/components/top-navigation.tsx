@@ -16,6 +16,7 @@ import { usePathname } from 'next/navigation';
 import { SIDEBAR_ITEMS } from '@/constants/sidebar';
 import { useAuthStore } from '@/stores/authStore';
 import { logoutAction } from '@/lib/actions';
+import { useCurrentUser } from '@/hooks/use-current-user';
 
 export function TopNavigation() {
   const { state } = useSidebar();
@@ -59,6 +60,13 @@ export function TopNavigation() {
   };
 
   const breadcrumbs = getBreadcrumbs();
+
+  const { mutate: mutateUser } = useCurrentUser();
+
+  const handleLogout = async () => {
+    await mutateUser(undefined, { revalidate: false });
+    await logoutAction();
+  };
 
   return (
     <div className="border-b bg-background sticky top-0 left-0 right-0 z-10 md:left-[var(--sidebar-width)] md:group-data-[collapsible=icon]:left-[var(--sidebar-width-icon)] md:group-data-[collapsible=offcanvas]:left-0 transition-[left] duration-200 ease-linear">
@@ -157,19 +165,15 @@ export function TopNavigation() {
                 </span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <form action={logoutAction}>
-                  <button type="submit" className="flex items-center w-full cursor-pointer">
-                    <span className="flex items-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                        <polyline points="16 17 21 12 16 7" />
-                        <line x1="21" x2="9" y1="12" y2="12" />
-                      </svg>
-                      Log out
-                    </span>
-                  </button>
-                </form>
+              <DropdownMenuItem onClick={handleLogout}>
+                <span className="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" x2="9" y1="12" y2="12" />
+                  </svg>
+                  Log out
+                </span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: 'Add New Gas Type' };
 
 export default function CreateGasTypePage() {
   return (
-    <PermissionGuard requiredPermission={PERMISSIONS.gasType.manage}>
+    <PermissionGuard requiredPermission={PERMISSIONS.gasType.view}>
       <PageTransition>
         <GasTypeForm />
       </PageTransition>

@@ -31,7 +31,7 @@ export default async function EditGasTypePage(props: Props) {
   if (!data) notFound();
 
   return (
-    <PermissionGuard requiredPermission={PERMISSIONS.gasType.manage}>
+    <PermissionGuard requiredPermission={PERMISSIONS.gasType.view}>
       <PageTransition>
         <GasTypeForm initialData={data} />
       </PageTransition>

@@ -22,6 +22,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     url: '/gas-type',
     id: 'gas-type',
     iconColor: 'text-orange-600',
+    iconBg: 'bg-orange-100 dark:bg-orange-900/30',
     icon: Flame,
     items: [
       {
@@ -40,7 +41,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
         title: 'Produk',
         url: '/products',
         id: 'gas-type-products',
-        permissionKey: 'product',
+        permissionKey: 'products',
       },
     ],
   },

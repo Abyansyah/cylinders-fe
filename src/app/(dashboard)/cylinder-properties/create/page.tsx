@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: 'Add New Cylinder Property' };
 
 export default function CreateCylinderPropertyPage() {
   return (
-    <PermissionGuard requiredPermission={PERMISSIONS.cylinderProperty.manage}>
+    <PermissionGuard requiredPermission={PERMISSIONS.cylinderProperty.view}>
       <PageTransition>
         <CylinderPropertyForm />
       </PageTransition>

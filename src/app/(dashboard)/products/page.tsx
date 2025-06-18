@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function ProductsPage() {
   return (
-    <PermissionGuard requiredPermission={PERMISSIONS.product.manage}>
+    <PermissionGuard requiredPermission={PERMISSIONS.products.view}>
       <PageTransition>
         <ProductTable />
       </PageTransition>

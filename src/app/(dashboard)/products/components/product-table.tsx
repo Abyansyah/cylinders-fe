@@ -82,7 +82,7 @@ export default function ProductTable() {
   };
 
   const columns = useMemo(() => getColumns(handleDelete), []);
-  const canCreate = checkPermission(PERMISSIONS.product.manage);
+  const canCreate = checkPermission(PERMISSIONS.products.view);
 
   return (
     <div className="space-y-4">

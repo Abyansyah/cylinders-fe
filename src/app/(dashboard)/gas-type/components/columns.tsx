@@ -30,8 +30,8 @@ export const getColumns = (onDelete: (item: GasType) => void): ColumnDef<GasType
     id: 'actions',
     cell: ({ row }) => {
       const { checkPermission } = usePermission();
-      const canUpdate = checkPermission(PERMISSIONS.gasType.manage);
-      const canDelete = checkPermission(PERMISSIONS.gasType.manage);
+      const canUpdate = checkPermission(PERMISSIONS.gasType.view);
+      const canDelete = checkPermission(PERMISSIONS.gasType.view);
 
       return (
         <div className="text-right">

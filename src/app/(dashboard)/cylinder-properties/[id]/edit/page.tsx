@@ -29,7 +29,7 @@ export default async function EditCylinderPropertyPage(props: Props) {
   try {
     const data = await getCylinderPropertyById(id);
     return (
-      <PermissionGuard requiredPermission={PERMISSIONS.cylinderProperty.manage}>
+      <PermissionGuard requiredPermission={PERMISSIONS.cylinderProperty.view}>
         <PageTransition>
           <CylinderPropertyForm initialData={data} />
         </PageTransition>

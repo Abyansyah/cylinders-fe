@@ -37,8 +37,8 @@ export const getColumns = (onDelete: (item: CylinderProperty) => void): ColumnDe
     id: 'actions',
     cell: ({ row }) => {
       const { checkPermission } = usePermission();
-      const canUpdate = checkPermission(PERMISSIONS.cylinderProperty.manage);
-      const canDelete = checkPermission(PERMISSIONS.cylinderProperty.manage);
+      const canUpdate = checkPermission(PERMISSIONS.cylinderProperty.view);
+      const canDelete = checkPermission(PERMISSIONS.cylinderProperty.view);
 
       return (
         <div className="text-right">

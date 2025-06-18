@@ -13,7 +13,7 @@ export default async function CreateProductPage() {
   const [gasTypes, cylinderProperties] = await Promise.all([getGasTypes({ limit: 100 }), getCylinderProperties({ limit: 100 })]);
 
   return (
-    <PermissionGuard requiredPermission={PERMISSIONS.product.manage}>
+    <PermissionGuard requiredPermission={PERMISSIONS.products.view}>
       <PageTransition>
         <ProductForm gasTypes={gasTypes} cylinderProperties={cylinderProperties} />
       </PageTransition>

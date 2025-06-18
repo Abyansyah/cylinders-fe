@@ -42,7 +42,6 @@ export default function CylinderPropertyTable() {
     } else {
       params.delete('search');
     }
-    
   }, [debouncedSearch, pathname, router, searchParams]);
 
   useEffect(() => {
@@ -89,7 +88,7 @@ export default function CylinderPropertyTable() {
   const columns = useMemo(() => getColumns(handleDelete), []);
   const data = apiResponse?.data ?? [];
   const pageCount = apiResponse?.totalPages ?? 0;
-  const canCreate = checkPermission(PERMISSIONS.cylinderProperty.manage);
+  const canCreate = checkPermission(PERMISSIONS.cylinderProperty.view);
 
   return (
     <div className="space-y-4">
