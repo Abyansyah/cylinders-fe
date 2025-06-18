@@ -1,5 +1,6 @@
 import api from '@/lib/api';
 import type { Role, RolesApiResponse } from '@/types/role';
+import { cache } from 'react';
 
 interface GetRolesParams {
   page?: number;
@@ -12,10 +13,10 @@ export const getRoles = async (params: GetRolesParams): Promise<RolesApiResponse
   return data;
 };
 
-export const getRoleById = async (id: number): Promise<Role> => {
+export const getRoleById = cache(async (id: number): Promise<Role> => {
   const { data } = await api.get(`/roles/${id}`);
   return data;
-};
+});
 
 export const createRole = async (roleData: any): Promise<Role> => {
   const { data } = await api.post('/roles', roleData);

@@ -1,5 +1,6 @@
 import api from '@/lib/api';
 import type { CylinderProperty, CylinderPropertiesApiResponse } from '@/types/cylinder-property';
+import { cache } from 'react';
 
 export type CylinderPropertyPayload = {
   name: string;
@@ -20,10 +21,10 @@ export const getCylinderProperties = async (params: GetCylinderPropertiesParams)
   return data;
 };
 
-export const getCylinderPropertyById = async (id: number): Promise<CylinderProperty> => {
+export const getCylinderPropertyById =  cache(async (id: number): Promise<CylinderProperty> => {
   const { data } = await api.get(`/cylinder-properties/${id}`);
   return data;
-};
+});
 
 export const createCylinderProperty = async (payload: CylinderPropertyPayload): Promise<CylinderProperty> => {
   const { data } = await api.post('/cylinder-properties', payload);

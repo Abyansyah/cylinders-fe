@@ -36,6 +36,12 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
         id: 'gas-type-cylinder-properties',
         permissionKey: 'cylinderProperty',
       },
+      {
+        title: 'Produk',
+        url: '/products',
+        id: 'gas-type-products',
+        permissionKey: 'product',
+      },
     ],
   },
   {

@@ -39,9 +39,6 @@ export default function GasTypeTable() {
     } else {
       params.delete('search');
     }
-    if (searchParams.get('search') !== debouncedSearch) {
-      router.push(`${pathname}?${params.toString()}`);
-    }
   }, [debouncedSearch, pathname, router, searchParams]);
 
   useEffect(() => {

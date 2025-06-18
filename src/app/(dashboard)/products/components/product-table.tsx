@@ -1,5 +1,6 @@
 'use client';
 
+// Impor semua yang diperlukan, sama seperti table-table sebelumnya
 import { useMemo, useState, useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import useSWR, { mutate } from 'swr';
@@ -12,20 +13,20 @@ import { DataTable } from '@/components/ui/data-table/data-table';
 import { Button } from '@/components/ui/button';
 import { DeleteAlertDialog } from '@/components/ui/alert-dialog-custom';
 import { getColumns } from './columns';
-import { getCylinderProperties } from '@/services/cylinderPropertyService';
-import { deleteCylinderPropertyAction } from '../actions/cylinderPropertyActions';
-import type { CylinderProperty } from '@/types/cylinder-property';
+import { getProducts } from '@/services/productService';
+import { deleteProductAction } from '../actions/productActions';
+import type { Product } from '@/types/product';
 import { usePermission } from '@/hooks/use-permission';
 import { PERMISSIONS } from '@/config/permissions';
 
-export default function CylinderPropertyTable() {
+export default function ProductTable() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { checkPermission } = usePermission();
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState<CylinderProperty | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<Product | null>(null);
 
   const page = Number(searchParams.get('page')) || 1;
   const limit = Number(searchParams.get('limit')) || 10;
@@ -37,12 +38,8 @@ export default function CylinderPropertyTable() {
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', '1');
-    if (debouncedSearch) {
-      params.set('search', debouncedSearch);
-    } else {
-      params.delete('search');
-    }
-    
+    if (debouncedSearch) params.set('search', debouncedSearch);
+    else params.delete('search');
   }, [debouncedSearch, pathname, router, searchParams]);
 
   useEffect(() => {
@@ -56,17 +53,16 @@ export default function CylinderPropertyTable() {
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  const swrKey = useMemo(() => `/cylinder-properties?page=${page}&limit=${limit}&search=${search}`, [page, limit, search]);
-  const { data: apiResponse, isLoading } = useSWR(swrKey, () => getCylinderProperties({ page, limit, search }), { keepPreviousData: true });
+  const swrKey = useMemo(() => `/products?page=${page}&limit=${limit}&search=${search}`, [page, limit, search]);
+  const { data: apiResponse, isLoading } = useSWR(swrKey, () => getProducts({ page, limit, search }), { keepPreviousData: true });
 
-  const handleDelete = (item: CylinderProperty) => {
+  const handleDelete = (item: Product) => {
     setItemToDelete(item);
     setDeleteDialogOpen(true);
   };
-
   const confirmDelete = async () => {
     if (!itemToDelete) return;
-    const result = await deleteCylinderPropertyAction(itemToDelete.id);
+    const result = await deleteProductAction(itemToDelete.id);
     if (result.success) {
       toast.success(result.message);
       mutate(swrKey);
@@ -77,7 +73,6 @@ export default function CylinderPropertyTable() {
   };
 
   const pagination = useMemo<PaginationState>(() => ({ pageIndex: page - 1, pageSize: limit }), [page, limit]);
-
   const handlePaginationChange = (updater: any) => {
     const newPagination = typeof updater === 'function' ? updater(pagination) : updater;
     const params = new URLSearchParams(searchParams.toString());
@@ -87,29 +82,27 @@ export default function CylinderPropertyTable() {
   };
 
   const columns = useMemo(() => getColumns(handleDelete), []);
-  const data = apiResponse?.data ?? [];
-  const pageCount = apiResponse?.totalPages ?? 0;
-  const canCreate = checkPermission(PERMISSIONS.cylinderProperty.manage);
+  const canCreate = checkPermission(PERMISSIONS.product.manage);
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Cylinder Properties</h1>
+        <h1 className="text-2xl font-bold">Manajemen Produk</h1>
         {canCreate && (
-          <Button onClick={() => router.push('/cylinder-properties/create')}>
-            <Plus className="mr-2 h-4 w-4" /> Add Property
+          <Button onClick={() => router.push('/products/create')}>
+            <Plus className="mr-2 h-4 w-4" /> Tambah Produk
           </Button>
         )}
       </div>
       <DataTable
         columns={columns}
-        data={data}
+        data={apiResponse?.data ?? []}
         isLoading={isLoading}
-        pageCount={pageCount}
+        pageCount={apiResponse?.totalPages ?? 0}
         pagination={pagination}
         onPaginationChange={handlePaginationChange}
         search={{
-          placeholder: 'Search by name or material...',
+          placeholder: 'Cari nama produk, SKU...',
           value: localSearch,
           onChange: setLocalSearch,
         }}
@@ -119,8 +112,8 @@ export default function CylinderPropertyTable() {
           open={deleteDialogOpen}
           onOpenChange={setDeleteDialogOpen}
           onConfirm={confirmDelete}
-          title={`Delete ${itemToDelete.name}`}
-          description="This action cannot be undone. This will permanently delete the cylinder property."
+          title={`Hapus ${itemToDelete.name}`}
+          description="Aksi ini tidak dapat dibatalkan. Ini akan menghapus produk secara permanen."
         />
       )}
     </div>

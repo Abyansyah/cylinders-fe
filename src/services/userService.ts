@@ -2,6 +2,7 @@ import api from '@/lib/api';
 import { Role } from '@/types/role';
 import { ApiUser, UsersApiResponse } from '@/types/user';
 import { Warehouse } from '@/types/warehouse';
+import { cache } from 'react';
 
 interface GetUsersParams {
   page?: number;
@@ -18,10 +19,10 @@ export const getUsers = async (params: GetUsersParams): Promise<UsersApiResponse
   return data;
 };
 
-export const getUserById = async (id: number): Promise<ApiUser> => {
+export const getUserById = cache(async (id: number): Promise<ApiUser> => {
   const { data } = await api.get(`/users/${id}`);
   return data;
-};
+});
 
 export const createUser = async (userData: any): Promise<ApiUser> => {
   const { data } = await api.post('/users', userData);

@@ -1,5 +1,6 @@
 import api from '@/lib/api';
 import type { GasType, GasTypesApiResponse } from '@/types/gas-type';
+import { cache } from 'react';
 
 type GasTypePayload = Pick<GasType, 'name' | 'description'>;
 
@@ -14,10 +15,10 @@ export const getGasTypes = async (params: GetGasTypesParams): Promise<GasTypesAp
   return data;
 };
 
-export const getGasTypeById = async (id: number): Promise<GasType> => {
+export const getGasTypeById = cache(async (id: number): Promise<GasType> => {
   const { data } = await api.get(`/gas-types/${id}`);
   return data;
-};
+});
 
 export const createGasType = async (payload: GasTypePayload): Promise<GasType> => {
   const { data } = await api.post('/gas-types', payload);

@@ -18,4 +18,7 @@ export const PERMISSIONS = {
   cylinderProperty: {
     manage: 'cylinderproperty:manage',
   },
+  product: {
+    manage: 'product:manage',
+  },
 } as const;
