@@ -36,7 +36,19 @@ export const getColumns = (onDelete: (item: Customer) => void): ColumnDef<Custom
   {
     accessorKey: 'customer_type',
     header: 'Tipe',
-    cell: ({ row }) => <Badge variant="outline">{row.original.customer_type}</Badge>,
+    cell: ({ row }) => <Badge className={row.original.customer_type === 'Individual' ? 'bg-purple-500' : 'bg-blue-500'}>{row.original.customer_type === 'Individual' ? 'Individu' : 'Perusahaan'}</Badge>,
+  },
+  {
+    accessorKey: 'is_active',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+    cell: ({ row }) => {
+      const isActive = row.original.userAccount.is_active as boolean;
+      const status = isActive ? 'aktif' : 'inactive';
+      return <Badge className={isActive ? 'bg-green-500' : 'bg-red-500'}>{status.charAt(0).toUpperCase() + status.slice(1)}</Badge>;
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id) as string);
+    },
   },
   {
     id: 'actions',

@@ -97,7 +97,7 @@ export function DataTableToolbar<TData>({ table, search, filterableColumns = [],
               .map((column) => {
                 return (
                   <DropdownMenuCheckboxItem key={column.id} className="capitalize" checked={column.getIsVisible()} onCheckedChange={(value: any) => column.toggleVisibility(!!value)}>
-                    {column.id}
+                    {column.id.replace('_', ' ')}
                   </DropdownMenuCheckboxItem>
                 );
               })}
