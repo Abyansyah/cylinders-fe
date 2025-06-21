@@ -1,4 +1,4 @@
-import { Flame, LayoutDashboard, Users, Warehouse } from 'lucide-react';
+import { Flame, LayoutDashboard, Users, UserSquare, Warehouse } from 'lucide-react';
 import type { SidebarItem } from '@/types/sidebar';
 
 export const SIDEBAR_ITEMS: SidebarItem[] = [
@@ -18,7 +18,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     ],
   },
   {
-    title: 'Gas Management',
+    title: 'Manajemen Gas',
     url: '/gas-type',
     id: 'gas-type',
     iconColor: 'text-orange-600',
@@ -55,7 +55,13 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     permissionKey: 'warehouse', 
   },
   {
-    title: 'User Management',
+    title: 'Pelanggan',
+    icon: UserSquare,
+    url: '/customers',
+    permissionKey: 'customer',
+  },
+  {
+    title: 'Manajemen Pengguna',
     url: '/users',
     icon: Users,
     id: 'users',

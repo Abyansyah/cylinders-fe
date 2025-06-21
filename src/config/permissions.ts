@@ -26,5 +26,12 @@ export const PERMISSIONS = {
     create: 'warehouse:create',
     update: 'warehouse:update',
     delete: 'warehouse:delete',
-  }
+  },
+  customer: {
+    view_all: 'customer:view_all',
+    view: 'customer:view',
+    create: 'customer:create',
+    update: 'customer:update',
+    delete: 'customer:delete',
+  },
 } as const;
