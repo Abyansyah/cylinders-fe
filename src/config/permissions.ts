@@ -34,4 +34,10 @@ export const PERMISSIONS = {
     update: 'customer:update',
     delete: 'customer:delete',
   },
+  branch: {
+    view: 'branch:manage',
+    create: 'branch:manage',
+    update: 'branch:manage',
+    delete: 'branch:manage',
+  },
 } as const;

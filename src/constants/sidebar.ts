@@ -1,4 +1,4 @@
-import { Flame, LayoutDashboard, Users, UserSquare, Warehouse } from 'lucide-react';
+import { Flame, GitBranch, LayoutDashboard, Users, UserSquare, Warehouse } from 'lucide-react';
 import type { SidebarItem } from '@/types/sidebar';
 
 export const SIDEBAR_ITEMS: SidebarItem[] = [
@@ -44,6 +44,12 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
         permissionKey: 'products',
       },
     ],
+  },
+   {
+    title: 'Cabang',
+    icon: GitBranch,
+    url: '/branches',
+    permissionKey: 'branch',
   },
   {
     title: 'Manajemen Gudang',
