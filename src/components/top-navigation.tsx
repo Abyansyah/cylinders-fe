@@ -69,7 +69,7 @@ export function TopNavigation() {
   };
 
   return (
-    <div className="border-b bg-background sticky top-0 left-0 right-0 z-10 md:left-[var(--sidebar-width)] md:group-data-[collapsible=icon]:left-[var(--sidebar-width-icon)] md:group-data-[collapsible=offcanvas]:left-0 transition-[left] duration-200 ease-linear">
+    <div className="border-b bg-background sticky top-0 left-0 right-0 z-50 md:left-[var(--sidebar-width)] md:group-data-[collapsible=icon]:left-[var(--sidebar-width-icon)] md:group-data-[collapsible=offcanvas]:left-0 transition-[left] duration-200 ease-linear">
       <motion.header
         className="flex h-16 shrink-0 items-center gap-2 px-4"
         initial={false}

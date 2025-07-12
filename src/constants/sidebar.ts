@@ -1,4 +1,4 @@
-import { Flame, GitBranch, LayoutDashboard, Users, UserSquare, Warehouse } from 'lucide-react';
+import { BrickWallFire, Flame, GitBranch, LayoutDashboard, ShoppingCart, Users, UserSquare, Warehouse } from 'lucide-react';
 import type { SidebarItem } from '@/types/sidebar';
 
 export const SIDEBAR_ITEMS: SidebarItem[] = [
@@ -45,7 +45,19 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
       },
     ],
   },
-   {
+  {
+    id: 'orders',
+    title: 'Buar Order',
+    icon: ShoppingCart,
+    isActive: false,
+    url: '/orders',
+  },
+  {
+    title: 'Tabung Gas',
+    url: '/cylinders',
+    icon: BrickWallFire,
+  },
+  {
     title: 'Cabang',
     icon: GitBranch,
     url: '/branches',
@@ -58,7 +70,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     iconColor: 'text-green-600',
     iconBg: 'bg-green-100 dark:bg-green-900/30',
     url: '/warehouses',
-    permissionKey: 'warehouse', 
+    permissionKey: 'warehouse',
   },
   {
     title: 'Pelanggan',

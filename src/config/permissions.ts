@@ -40,4 +40,9 @@ export const PERMISSIONS = {
     update: 'branch:manage',
     delete: 'branch:manage',
   },
+  cylinder: {
+    view: 'cylinder:view_all',
+    create: 'cylinder:create',
+    update: 'cylinder:update_status',
+  },
 } as const;

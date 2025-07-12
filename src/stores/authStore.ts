@@ -17,6 +17,7 @@ interface User {
   address: string;
   phone_number: string;
   role: Role;
+  warehouse_id: number;
 }
 type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated';
 
