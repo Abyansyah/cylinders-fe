@@ -60,32 +60,33 @@ export interface CreateOrderRequest {
   }[];
 }
 
-export interface ProductStock {
-  product_id: number;
-  warehouse_id: number;
-  available_stock: number;
+export interface OrderStats {
+  total_order: number;
+  order_aktif: number;
+  total_order_sewa: number;
+  total_order_beli: number;
 }
 
-export interface Customer {
-  id: number;
-  customer_name: string;
-  company_name: string;
-  phone: string;
-  email: string;
-  address: string;
+export interface OrderStatsApiResponse {
+  success: boolean;
+  message: string;
+  data: OrderStats;
 }
 
-export interface Product {
-  id: number;
-  name: string;
-  sku: string;
-  description: string;
-  category: string;
+export interface OrdersApiResponse {
+  data: Order[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
 }
 
-export interface Warehouse {
-  id: number;
-  name: string;
-  address: string;
-  manager_name: string;
+export interface GetOrdersParams {
+  page?: number;
+  limit?: number;
+  status?: string;
+  order_type?: 'Sewa' | 'Beli' | 'all';
+  date_start?: string;
+  date_end?: string;
+  order_number_search?: string;
+  warehouseId?: string;
 }

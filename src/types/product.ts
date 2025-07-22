@@ -13,6 +13,7 @@ export interface Product {
   updatedAt: string;
   cylinderProperty: Pick<CylinderProperty, 'id' | 'name' | 'size_cubic_meter' | 'material' | 'max_age_years' | 'notes'>;
   gasType: Pick<GasType, 'id' | 'name' | 'description'>;
+  available_stock?: number;
 }
 
 export interface ProductsApiResponse {
