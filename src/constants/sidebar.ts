@@ -51,6 +51,13 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     icon: ShoppingCart,
     isActive: false,
     url: '/orders',
+    permissionKey: 'order',
+  },
+  {
+    title: 'Menyiapkan Tabung',
+    url: '/warehouse-prepare',
+    icon: Warehouse,
+    isActive: false,
   },
   {
     title: 'Tabung Gas',

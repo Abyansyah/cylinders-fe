@@ -2,6 +2,8 @@ import { PageTransition } from '@/components/page-transition';
 import OrderTable from './components/order-table';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { PermissionGuard } from '@/components/guards/permission-guard';
+import { PERMISSIONS } from '@/config/permissions';
 
 export const metadata = {
   title: 'Manajemen Order',
@@ -34,10 +36,12 @@ function OrdersLoadingSkeleton() {
 
 export default function OrdersPage() {
   return (
-    <PageTransition>
-      <Suspense fallback={<OrdersLoadingSkeleton />}>
-        <OrderTable />
-      </Suspense>
-    </PageTransition>
+    <PermissionGuard requiredPermission={PERMISSIONS.order.view}>
+      <PageTransition>
+        <Suspense fallback={<OrdersLoadingSkeleton />}>
+          <OrderTable />
+        </Suspense>
+      </PageTransition>
+    </PermissionGuard>
   );
 }

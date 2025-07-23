@@ -45,4 +45,13 @@ export const PERMISSIONS = {
     create: 'cylinder:create',
     update: 'cylinder:update_status',
   },
+  warehousePrepare: {
+    view: 'warehouse:view_orders_to_prepare',
+  },
+  order: {
+    view: 'order:view_all',
+    create: 'order:create',
+    update: 'order:update',
+    cancel: 'order:cancel',
+  },
 } as const;

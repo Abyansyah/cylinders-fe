@@ -90,3 +90,23 @@ export interface GetOrdersParams {
   order_number_search?: string;
   warehouseId?: string;
 }
+
+export interface PrepareOrderDetail {
+  id: number;
+  order_number: string;
+  customer_name: string;
+  company_name: string;
+  order_type: 'Sewa' | 'Beli';
+  order_date: string;
+  status: string;
+  items: PrepareOrderItem[];
+}
+
+export interface PrepareOrderItem {
+  order_item_id: number;
+  product_name: string;
+  sku: string;
+  required_quantity: number;
+  assigned_quantity: number;
+  assigned_barcodes: string[];
+}

@@ -1,5 +1,5 @@
 import api from '@/lib/api';
-import type { CreateOrderRequest, GetOrdersParams, Order, OrdersApiResponse, OrderStats, OrderStatsApiResponse } from '@/types/order';
+import type { CreateOrderRequest, GetOrdersParams, Order, OrdersApiResponse, OrderStats, OrderStatsApiResponse, PrepareOrderDetail } from '@/types/order';
 import { cache } from 'react';
 
 /**
@@ -54,5 +54,39 @@ export const getOrderById = cache(async (id: number): Promise<Order> => {
  */
 export const cancelOrder = async (id: number, notes: string): Promise<void> => {
   const { data } = await api.put(`/orders/${id}/cancel`, { notes });
+  return data;
+};
+
+/**
+ * @param url
+ * @returns
+ */
+export const getOrdersToPrepare = async (url: string) => {
+  const { data } = await api.get(url);
+  return data;
+};
+
+export const getPrepareOrderDetails = cache(async (id: number): Promise<PrepareOrderDetail> => {
+  const { data } = await api.get(`/orders/warehouse/orders/${id}/prepare-details`);
+  return data;
+});
+
+export const validateCylinderForOrderItem = async (orderItemId: number, barcode: string): Promise<{ isValid: boolean; message: string }> => {
+  const { data } = await api.post(`/orders/warehouse/order-items/${orderItemId}/validate-cylinder`, { barcode });
+  return data;
+};
+
+export const assignAllCylinders = async (orderId: number, payload: { assignments: { order_item_id: number; barcode_ids: string[] }[]; notes_petugas_gudang: string }): Promise<void> => {
+  const { data } = await api.post(`/orders/warehouse/orders/${orderId}/assign-all-cylinders`, payload);
+  return data;
+};
+
+export const markOrderAsPrepared = async (orderId: number): Promise<void> => {
+  const { data } = await api.put(`/orders/warehouse/orders/${orderId}/mark-prepared`);
+  return data;
+};
+
+export const unassignAllCylinders = async (orderId: number): Promise<void> => {
+  const { data } = await api.put(`/orders/warehouse/orders/${orderId}/unassign-all`);
   return data;
 };
