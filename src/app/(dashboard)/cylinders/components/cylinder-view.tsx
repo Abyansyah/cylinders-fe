@@ -142,8 +142,14 @@ export default function CylinderDetailView({ cylinder }: CylinderDetailViewProps
                         <div className="flex items-start gap-2">
                           <MapPin className="h-4 w-4 mt-0.5 text-muted-foreground" />
                           <div>
-                            <p className="font-medium">{cylinder.currentWarehouse.name}</p>
-                            <p className="text-sm text-muted-foreground">{cylinder.currentWarehouse.address}</p>
+                            {cylinder.currentWarehouse ? (
+                              <>
+                                <p className="font-medium">{cylinder.currentWarehouse.name}</p>
+                                <p className="text-sm text-muted-foreground">{cylinder.currentWarehouse?.address}</p>
+                              </>
+                            ) : (
+                              <p className="text-sm text-muted-foreground">Tidak berada di gudang</p>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -173,7 +179,7 @@ export default function CylinderDetailView({ cylinder }: CylinderDetailViewProps
                       </CardTitle>
                       <CardDescription>Log aktivitas dan pergerakan tabung gas</CardDescription>
                     </div>
-                    <MovementHistoryExport movements={detailedMovements} cylinderBarcode={cylinder.barcode_id} />
+                    <MovementHistoryExport cylinderId={cylinder.id} />
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -194,13 +200,18 @@ export default function CylinderDetailView({ cylinder }: CylinderDetailViewProps
                                 {movement.user.name} (@{movement.user.username})
                               </span>
                             </div>
-                            {movement.fromWarehouse && movement.toWarehouse && (
+                            {/* {movement.fromWarehouse && movement.toWarehouse ? (
                               <div className="flex items-center gap-1">
                                 <span>{movement.fromWarehouse.name}</span>
                                 <ArrowRight className="h-3 w-3" />
                                 <span>{movement.toWarehouse.name}</span>
                               </div>
-                            )}
+                            ) : (
+                              <div className="flex items-center gap-1">
+                                <MapPin className="h-3 w-3" />
+                                <span>{movement.fromWarehouse?.name || 'Tidak digudang'}</span>
+                              </div>
+                            )} */}
                           </div>
                         </div>
                       </motion.div>
