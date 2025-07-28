@@ -7,6 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import useSWR from 'swr';
 import { getWarehouses } from '@/services/warehouseService';
 import { CYLINDER_STATUSES } from '@/constants/cylinder';
+import { useAuthStore } from '@/stores/authStore';
+import { cn } from '@/lib/utils';
 
 interface CylinderFilterProps {
   searchTerm: string;
@@ -20,7 +22,10 @@ interface CylinderFilterProps {
 }
 
 export default function CylinderFilter({ searchTerm, selectedWarehouse, selectedStatus, handleSearch, setSelectedWarehouse, setSelectedStatus, setShowScanner, onResetFilter }: CylinderFilterProps) {
-  const { data: warehousesResponse, isLoading: isLoadingWarehouses } = useSWR('/warehouses?limit=50', () => getWarehouses({ limit: 50 }), {
+  const { user } = useAuthStore();
+  const isPetugasGudang = user?.role.role_name === 'Petugas Gudang';
+
+  const { data: warehousesResponse, isLoading: isLoadingWarehouses } = useSWR(!isPetugasGudang ? '/warehouses?limit=50' : null, () => getWarehouses({ limit: 50 }), {
     revalidateOnFocus: false,
   });
 
@@ -35,7 +40,7 @@ export default function CylinderFilter({ searchTerm, selectedWarehouse, selected
           <CardDescription>Gunakan filter untuk mencari tabung gas berdasarkan kriteria tertentu</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-4">
+          <div className={cn('grid gap-4', isPetugasGudang ? 'md:grid-cols-3' : 'md:grid-cols-4')}>
             <div className="space-y-2">
               <label className="text-sm font-medium">Pencarian</label>
               <div className="relative">
@@ -47,31 +52,33 @@ export default function CylinderFilter({ searchTerm, selectedWarehouse, selected
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Gudang</label>
-              <Select value={selectedWarehouse} onValueChange={setSelectedWarehouse} disabled={isLoadingWarehouses}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Pilih gudang" />
-                </SelectTrigger>
-                <SelectContent>
-                  {isLoadingWarehouses ? (
-                    <div className="flex items-center justify-center p-2">
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Memuat gudang...
-                    </div>
-                  ) : (
-                    <>
-                      <SelectItem value="all">Semua Gudang</SelectItem>
-                      {warehousesResponse?.data?.map((warehouse) => (
-                        <SelectItem key={warehouse.id} value={warehouse.id.toString()}>
-                          {warehouse.name}
-                        </SelectItem>
-                      ))}
-                    </>
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
+            {!isPetugasGudang && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Gudang</label>
+                <Select value={selectedWarehouse} onValueChange={setSelectedWarehouse} disabled={isLoadingWarehouses}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Pilih gudang" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {isLoadingWarehouses ? (
+                      <div className="flex items-center justify-center p-2">
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Memuat gudang...
+                      </div>
+                    ) : (
+                      <>
+                        <SelectItem value="all">Semua Gudang</SelectItem>
+                        {warehousesResponse?.data?.map((warehouse) => (
+                          <SelectItem key={warehouse.id} value={warehouse.id.toString()}>
+                            {warehouse.name}
+                          </SelectItem>
+                        ))}
+                      </>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
             <div className="space-y-2">
               <label className="text-sm font-medium">Status</label>

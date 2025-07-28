@@ -65,6 +65,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     url: '/driver-deliveries',
     icon: Truck,
     isActive: false,
+    permissionKey: 'driverDelivery',
   },
   {
     title: 'Tabung Gas',

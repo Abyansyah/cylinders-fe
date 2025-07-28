@@ -60,8 +60,6 @@ export function CylinderPropertyForm({ initialData }: CylinderPropertyFormProps)
 
       const result = await action;
 
-      console.log(result);
-
       if (result.success) {
         toast.success(result.message);
         router.push('/cylinder-properties');

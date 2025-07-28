@@ -9,7 +9,7 @@ import type { Order } from '@/types/order';
 import Link from 'next/link';
 import useSWRInfinite from 'swr/infinite';
 import { getOrdersToPrepare } from '@/services/orderService';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 const StatCard = ({ title, value, subtitle, icon: Icon, gradient, delay = 0 }: { title: string; value: string | number; subtitle: string; icon: any; gradient: string; delay?: number }) => {
   return (
@@ -181,7 +181,12 @@ export default function WarehousePrepareTable() {
     };
   }, [observerTarget, isLoadingMore, isReachingEnd, size, setSize]);
 
-  const totalItems = data?.[0]?.totalItems || 0;
+  const stats = useMemo(() => {
+    const confirmed = orders.filter((o: any) => o.status === 'Dikonfirmasi Sales').length;
+    const prepared = orders.filter((o: any) => o.status === 'Disiapkan Gudang').length;
+    const total = orders.length;
+    return { confirmed, prepared, total };
+  }, [orders]);
 
   return (
     <PageTransition>
@@ -192,11 +197,9 @@ export default function WarehousePrepareTable() {
         </motion.div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          <StatCard title="Order Menunggu" value={totalItems} subtitle="Perlu disiapkan" icon={Package} gradient="bg-gradient-to-br from-blue-500 to-blue-600" delay={0.1} />
-
-          <StatCard title="Total Tabung" value="N/A" subtitle="Harus disiapkan" icon={CheckCircle} gradient="bg-gradient-to-br from-green-500 to-green-600" delay={0.2} />
-
-          <StatCard title="Order Mendesak" value="N/A" subtitle="> 24 jam" icon={AlertCircle} gradient="bg-gradient-to-br from-red-500 to-red-600" delay={0.3} />
+          <StatCard title="Total Order" value={stats.total} subtitle="Perlu disiapkan" icon={Package} gradient="bg-gradient-to-br from-gray-500 to-gray-600" delay={0.1} />
+          <StatCard title="Dikonfirmasi Sales" value={stats.confirmed} subtitle="Menunggu untuk disiapkan" icon={AlertCircle} gradient="bg-gradient-to-br from-blue-500 to-blue-600" delay={0.2} />
+          <StatCard title="Disiapkan Gudang" value={stats.prepared} subtitle="Sudah disiapkan" icon={CheckCircle} gradient="bg-gradient-to-br from-green-500 to-green-600" delay={0.3} />
         </div>
 
         {isEmpty ? (

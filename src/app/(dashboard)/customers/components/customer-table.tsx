@@ -73,7 +73,7 @@ export default function CustomerTable() {
     router.push(`${pathname}?${params.toString()}`);
   };
   const columns = useMemo(() => getColumns(handleDelete), []);
-  const canCreate = checkPermission(PERMISSIONS.warehouse.create);
+  const canCreate = checkPermission(PERMISSIONS.customer.create);
 
   return (
     <div className="space-y-4">
