@@ -1,4 +1,4 @@
-import { BrickWallFire, Flame, GitBranch, LayoutDashboard, ShoppingCart, Users, UserSquare, Warehouse } from 'lucide-react';
+import { BrickWallFire, Flame, GitBranch, LayoutDashboard, ShoppingCart, Truck, Users, UserSquare, Warehouse } from 'lucide-react';
 import type { SidebarItem } from '@/types/sidebar';
 
 export const SIDEBAR_ITEMS: SidebarItem[] = [
@@ -58,11 +58,20 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     url: '/warehouse-prepare',
     icon: Warehouse,
     isActive: false,
+    permissionKey: 'warehousePrepare',
+  },
+  {
+    title: 'Pengiriman Saya',
+    url: '/driver-deliveries',
+    icon: Truck,
+    isActive: false,
   },
   {
     title: 'Tabung Gas',
     url: '/cylinders',
     icon: BrickWallFire,
+    isActive: false,
+    permissionKey: 'cylinder',
   },
   {
     title: 'Cabang',

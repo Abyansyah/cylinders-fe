@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Search, Eye, Edit, MoreHorizontal, Package, Calendar, User, TrendingUp, XCircle, X } from 'lucide-react';
+import { Plus, Search, Eye, Edit, MoreHorizontal, Package, Calendar, User, TrendingUp, XCircle, X, Truck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -253,6 +253,7 @@ export default function OrderTable() {
         cell: ({ row }) => {
           const order = row.original;
           const canBeCancelled = order.status !== 'Selesai' && order.status !== 'Dibatalkan Sales';
+          const isReadyToShip = order.status === 'Siap Kirim';
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -267,6 +268,14 @@ export default function OrderTable() {
                     Detail
                   </Link>
                 </DropdownMenuItem>
+                {isReadyToShip && (
+                  <DropdownMenuItem asChild>
+                    <Link href={`/orders/${order.id}/driver-prepare`} className="flex items-center">
+                      <Truck className="mr-2 h-4 w-4" />
+                      Atur Pengiriman
+                    </Link>
+                  </DropdownMenuItem>
+                )}
                 {canBeCancelled && (
                   <DropdownMenuItem onClick={() => handleCancelClick(order)} className="text-red-500 flex items-center">
                     <XCircle className="mr-2 h-4 w-4" />

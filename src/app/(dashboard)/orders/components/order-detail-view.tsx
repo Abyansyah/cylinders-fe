@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Package, Calendar, User, MapPin, Building, FileText, Download, XCircle } from 'lucide-react';
+import { ArrowLeft, Package, Calendar, User, MapPin, Building, FileText, Download, XCircle, Truck, Mail, Phone, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,10 +9,11 @@ import { Separator } from '@/components/ui/separator';
 import { PageTransition } from '@/components/page-transition';
 import { CancelOrderModal } from '../components/cancel-order-modal';
 import Link from 'next/link';
-import {  cancelOrder } from '@/services/orderService';
+import { cancelOrder } from '@/services/orderService';
 import { Order } from '@/types/order';
 import useSWR from 'swr';
 import { toast } from 'sonner';
+import OrderTimeline from './order-timeline';
 
 const getStatusColor = (status: string) => {
   const colors: Record<string, string> = {
@@ -206,6 +207,83 @@ export default function OrderDetailPage({ initialOrder }: OrderDetailViewProps) 
               </Card>
             </motion.div>
 
+            {order.delivery && (
+              <>
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Truck className="h-5 w-5" />
+                        Driver yang Mengantar
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="space-y-3">
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground">Nama Driver</p>
+                            <p className="font-medium">{order.delivery.driver.name}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground">Email</p>
+                            <div className="flex items-center gap-2">
+                              <Mail className="h-4 w-4 text-muted-foreground" />
+                              <p className="text-sm">{order.delivery.driver.email}</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="space-y-3">
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground">No. Telepon</p>
+                            <div className="flex items-center gap-2">
+                              <Phone className="h-4 w-4 text-muted-foreground" />
+                              <p className="text-sm">+{order.delivery.driver.phone_number}</p>
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground">Nomor Kendaraan</p>
+                            <div className="flex items-center gap-2">
+                              <Truck className="h-4 w-4 text-muted-foreground" />
+                              <p className="text-sm font-mono bg-muted px-2 py-1 rounded">{order.delivery.vehicle_number}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <FileText className="h-5 w-5" />
+                        Surat Jalan
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
+                        <div className="space-y-1">
+                          <p className="font-medium">Dokumen Surat Jalan</p>
+                          <p className="text-sm text-muted-foreground">
+                            No. Dokumen: <span className="font-mono">{order.delivery.surat_jalan_number}</span>
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button variant="outline" size="sm" asChild>
+                            <Link href={`/order-docs/${order.delivery?.tracking_number}`}>
+                              <Eye className="h-4 w-4 mr-2" />
+                              View Surat Jalan
+                            </Link>
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </>
+            )}
+
             {/* Notes */}
             {(order.notes_customer || order.notes_internal) && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
@@ -295,29 +373,13 @@ export default function OrderDetailPage({ initialOrder }: OrderDetailViewProps) 
               </Card>
             </motion.div>
 
-            {/* Timeline */}
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
               <Card>
                 <CardHeader>
                   <CardTitle>Timeline</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 bg-green-500 rounded-full" />
-                      <div className="text-sm">
-                        <p className="font-medium">Order Dibuat</p>
-                        <p className="text-muted-foreground">{new Date(order.createdAt).toLocaleDateString('id-ID')}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full" />
-                      <div className="text-sm">
-                        <p className="font-medium">Status: {order.status}</p>
-                        <p className="text-muted-foreground">{new Date(order.updatedAt).toLocaleDateString('id-ID')}</p>
-                      </div>
-                    </div>
-                  </div>
+                  <OrderTimeline history={order.history} />
                 </CardContent>
               </Card>
             </motion.div>

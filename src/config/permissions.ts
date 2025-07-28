@@ -54,4 +54,7 @@ export const PERMISSIONS = {
     update: 'order:update',
     cancel: 'order:cancel',
   },
+  driverDelivery: {
+    view: 'delivery:view_own_active',
+  },
 } as const;

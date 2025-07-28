@@ -23,6 +23,32 @@ export interface Order {
     name: string;
   };
   items: OrderItem[];
+  history: OrderHistory[];
+  delivery: Delivery | null;
+}
+
+export interface OrderHistory {
+  status: string;
+  notes: string;
+  timestamp: string;
+  user: {
+    id: number;
+    name: string;
+  } | null;
+}
+
+export interface Delivery {
+  id: number;
+  status: string;
+  surat_jalan_number: string;
+  vehicle_number: string;
+  tracking_number: string | null;
+  driver: {
+    id: number;
+    name: string;
+    phone_number: string;
+    email: string;
+  };
 }
 
 export interface OrderItem {

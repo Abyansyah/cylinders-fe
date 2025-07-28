@@ -1,4 +1,6 @@
 import api from '@/lib/api';
+import { DeliveryAssignment, DeliveryDocument } from '@/types/delivery';
+import { DriverDelivery } from '@/types/driver-delivery';
 import type { CreateOrderRequest, GetOrdersParams, Order, OrdersApiResponse, OrderStats, OrderStatsApiResponse, PrepareOrderDetail } from '@/types/order';
 import { cache } from 'react';
 
@@ -89,4 +91,27 @@ export const markOrderAsPrepared = async (orderId: number): Promise<void> => {
 export const unassignAllCylinders = async (orderId: number): Promise<void> => {
   const { data } = await api.put(`/orders/warehouse/orders/${orderId}/unassign-all`);
   return data;
+};
+
+export const createDelivery = async (payload: DeliveryAssignment): Promise<any> => {
+  const { data } = await api.post('/deliveries', payload);
+  return data;
+};
+
+export const getDeliveryDocument = cache(async (id: string): Promise<DeliveryDocument> => {
+  const { data } = await api.get(`/deliveries/document/${id}`);
+  return data.data;
+});
+
+export const getDriverDeliveries = async (): Promise<{ data: DriverDelivery[] }> => {
+  const { data } = await api.get('/deliveries/driver/active');
+  return data;
+};
+
+export const pickupFromWarehouse = async (deliveryId: number): Promise<void> => {
+  await api.put(`/deliveries/${deliveryId}/pickup-from-warehouse`);
+};
+
+export const completeAtCustomer = async (deliveryId: number): Promise<void> => {
+  await api.put(`/deliveries/${deliveryId}/complete-at-customer`);
 };

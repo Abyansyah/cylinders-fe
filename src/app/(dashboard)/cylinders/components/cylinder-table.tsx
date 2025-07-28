@@ -17,7 +17,6 @@ import CylinderFilter from './cylinder-filter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { DataTable } from '@/components/ui/data-table/data-table';
 import { BarcodeScanner } from '@/components/features/barcode-scanner';
-import { set } from 'date-fns';
 
 export default function CylinderTable() {
   const router = useRouter();
@@ -62,6 +61,9 @@ export default function CylinderTable() {
 
   const swrKey = useMemo(() => ['/cylinders', JSON.stringify(queryParams)], [queryParams]);
   const { data: apiResponse, isLoading } = useSWR(swrKey, () => getCylinders(queryParams), { keepPreviousData: true });
+
+  console.log(apiResponse?.data);
+  
 
   const pagination = useMemo<PaginationState>(() => ({ pageIndex: page - 1, pageSize: limit }), [page, limit]);
   const handlePaginationChange = (updater: any) => {

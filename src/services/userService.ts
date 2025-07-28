@@ -1,4 +1,5 @@
 import api from '@/lib/api';
+import { Driver } from '@/types/delivery';
 import { Role } from '@/types/role';
 import { ApiUser, UsersApiResponse } from '@/types/user';
 import { Warehouse } from '@/types/warehouse';
@@ -46,4 +47,9 @@ export const getRoles = async (): Promise<Role[]> => {
 export const getWarehouses = async (): Promise<Warehouse[]> => {
   const { data } = await api.get('/warehouses');
   return data.data;
+};
+
+export const getDrivers = async (): Promise<{ data: Driver[] }> => {
+  const { data } = await api.get('/users/drivers');
+  return data;
 };

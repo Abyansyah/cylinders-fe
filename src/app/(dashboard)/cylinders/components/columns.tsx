@@ -51,7 +51,7 @@ export const getColumns = (): ColumnDef<Cylinder>[] => [
   {
     accessorKey: 'currentWarehouse',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Gudang" />,
-    cell: ({ row }) => <div className="text-sm">{row.original.currentWarehouse.name}</div>,
+    cell: ({ row }) => <div className="text-sm">{row.original.currentWarehouse?.name}</div>,
   },
   {
     accessorKey: 'manufacture_date',
