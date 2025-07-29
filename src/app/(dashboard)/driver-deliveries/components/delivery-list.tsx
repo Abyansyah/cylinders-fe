@@ -307,7 +307,7 @@ export default function DriverDeliveriesList() {
 
                   <div className="flex gap-2">
                     <Button variant="outline" size="sm" asChild>
-                      <Link href={`/orders/${delivery.order_id}`}>
+                      <Link href={`/driver-deliveries/${delivery.id}`}>
                         <Eye className="w-4 h-4 mr-2" />
                         Lihat Detail
                       </Link>

@@ -1,6 +1,6 @@
 import api from '@/lib/api';
 import { DeliveryAssignment, DeliveryDocument } from '@/types/delivery';
-import { DriverDelivery } from '@/types/driver-delivery';
+import { DriverDelivery, DriverDeliveryDetail } from '@/types/driver-delivery';
 import type { CreateOrderRequest, GetOrdersParams, Order, OrdersApiResponse, OrderStats, OrderStatsApiResponse, PrepareOrderDetail } from '@/types/order';
 import { cache } from 'react';
 
@@ -114,4 +114,9 @@ export const pickupFromWarehouse = async (deliveryId: number): Promise<void> => 
 
 export const completeAtCustomer = async (deliveryId: number): Promise<void> => {
   await api.put(`/deliveries/${deliveryId}/complete-at-customer`);
+};
+
+export const getDeliveryById = async (id: number): Promise<{ data: DriverDeliveryDetail }> => {
+  const { data } = await api.get(`/deliveries/${id}`);
+  return data;
 };
