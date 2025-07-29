@@ -69,12 +69,6 @@ export const getColumns = (onDelete: (item: Branch) => void): ColumnDef<Branch>[
                   </Link>
                 </DropdownMenuItem>
               )}
-              {canDelete && (
-                <DropdownMenuItem className="text-red-500" onClick={() => onDelete(row.original)}>
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  Hapus
-                </DropdownMenuItem>
-              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

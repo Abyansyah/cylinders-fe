@@ -1,6 +1,5 @@
 'use client';
 
-// Impor semua yang diperlukan, sama seperti table-table sebelumnya
 import { useMemo, useState, useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import useSWR, { mutate } from 'swr';
@@ -38,8 +37,14 @@ export default function ProductTable() {
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', '1');
-    if (debouncedSearch) params.set('search', debouncedSearch);
-    else params.delete('search');
+    if (debouncedSearch) {
+      params.set('search', debouncedSearch);
+    } else {
+      params.delete('search');
+    }
+    if (searchParams.get('search') !== debouncedSearch) {
+      router.push(`${pathname}?${params.toString()}`);
+    }
   }, [debouncedSearch, pathname, router, searchParams]);
 
   useEffect(() => {

@@ -70,15 +70,6 @@ export const getColumns = (onDelete: (item: Product) => void): ColumnDef<Product
                   </Link>
                 </DropdownMenuItem>
               )}
-              {canDelete && (
-                <>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-red-500" onClick={() => onDelete(row.original)}>
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Hapus
-                  </DropdownMenuItem>
-                </>
-              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
