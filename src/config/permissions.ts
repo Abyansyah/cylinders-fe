@@ -57,4 +57,9 @@ export const PERMISSIONS = {
   driverDelivery: {
     view: 'delivery:view_own_active',
   },
+  returnreceipt: {
+    view_driver: 'returnreceipt:view_own',
+    view_detail: 'returnreceipt:view_detail',
+    view_all: 'returnreceipt:view_all',
+  },
 } as const;

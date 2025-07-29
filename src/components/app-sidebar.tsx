@@ -23,6 +23,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { state } = useSidebar();
   const { expandedGroup, setExpandedGroup } = useSidebarMenu();
   const { user } = useAuthStore();
+  const isSuperAdmin = user?.role.role_name === 'Super Admin';
 
   React.useEffect(() => {
     const currentGroup = SIDEBAR_ITEMS.find((item) => item.items?.some((subItem) => pathname === subItem.url || (pathname.startsWith(subItem.url + '/') && subItem.url !== '/')));
@@ -52,34 +53,37 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   };
 
   const accessibleMenuItems = React.useMemo(() => {
-    return (
-      SIDEBAR_ITEMS.map((item) => {
-        if (item.items) {
-          const accessibleSubItems = item.items.filter((subItem) => {
-            if (!subItem.permissionKey) return true;
+    return SIDEBAR_ITEMS.map((item) => {
+      if (item.onlyPermission && isSuperAdmin) {
+        return null;
+      }
 
-            const permissionConfig: any = PERMISSIONS[subItem.permissionKey as keyof typeof PERMISSIONS];
+      if (item.items) {
+        const accessibleSubItems = item.items.filter((subItem) => {
+          if (subItem.onlyPermission && isSuperAdmin) return false;
+          if (!subItem.permissionKey) return true;
 
-            return checkPermission(permissionConfig?.view);
-          });
+          const permissionConfig: any = PERMISSIONS[subItem.permissionKey as keyof typeof PERMISSIONS];
+          const requiredPermission = permissionConfig?.view || permissionConfig?.view_all;
+          return checkPermission(requiredPermission);
+        });
 
-          return { ...item, items: accessibleSubItems };
-        }
+        return { ...item, items: accessibleSubItems };
+      }
 
-        if (item.permissionKey) {
-          const permissionConfig: any = PERMISSIONS[item.permissionKey as keyof typeof PERMISSIONS];
-          return checkPermission(permissionConfig?.view) ? item : null;
-        }
+      if (item.permissionKey) {
+        const permissionConfig: any = PERMISSIONS[item.permissionKey as keyof typeof PERMISSIONS];
+        const requiredPermission = permissionConfig?.view || permissionConfig?.view_all;
+        return checkPermission(requiredPermission) ? item : null;
+      }
 
-        return item;
-      })
-        .filter((item): item is SidebarItem => {
-          if (!item) return false;
-          if (item.items && item.items.length === 0) return false;
-          return true;
-        })
-    );
-  }, [checkPermission]);
+      return item;
+    }).filter((item): item is SidebarItem => {
+      if (!item) return false;
+      if (item.items && item.items.length === 0) return false;
+      return true;
+    });
+  }, [checkPermission, isSuperAdmin]);
 
   return (
     <Sidebar collapsible="icon" {...props}>

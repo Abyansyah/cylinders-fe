@@ -10,6 +10,7 @@ export interface SidebarItem {
   iconBg?: string
   items?: SidebarSubItem[]
   permissionKey?: string
+  onlyPermission?: boolean
 }
 
 export interface SidebarSubItem {
@@ -17,4 +18,5 @@ export interface SidebarSubItem {
   url: string
   id: string
   permissionKey?: string
+   onlyPermission?: boolean
 }

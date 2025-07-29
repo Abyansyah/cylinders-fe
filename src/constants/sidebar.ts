@@ -1,4 +1,4 @@
-import { BrickWallFire, Flame, GitBranch, LayoutDashboard, ShoppingCart, Truck, Users, UserSquare, Warehouse } from 'lucide-react';
+import { BrickWallFire, FileText, Flame, GitBranch, LayoutDashboard, Package, ShoppingCart, Truck, Users, UserSquare, Warehouse } from 'lucide-react';
 import type { SidebarItem } from '@/types/sidebar';
 
 export const SIDEBAR_ITEMS: SidebarItem[] = [
@@ -66,6 +66,21 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     icon: Truck,
     isActive: false,
     permissionKey: 'driverDelivery',
+  },
+  {
+    title: 'TTBK',
+    url: '/ttbk',
+    icon: Package,
+    isActive: false,
+    permissionKey: 'returnreceipt',
+    // onlyPermission: true,
+  },
+  {
+    title: 'Manage TTBK',
+    url: '/manage-ttbk',
+    icon: FileText,
+    isActive: false,
+    permissionKey: 'returnreceipt',
   },
   {
     title: 'Tabung Gas',

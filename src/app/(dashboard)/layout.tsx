@@ -19,7 +19,7 @@ export default async function DashboardLayout({
               <AppSidebar />
               <div className="flex-1 flex flex-col min-w-0">
                 <TopNavigation />
-                <main className="flex-1 p-3 sm:p-6 bg-gray-50/50 dark:bg-gray-900/50 overflow-auto pt-16">
+                <main className="flex-1 p-3 sm:p-6 bg-gray-50/50 dark:bg-gray-900/50 overflow-auto pt-1">
                   <div className="max-w-full">{children}</div>
                 </main>
               </div>
