@@ -58,8 +58,14 @@ export const PERMISSIONS = {
     view: 'delivery:view_own_active',
   },
   returnreceipt: {
-    view_driver: 'returnreceipt:view_own',
+    view: 'returnreceipt:view_own',
     view_detail: 'returnreceipt:view_detail',
     view_all: 'returnreceipt:view_all',
   },
+  laporanTTBK: {
+    view: 'returnreceipt:view_all',
+  },
+  penerimaanTTBK:{
+    view: 'returnreceipt:view_incoming'
+  }
 } as const;

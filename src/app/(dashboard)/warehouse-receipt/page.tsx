@@ -2,18 +2,18 @@ import { Metadata } from 'next';
 import { PageTransition } from '@/components/page-transition';
 import { PermissionGuard } from '@/components/guards/permission-guard';
 import { PERMISSIONS } from '@/config/permissions';
-import ManagementTTBKList from './components/management-ttbk-list';
+import WarehouseReceiptList from './components/warehouse-receipt-list';
 
 export const metadata: Metadata = {
-  title: 'Manajemen TTBK',
-  description: 'Kelola dan pantau semua Tanda Terima Barang Kosong (TTBK).',
+  title: 'Penerimaan Gudang',
+  description: 'Kelola penerimaan tabung yang kembali ke gudang dari customer.',
 };
 
-export default function ManagementTTBKPage() {
+export default function WarehouseReceiptPage() {
   return (
-    <PermissionGuard requiredPermission={PERMISSIONS.laporanTTBK.view}>
+    <PermissionGuard requiredPermission={PERMISSIONS.penerimaanTTBK.view}>
       <PageTransition>
-        <ManagementTTBKList />
+        <WarehouseReceiptList />
       </PageTransition>
     </PermissionGuard>
   );

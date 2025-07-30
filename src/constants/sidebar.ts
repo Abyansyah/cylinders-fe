@@ -59,6 +59,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     icon: Warehouse,
     isActive: false,
     permissionKey: 'warehousePrepare',
+    onlyPermission: true,
   },
   {
     title: 'Pengiriman Saya',
@@ -66,6 +67,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     icon: Truck,
     isActive: false,
     permissionKey: 'driverDelivery',
+    onlyPermission: true,
   },
   {
     title: 'TTBK',
@@ -80,7 +82,15 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     url: '/manage-ttbk',
     icon: FileText,
     isActive: false,
-    permissionKey: 'returnreceipt',
+    permissionKey: 'laporanTTBK',
+  },
+  {
+    title: 'Penerimaan TTBK',
+    url: '/warehouse-receipt',
+    icon: FileText,
+    isActive: false,
+    permissionKey: 'penerimaanTTBK',
+    onlyPermission: true,
   },
   {
     title: 'Tabung Gas',

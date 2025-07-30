@@ -104,7 +104,7 @@ export default function CreateTTBKForm() {
     try {
       await createTTBK(formData as CreateTTBKRequest);
       toast.success('TTBK berhasil dibuat');
-      router.push('/driver-deliveries');
+      router.push('/ttbk');
     } catch (error: any) {
       toast.error('Gagal membuat TTBK', {
         description: error.response?.data?.message,
