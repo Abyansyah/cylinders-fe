@@ -65,7 +65,10 @@ export const PERMISSIONS = {
   laporanTTBK: {
     view: 'returnreceipt:view_all',
   },
-  penerimaanTTBK:{
-    view: 'returnreceipt:view_incoming'
-  }
+  penerimaanTTBK: {
+    view: 'returnreceipt:view_incoming',
+  },
+  replacementBarcode: {
+    view: 'replacementbarcode:can_replace',
+  },
 } as const;

@@ -98,13 +98,13 @@ export function TopNavigation() {
         </div>
 
         <div className="ml-auto flex items-center gap-2">
-          <div className="relative hidden sm:block">
+          {/* <div className="relative hidden sm:block">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input type="search" placeholder="Search" className="w-48 lg:w-64 pl-8 pr-12" onClick={openCommandPalette} readOnly />
             <kbd className="pointer-events-none absolute right-2.5 top-2.5 hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 lg:flex">
               <span className="text-xs">⌘</span>K
             </kbd>
-          </div>
+          </div> */}
 
           <Button variant="ghost" size="icon" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} className="h-8 w-8">
             {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}

@@ -1,4 +1,4 @@
-import { BrickWallFire, FileText, Flame, GitBranch, LayoutDashboard, Package, ShoppingCart, Truck, Users, UserSquare, Warehouse } from 'lucide-react';
+import { BrickWallFire, FileText, Flame, GitBranch, LayoutDashboard, Package, QrCode, ShoppingCart, Truck, Users, UserSquare, Warehouse } from 'lucide-react';
 import type { SidebarItem } from '@/types/sidebar';
 
 export const SIDEBAR_ITEMS: SidebarItem[] = [
@@ -98,6 +98,13 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     icon: BrickWallFire,
     isActive: false,
     permissionKey: 'cylinder',
+  },
+  {
+    title: 'Replacement Barcode',
+    url: '/replacement-barcode',
+    icon: QrCode,
+    isActive: false,
+    permissionKey: 'replacementBarcode',
   },
   {
     title: 'Cabang',

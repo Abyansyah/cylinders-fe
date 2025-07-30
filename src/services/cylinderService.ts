@@ -3,6 +3,7 @@ import type { Cylinder, CylindersApiResponse, CylinderDetail } from '@/types/cyl
 import { cache } from 'react';
 import { GasType } from '@/types/gas-type';
 import { format } from 'date-fns';
+import { CylinderForReplacement } from '@/types/replacement-barcode';
 
 export type CylinderCreatePayload = {
   barcode_id: string;
@@ -85,4 +86,13 @@ export const exportCylinderHistory = async (cylinderId: number, formatType: 'pdf
 
   link.parentNode?.removeChild(link);
   window.URL.revokeObjectURL(url);
+};
+
+export const getCylinderForReplacement = async (serialNumber: string): Promise<CylinderForReplacement> => {
+  const { data } = await api.get(`/cylinders/detail-replacement/${serialNumber}`);
+  return data;
+};
+
+export const replaceBarcode = async (payload: { serial_number: string; new_barcode_id: string }): Promise<void> => {
+  await api.put('/cylinders/replace-barcode', payload);
 };
