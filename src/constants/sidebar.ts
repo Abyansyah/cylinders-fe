@@ -73,10 +73,10 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     icon: Package,
     isActive: false,
     permissionKey: 'returnreceipt',
-    // onlyPermission: true,
+    onlyPermission: true,
   },
   {
-    title: 'Manage TTBK',
+    title: 'Laporan TTBK',
     url: '/manage-ttbk',
     icon: FileText,
     isActive: false,

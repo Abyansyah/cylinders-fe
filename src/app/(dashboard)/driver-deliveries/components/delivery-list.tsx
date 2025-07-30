@@ -16,6 +16,8 @@ import type { DriverDelivery } from '@/types/driver-delivery';
 import { getDriverDeliveries, pickupFromWarehouse, completeAtCustomer } from '@/services/orderService';
 import { toast } from 'sonner';
 import useSWR from 'swr';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 
 const statusConfig: { [key: string]: { color: string; icon: React.ElementType; action: string | null } } = {
   'Menunggu Pickup': {
@@ -44,17 +46,18 @@ interface ConfirmationModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   delivery: DriverDelivery | null;
-  onConfirm: () => Promise<void>;
+  onConfirm: (notes: string) => Promise<void>;
 }
 
 function ConfirmationModal({ open, onOpenChange, delivery, onConfirm }: ConfirmationModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const isMobile = useIsMobile();
+  const [notes, setNotes] = useState('');
 
   const handleConfirm = async () => {
     setIsLoading(true);
     try {
-      await onConfirm();
+      await onConfirm(notes);
       onOpenChange(false);
     } catch (error) {
       console.error('Error updating delivery:', error);
@@ -90,6 +93,13 @@ function ConfirmationModal({ open, onOpenChange, delivery, onConfirm }: Confirma
             <span className="font-medium">{delivery.order.customer.customer_name}</span>
           </div>
         </div>
+
+        {!isPickup && (
+          <div className="w-full space-y-2">
+            <Label htmlFor="driver-notes">Catatan Driver (Opsional)</Label>
+            <Textarea id="driver-notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Tambahkan catatan jika ada..." />
+          </div>
+        )}
 
         <div className="flex items-center space-x-2 text-sm text-amber-600 bg-amber-50 p-3 rounded-lg w-full">
           <AlertTriangle className="h-4 w-4 flex-shrink-0" />
@@ -198,7 +208,7 @@ export default function DriverDeliveriesList() {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
-  const handleStatusUpdate = async () => {
+  const handleStatusUpdate = async (notes: string) => {
     if (!selectedDelivery) return;
 
     try {
@@ -206,7 +216,7 @@ export default function DriverDeliveriesList() {
         await pickupFromWarehouse(selectedDelivery.id);
         toast.success('Status berhasil diubah menjadi "Dalam Perjalanan"');
       } else if (selectedDelivery.status === 'Dalam Perjalanan') {
-        await completeAtCustomer(selectedDelivery.id);
+        await completeAtCustomer(selectedDelivery.id, notes);
         toast.success('Pesanan berhasil diselesaikan');
       }
       mutate();
@@ -342,7 +352,7 @@ export default function DriverDeliveriesList() {
         </motion.div>
       )}
 
-      <ConfirmationModal open={showConfirmation} onOpenChange={setShowConfirmation} delivery={selectedDelivery} onConfirm={handleStatusUpdate} />
+      <ConfirmationModal open={showConfirmation} onOpenChange={setShowConfirmation} delivery={selectedDelivery} onConfirm={(notes) => handleStatusUpdate(notes)} />
     </div>
   );
 }

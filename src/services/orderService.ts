@@ -112,8 +112,8 @@ export const pickupFromWarehouse = async (deliveryId: number): Promise<void> => 
   await api.put(`/deliveries/${deliveryId}/pickup-from-warehouse`);
 };
 
-export const completeAtCustomer = async (deliveryId: number): Promise<void> => {
-  await api.put(`/deliveries/${deliveryId}/complete-at-customer`);
+export const completeAtCustomer = async (deliveryId: number, notes_driver: string): Promise<void> => {
+  await api.put(`/deliveries/${deliveryId}/complete-at-customer`, { notes_driver });
 };
 
 export const getDeliveryById = async (id: number): Promise<{ data: DriverDeliveryDetail }> => {

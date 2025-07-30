@@ -15,6 +15,8 @@ import { DriverDeliveryDetail } from '@/types/driver-delivery';
 import { toast } from 'sonner';
 import { pickupFromWarehouse, completeAtCustomer, getDeliveryById } from '@/services/orderService';
 import useSWR from 'swr';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 
 const statusConfig: { [key: string]: { color: string; icon: React.ElementType; action: string | null } } = {
   'Menunggu Pickup': {
@@ -43,17 +45,18 @@ interface ConfirmationModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   delivery: DriverDeliveryDetail | null;
-  onConfirm: () => Promise<void>;
+  onConfirm: (notes: string) => Promise<void>;
 }
 
 function ConfirmationModal({ open, onOpenChange, delivery, onConfirm }: ConfirmationModalProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [notes, setNotes] = useState('');
   const isMobile = useIsMobile();
 
   const handleConfirm = async () => {
     setIsLoading(true);
     try {
-      await onConfirm();
+      await onConfirm(notes);
       onOpenChange(false);
     } catch (error) {
       console.error('Error updating delivery:', error);
@@ -88,6 +91,13 @@ function ConfirmationModal({ open, onOpenChange, delivery, onConfirm }: Confirma
             <span className="font-medium">{delivery.customer_info.customer_name}</span>
           </div>
         </div>
+
+        {!isPickup && (
+          <div className="w-full space-y-2">
+            <Label htmlFor="driver-notes">Catatan Driver (Opsional)</Label>
+            <Textarea id="driver-notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Tambahkan catatan jika ada..." />
+          </div>
+        )}
 
         <div className="flex items-center space-x-2 text-sm text-amber-600 bg-amber-50 p-3 rounded-lg w-full">
           <AlertTriangle className="h-4 w-4 flex-shrink-0" />
@@ -157,7 +167,7 @@ export default function DeliveryDetailView({ initialDelivery }: { initialDeliver
 
   const [showConfirmation, setShowConfirmation] = useState(false);
 
-  const handleStatusUpdate = async () => {
+  const handleStatusUpdate = async (notes: string) => {
     if (!delivery) return;
 
     try {
@@ -165,7 +175,7 @@ export default function DeliveryDetailView({ initialDelivery }: { initialDeliver
         await pickupFromWarehouse(delivery.delivery_id);
         toast.success('Status berhasil diubah menjadi "Dalam Perjalanan"');
       } else if (delivery.delivery_status === 'Dalam Perjalanan') {
-        await completeAtCustomer(delivery.delivery_id);
+        await completeAtCustomer(delivery.delivery_id, notes);
         toast.success('Pesanan berhasil diselesaikan');
       }
       mutate();
@@ -356,7 +366,7 @@ export default function DeliveryDetailView({ initialDelivery }: { initialDeliver
         )}
       </motion.div>
 
-      <ConfirmationModal open={showConfirmation} onOpenChange={setShowConfirmation} delivery={delivery} onConfirm={handleStatusUpdate} />
+      <ConfirmationModal open={showConfirmation} onOpenChange={setShowConfirmation} delivery={delivery} onConfirm={(notes) => handleStatusUpdate(notes)} />
     </div>
   );
 }

@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import type { ColumnDef, PaginationState } from '@tanstack/react-table';
-import { MoreHorizontal, Eye, Calendar, User, Truck, Package, RotateCcw, Search } from 'lucide-react';
+import { MoreHorizontal, Eye, Calendar, User, Truck, Package, RotateCcw, Search, Download, FileText, FileSpreadsheet } from 'lucide-react';
 import { DataTable } from '@/components/ui/data-table/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header';
 import { Button } from '@/components/ui/button';
@@ -23,6 +23,7 @@ import { getManagementTTBKs } from '@/services/ttbkService';
 import { getDrivers } from '@/services/userService';
 import { getWarehouses } from '@/services/warehouseService';
 import { useDebounce } from '@/hooks/use-debounce';
+import Link from 'next/link';
 
 export default function ManagementTTBKList() {
   const router = useRouter();
@@ -86,6 +87,14 @@ export default function ManagementTTBKList() {
       default:
         return 'bg-gray-500 hover:bg-gray-600';
     }
+  };
+
+  const buildExportUrl = (formatType: 'pdf' | 'excel') => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('format', formatType);
+    params.delete('page');
+    params.delete('limit');
+    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/return-receipts/export?${params.toString()}`;
   };
 
   const columns: ColumnDef<ManagementTTBKItem>[] = [
@@ -175,9 +184,33 @@ export default function ManagementTTBKList() {
   return (
     <PageTransition>
       <div className="space-y-4">
-        <div>
-          <h1 className="text-xl font-bold">Management TTBK</h1>
-          <p className="text-sm text-muted-foreground">Kelola dan pantau semua Tanda Terima Barang Kosong</p>
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-xl font-bold">Management TTBK</h1>
+            <p className="text-sm text-muted-foreground">Kelola dan pantau semua Tanda Terima Barang Kosong</p>
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button>
+                <Download className="mr-2 h-4 w-4" />
+                Export
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem asChild>
+                <Link href={buildExportUrl('pdf')} target="_blank" rel="noopener noreferrer">
+                  <FileText className="mr-2 h-4 w-4" />
+                  Export as PDF
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={buildExportUrl('excel')} target="_blank" rel="noopener noreferrer">
+                  <FileSpreadsheet className="mr-2 h-4 w-4" />
+                  Export as Excel
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-4 flex-wrap p-4 bg-muted/50 rounded-lg">
