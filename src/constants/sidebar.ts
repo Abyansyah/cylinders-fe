@@ -1,4 +1,4 @@
-import { BrickWallFire, FileText, Flame, GitBranch, LayoutDashboard, Package, QrCode, ShoppingCart, Truck, Users, UserSquare, Warehouse } from 'lucide-react';
+import { BrickWallFire, FileText, Flame, GitBranch, LayoutDashboard, Package, QrCode, ShoppingCart, TrendingUp, Truck, Users, UserSquare, Warehouse } from 'lucide-react';
 import type { SidebarItem } from '@/types/sidebar';
 
 export const SIDEBAR_ITEMS: SidebarItem[] = [
@@ -105,6 +105,13 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     icon: QrCode,
     isActive: false,
     permissionKey: 'replacementBarcode',
+  },
+  {
+    title: 'Update Pinjaman Relasi',
+    url: '/loan-adjustments',
+    icon: TrendingUp,
+    isActive: false,
+    permissionKey: 'loanAdjustment',
   },
   {
     title: 'Cabang',

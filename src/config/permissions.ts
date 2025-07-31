@@ -71,4 +71,11 @@ export const PERMISSIONS = {
   replacementBarcode: {
     view: 'replacementbarcode:can_replace',
   },
+  loanAdjustment: {
+    view: 'loan_adjustment:view_all',
+    view_detail: 'loan_adjustment:view_detail',
+    create: 'loan_adjustment:add',
+    delete: 'loan_adjustment:remove',
+    transfer: 'loan_adjustment:transfer',
+  },
 } as const;
