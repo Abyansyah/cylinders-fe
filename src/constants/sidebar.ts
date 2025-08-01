@@ -78,13 +78,6 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     onlyPermission: true,
   },
   {
-    title: 'Laporan TTBK',
-    url: '/manage-ttbk',
-    icon: FileText,
-    isActive: false,
-    permissionKey: 'laporanTTBK',
-  },
-  {
     title: 'Penerimaan TTBK',
     url: '/warehouse-receipt',
     icon: FileText,
@@ -153,6 +146,26 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
         url: '/role',
         id: 'users-roles',
         permissionKey: 'roles',
+      },
+    ],
+  },
+  {
+    title: 'Laporan',
+    url: '/manage-ttbk',
+    icon: FileText,
+    isActive: false,
+    items: [
+      {
+        title: 'Laporan TTBK',
+        url: '/manage-ttbk',
+        id: 'manage-ttbk',
+        permissionKey: 'laporanTTBK',
+      },
+      {
+        title: 'Laporan Pengiriman',
+        url: '/report-deliveries',
+        id: 'delivery-report',
+        permissionKey: 'laporanTTBK',
       },
     ],
   },

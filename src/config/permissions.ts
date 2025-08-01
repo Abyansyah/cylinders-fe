@@ -78,4 +78,7 @@ export const PERMISSIONS = {
     delete: 'loan_adjustment:remove',
     transfer: 'loan_adjustment:transfer',
   },
+  reportDelivery:{
+    view: 'report:view_deliveries'
+  }
 } as const;
