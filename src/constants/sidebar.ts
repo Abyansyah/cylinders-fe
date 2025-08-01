@@ -167,6 +167,12 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
         id: 'delivery-report',
         permissionKey: 'laporanTTBK',
       },
+      {
+        title: 'Laporan Stok Gudang',
+        url: '/warehouse-stock-report',
+        id: 'delivery-report',
+        permissionKey: 'laporanTTBK',
+      },
     ],
   },
 ];
