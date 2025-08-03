@@ -84,4 +84,8 @@ export const PERMISSIONS = {
   reportStockWarehouse: {
     view: 'report:view_warehouse_stock',
   },
+  audit: {
+    view_all: 'audit:view_all',
+    create: 'audit:create',
+  }
 } as const;
