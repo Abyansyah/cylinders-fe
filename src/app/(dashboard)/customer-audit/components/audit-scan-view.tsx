@@ -101,7 +101,7 @@ export default function AuditScanView({ initialAuditData }: { initialAuditData: 
 
   return (
     <PageTransition>
-      <div className="flex-1 space-y-4 p-4 md:p-6">
+      <div className="flex-1 space-y-4 pt-2 md:pt-0">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <div className="flex items-center space-x-4">
             <Button variant="outline" size="icon" onClick={() => router.back()}>
