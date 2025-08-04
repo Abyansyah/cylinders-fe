@@ -180,6 +180,12 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
         id: 'delivery-report',
         permissionKey: 'laporanTTBK',
       },
+      {
+        title: 'Laporan Customer Audit',
+        url: '/customer-audit-report',
+        id: 'delivery-report',
+        permissionKey: 'laporanTTBK',
+      },
     ],
   },
 ];
