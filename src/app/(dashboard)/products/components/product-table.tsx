@@ -42,9 +42,6 @@ export default function ProductTable() {
     } else {
       params.delete('search');
     }
-    if (searchParams.get('search') !== debouncedSearch) {
-      router.push(`${pathname}?${params.toString()}`);
-    }
   }, [debouncedSearch, pathname, router, searchParams]);
 
   useEffect(() => {

@@ -87,5 +87,14 @@ export const PERMISSIONS = {
   audit: {
     view_all: 'audit:view_all',
     create: 'audit:create',
-  }
+  },
+  gasConversion: {
+    view_all: 'gas_conversion:view_all',
+    approve: 'gas_conversion:approve',
+    reassign_warehouse: 'gas_conversion:reassign',
+    create: 'gas_conversion:create',
+  },
+  gasConversionWarehouse: {
+    view_all: 'gas_conversion:execute',
+  },
 } as const;
