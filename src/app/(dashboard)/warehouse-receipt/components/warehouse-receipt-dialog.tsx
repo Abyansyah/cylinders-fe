@@ -135,7 +135,7 @@ export function WarehouseReceiptDialog({ open, onOpenChange, item, onConfirm }: 
   }
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
+    <Drawer open={open} onOpenChange={onOpenChange} repositionInputs={false}>
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle className="flex items-center gap-2">
@@ -191,7 +191,6 @@ export function WarehouseReceiptDialog({ open, onOpenChange, item, onConfirm }: 
             <p className="text-xs text-muted-foreground">Catatan ini akan disimpan sebagai dokumentasi penerimaan tabung.</p>
           </div>
         </div>
-
         <DrawerFooter>
           <Button onClick={handleConfirm} disabled={isLoading} className="bg-green-600 hover:bg-green-700">
             {isLoading ? (
