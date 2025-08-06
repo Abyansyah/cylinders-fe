@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge';
 export const getColumns = (onDelete: (item: CylinderProperty) => void): ColumnDef<CylinderProperty>[] => [
   {
     accessorKey: 'name',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Nama" />,
     cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
   },
   {

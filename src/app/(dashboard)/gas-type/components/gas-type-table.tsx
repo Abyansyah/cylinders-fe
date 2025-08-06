@@ -33,11 +33,13 @@ export default function GasTypeTable() {
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set('page', '1');
     if (debouncedSearch) {
       params.set('search', debouncedSearch);
     } else {
       params.delete('search');
+    }
+    if (searchParams.get('search') !== debouncedSearch) {
+      router.push(`${pathname}?${params.toString()}`);
     }
   }, [debouncedSearch, pathname, router, searchParams]);
 
@@ -87,9 +89,9 @@ export default function GasTypeTable() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Gas Type Management</h1>
+        <h1 className="text-2xl font-bold">Manajemen Tipe Gas</h1>
         <Button onClick={() => router.push('/gas-type/create')}>
-          <Plus className="mr-2 h-4 w-4" /> Add Gas Type
+          <Plus className="mr-2 h-4 w-4" /> Tambah Tipe Gas
         </Button>
       </div>
       <DataTable

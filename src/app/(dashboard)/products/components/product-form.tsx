@@ -19,8 +19,10 @@ import { Separator } from '@/components/ui/separator';
 import { createProductAction, updateProductAction } from '../actions/productActions';
 import type { Product } from '@/types/product';
 import type { GasTypesApiResponse } from '@/types/gas-type';
-import type { CylinderPropertiesApiResponse, CylinderProperty } from '@/types/cylinder-property';
+import type { CylinderPropertiesApiResponse } from '@/types/cylinder-property';
 import { ChevronLeft } from 'lucide-react';
+import { GasTypeSearchCombobox } from './gas-type-combobox';
+import { CylinderPropertySearchCombobox } from './cylinder-property-combobox';
 
 interface ProductFormProps {
   initialData?: Product | null;
@@ -115,20 +117,7 @@ export function ProductForm({ initialData, gasTypes, cylinderProperties }: Produ
                   render={({ field }) => (
                     <FormItem>
                       <RequiredFormLabel>Tipe Gas</RequiredFormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={String(field.value)}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Pilih tipe gas..." />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {gasTypes?.data.map((gt) => (
-                            <SelectItem key={gt.id} value={String(gt.id)}>
-                              {gt.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <GasTypeSearchCombobox value={String(field.value)} onChange={(val) => field.onChange(Number(val))} />
                       <FormMessage />
                     </FormItem>
                   )}
@@ -139,20 +128,7 @@ export function ProductForm({ initialData, gasTypes, cylinderProperties }: Produ
                   render={({ field }) => (
                     <FormItem>
                       <RequiredFormLabel>Properti Tabung</RequiredFormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={String(field.value)}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Pilih properti tabung..." />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {cylinderProperties?.data.map((cp) => (
-                            <SelectItem key={cp.id} value={String(cp.id)}>
-                              {cp.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <CylinderPropertySearchCombobox value={String(field.value)} onChange={(val) => field.onChange(Number(val))} />
                       <FormMessage />
                     </FormItem>
                   )}

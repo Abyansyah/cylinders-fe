@@ -36,11 +36,13 @@ export default function CylinderPropertyTable() {
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set('page', '1');
     if (debouncedSearch) {
       params.set('search', debouncedSearch);
     } else {
       params.delete('search');
+    }
+     if (searchParams.get('search') !== debouncedSearch) {
+      router.push(`${pathname}?${params.toString()}`);
     }
   }, [debouncedSearch, pathname, router, searchParams]);
 
@@ -93,10 +95,10 @@ export default function CylinderPropertyTable() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Cylinder Properties</h1>
+        <h1 className="text-2xl font-bold">Properti Tabung</h1>
         {canCreate && (
           <Button onClick={() => router.push('/cylinder-properties/create')}>
-            <Plus className="mr-2 h-4 w-4" /> Add Property
+            <Plus className="mr-2 h-4 w-4" /> Tambah Properti Tabung
           </Button>
         )}
       </div>
@@ -108,7 +110,7 @@ export default function CylinderPropertyTable() {
         pagination={pagination}
         onPaginationChange={handlePaginationChange}
         search={{
-          placeholder: 'Search by name or material...',
+          placeholder: 'Cari properti tabung...',
           value: localSearch,
           onChange: setLocalSearch,
         }}

@@ -14,16 +14,16 @@ import type { GasType } from '@/types/gas-type';
 export const getColumns = (onDelete: (item: GasType) => void): ColumnDef<GasType>[] => [
   {
     accessorKey: 'name',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Nama" />,
     cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
   },
   {
     accessorKey: 'description',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Description" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Deksripsi" />,
   },
   {
     accessorKey: 'updatedAt',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Last Updated" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Terakhir diubah" />,
     cell: ({ row }) => new Date(row.original.updatedAt).toLocaleDateString('id-ID'),
   },
   {

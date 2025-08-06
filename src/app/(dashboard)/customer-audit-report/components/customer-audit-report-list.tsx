@@ -3,16 +3,14 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import type { ColumnDef, PaginationState } from '@tanstack/react-table';
-import { MoreHorizontal, Eye, Calendar, User, Truck, Package, RotateCcw, Search, Download, FileText, FileSpreadsheet, Building2, Filter, Users } from 'lucide-react';
+import { MoreHorizontal, Eye, Calendar, User, RotateCcw, Download, FileText, FileSpreadsheet, Building2, Filter, Users } from 'lucide-react';
 import { DataTable } from '@/components/ui/data-table/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
-import { Input } from '@/components/ui/input';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
 import type { DateRange } from 'react-day-picker';
@@ -26,7 +24,6 @@ import { CustomerSearchCombobox } from '../../loan-adjustments/components/custom
 import { AuditorSearchCombobox } from './auditor-search-combobox';
 import { BranchSearchCombobox } from './branch-search-combobox';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { DatePicker } from '@/components/ui/date-picker';
 
 const AUDIT_STATUS_OPTIONS = [
   { value: 'all', label: 'Semua Status' },

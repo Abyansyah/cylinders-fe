@@ -60,12 +60,12 @@ export function GasTypeForm({ initialData }: GasTypeFormProps) {
         <Button variant="outline" size="icon" onClick={() => router.push('/gas-type')}>
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        <h1 className="text-xl font-bold">{isEditMode ? 'Gas Type Details' : 'Create Gas Type'}</h1>
+        <h1 className="text-xl font-bold">{isEditMode ? 'Tipe Gas Details' : 'Tambah Tipe Gas'}</h1>
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>{isEditMode ? 'Edit Gas Type' : 'Create New Gas Type'}</CardTitle>
-          <CardDescription>Fill in the details below.</CardDescription>
+          <CardTitle>{isEditMode ? 'Edit Tipe Gas' : 'Tambah Tipe Gas'}</CardTitle>
+          <CardDescription>Isi form dibawah untuk {isEditMode ? 'mengedit' : 'menambahkan'} tipe gas</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -75,7 +75,7 @@ export function GasTypeForm({ initialData }: GasTypeFormProps) {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Gas Name</FormLabel>
+                    <FormLabel>Nama Gas</FormLabel>
                     <FormControl>
                       <Input placeholder="e.g., Oksigen (O2) Medis" {...field} />
                     </FormControl>
@@ -88,7 +88,7 @@ export function GasTypeForm({ initialData }: GasTypeFormProps) {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>Deskripsi</FormLabel>
                     <FormControl>
                       <Textarea rows={4} placeholder="Enter a detailed description..." {...field} />
                     </FormControl>
@@ -98,10 +98,10 @@ export function GasTypeForm({ initialData }: GasTypeFormProps) {
               />
               <div className="flex justify-end gap-2">
                 <Button type="button" variant="outline" onClick={() => router.back()}>
-                  Cancel
+                  Batal
                 </Button>
                 <Button type="submit" disabled={isPending}>
-                  {isPending ? 'Saving...' : 'Save Changes'}
+                  {isPending ? 'Saving...' : isEditMode ? 'Update Tipe Gas' : 'Tambah Tipe Gas'}
                 </Button>
               </div>
             </form>

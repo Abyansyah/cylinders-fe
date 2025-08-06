@@ -18,10 +18,10 @@ import { Separator } from '@/components/ui/separator';
 import { ChevronLeft } from 'lucide-react';
 
 const formSchema = z.object({
-  name: z.string().min(3, { message: 'Name must be at least 3 characters.' }),
-  size_cubic_meter: z.coerce.number({ invalid_type_error: 'Size must be a number.' }).positive({ message: 'Size must be a positive number.' }),
+  name: z.string().min(3, { message: 'Nama minimal terdiri dari 3 karakter.' }),
+  size_cubic_meter: z.coerce.number({ invalid_type_error: 'Ukuran harus berupa angka.' }).positive({ message: 'Size must be a positive number.' }),
   material: z.string().optional(),
-  max_age_years: z.coerce.number({ invalid_type_error: 'Max age must be a number.' }).int({ message: 'Max age must be a whole number.' }).positive({ message: 'Max age must be positive.' }),
+  max_age_years: z.coerce.number({ invalid_type_error: 'Usia maksimal harus berupa angka.' }).int({ message: 'Max age must be a whole number.' }).positive({ message: 'Max age must be positive.' }),
   notes: z.string().optional(),
 });
 
@@ -75,19 +75,19 @@ export function CylinderPropertyForm({ initialData }: CylinderPropertyFormProps)
         <Button variant="outline" size="icon" onClick={() => router.push('/cylinder-properties')}>
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        <h1 className="text-xl font-bold">{isEditMode ? 'Cylinder Property Details' : 'Create Cylinder Property'}</h1>
+        <h1 className="text-xl font-bold">{isEditMode ? 'Detail Properti tabung' : 'Tambah Properti tabung'}</h1>
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>{isEditMode ? 'Edit Cylinder Property' : 'Create New Cylinder Property'}</CardTitle>
-          <CardDescription>Fill in the form below to {isEditMode ? 'update the' : 'add a new'} cylinder property.</CardDescription>
+          <CardTitle>{isEditMode ? 'Edit Properti tabung' : 'Tambah Properti tabung'}</CardTitle>
+          <CardDescription>Isi form di bawah untuk {isEditMode ? 'edit' : 'tambah'} properti tabung.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <div>
-                <h3 className="text-lg font-medium">Main Specifications</h3>
-                <p className="text-sm text-muted-foreground">Core details of the cylinder property.</p>
+                <h3 className="text-lg font-medium">Spesifikasi Utama</h3>
+                <p className="text-sm text-muted-foreground">Detail utama dari properti tabung.</p>
                 <Separator className="my-4" />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField
@@ -95,7 +95,7 @@ export function CylinderPropertyForm({ initialData }: CylinderPropertyFormProps)
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <RequiredFormLabel>Property Name</RequiredFormLabel>
+                        <RequiredFormLabel>Nama Properti</RequiredFormLabel>
                         <FormControl>
                           <Input placeholder="e.g., Tabung Baja 6m³" {...field} />
                         </FormControl>
@@ -122,8 +122,8 @@ export function CylinderPropertyForm({ initialData }: CylinderPropertyFormProps)
               </div>
 
               <div>
-                <h3 className="text-lg font-medium">Technical Details</h3>
-                <p className="text-sm text-muted-foreground">Size and lifetime information.</p>
+                <h3 className="text-lg font-medium">Detail Teknis</h3>
+                <p className="text-sm text-muted-foreground">Infromasi volume dan usia maksimum</p>
                 <Separator className="my-4" />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField
@@ -135,7 +135,7 @@ export function CylinderPropertyForm({ initialData }: CylinderPropertyFormProps)
                         <FormControl>
                           <Input type="number" step="0.01" placeholder="e.g., 6.0" {...field} value={field.value ?? ''} />
                         </FormControl>
-                        <FormDescription>Volume capacity in cubic meters.</FormDescription>
+                        <FormDescription>Kapasitas volume dalam meter kubik.</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -145,11 +145,11 @@ export function CylinderPropertyForm({ initialData }: CylinderPropertyFormProps)
                     name="max_age_years"
                     render={({ field }) => (
                       <FormItem>
-                        <RequiredFormLabel>Max Age (Years)</RequiredFormLabel>
+                        <RequiredFormLabel>Usia Maksimal (Years)</RequiredFormLabel>
                         <FormControl>
                           <Input type="number" placeholder="e.g., 10" {...field} value={field.value ?? ''} />
                         </FormControl>
-                        <FormDescription>Recommended maximum usage life in years.</FormDescription>
+                        <FormDescription>Masa pakai maksimum yang direkomendasikan.</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -158,7 +158,7 @@ export function CylinderPropertyForm({ initialData }: CylinderPropertyFormProps)
               </div>
 
               <div>
-                <h3 className="text-lg font-medium">Additional Information</h3>
+                <h3 className="text-lg font-medium">Informasi Tambahan</h3>
                 <Separator className="my-2" />
                 <FormField
                   control={form.control}
@@ -167,7 +167,7 @@ export function CylinderPropertyForm({ initialData }: CylinderPropertyFormProps)
                     <FormItem>
                       <FormLabel>Notes</FormLabel>
                       <FormControl>
-                        <Textarea rows={4} placeholder="Enter any additional notes..." {...field} />
+                        <Textarea rows={4} placeholder="Masukkan catatan tambahan jika ada..." {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -177,10 +177,10 @@ export function CylinderPropertyForm({ initialData }: CylinderPropertyFormProps)
 
               <div className="flex justify-end gap-2 pt-4">
                 <Button type="button" variant="outline" onClick={() => router.back()}>
-                  Cancel
+                  Batal
                 </Button>
                 <Button type="submit" disabled={isPending}>
-                  {isPending ? 'Saving...' : 'Save Changes'}
+                  {isPending ? 'Saving...' : isEditMode ? 'Update Properti Tabung' : 'Tambah Properti Tabung'}
                 </Button>
               </div>
             </form>
