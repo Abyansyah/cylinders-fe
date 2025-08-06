@@ -121,7 +121,7 @@ export function ReplacementBarcodeDialog({ open, onOpenChange, cylinder, newBarc
 
   if (isMobile) {
     return (
-      <Drawer open={open} onOpenChange={onOpenChange}>
+      <Drawer open={open} onOpenChange={onOpenChange} repositionInputs={false}>
         <DrawerContent className="max-h-[90vh]">
           <DrawerHeader className="text-left">
             <DrawerTitle>Konfirmasi Penggantian Barcode</DrawerTitle>

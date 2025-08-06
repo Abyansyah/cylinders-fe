@@ -129,7 +129,7 @@ function ConfirmationModal({ open, onOpenChange, delivery, onConfirm }: Confirma
 
   if (isMobile) {
     return (
-      <Drawer open={open} onOpenChange={onOpenChange}>
+      <Drawer open={open} onOpenChange={onOpenChange} repositionInputs={false}>
         <DrawerContent>
           <DrawerHeader className="text-left">
             <DrawerTitle>{isPickup ? 'Konfirmasi Pengambilan' : 'Konfirmasi Penyelesaian'}</DrawerTitle>

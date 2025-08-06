@@ -53,7 +53,7 @@ export function ConfirmationDialog({ open, onOpenChange, title, description, onC
 
   if (isMobile) {
     return (
-      <Drawer open={open} onOpenChange={onOpenChange}>
+      <Drawer open={open} onOpenChange={onOpenChange} repositionInputs={false}>
         <DrawerContent className="px-4 pb-6">
           <DrawerHeader className="text-left px-0">
             <DrawerTitle>{title}</DrawerTitle>
