@@ -26,6 +26,8 @@ import { createTTBK } from '@/services/ttbkService';
 import useSWR from 'swr';
 import { useDebounce } from '@/hooks/use-debounce';
 import { BarcodeScanner } from '@/components/features/barcode-scanner';
+import { CustomerSearchCombobox } from '../../loan-adjustments/components/customer-search-combobox';
+import { WarehouseSearchCombobox } from '../../loan-adjustments/components/warehouse-search-combobox';
 
 export default function CreateTTBKForm() {
   const router = useRouter();
@@ -157,90 +159,12 @@ export default function CreateTTBKForm() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="customer">Customer *</Label>
-                  <Popover open={customerOpen} onOpenChange={setCustomerOpen}>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" role="combobox" aria-expanded={customerOpen} className="w-full justify-between bg-transparent">
-                        {selectedCustomer ? (
-                          <div className="text-left">
-                            <div className="font-medium">{selectedCustomer.customer_name}</div>
-                            <div className="text-sm text-gray-500">{selectedCustomer.company_name}</div>
-                          </div>
-                        ) : (
-                          'Pilih Customer'
-                        )}
-                        <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-full p-0">
-                      <Command>
-                        <CommandInput placeholder="Cari customer..." onValueChange={setCustomerSearch} />
-                        <CommandList>
-                          <CommandEmpty>Customer tidak ditemukan.</CommandEmpty>
-                          <CommandGroup>
-                            {customers.map((customer) => (
-                              <CommandItem
-                                key={customer.id}
-                                value={`${customer.customer_name} ${customer.company_name}`}
-                                onSelect={() => {
-                                  setFormData({ ...formData, customer_id: customer.id });
-                                  setCustomerOpen(false);
-                                }}
-                              >
-                                <div>
-                                  <div className="font-medium">{customer.customer_name}</div>
-                                  <div className="text-sm text-gray-500">{customer.company_name}</div>
-                                </div>
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+                  <CustomerSearchCombobox value={formData.customer_id?.toString() || ''} onChange={(value) => setFormData({ ...formData, customer_id: value ? parseInt(value, 10) : undefined })} />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="warehouse">Gudang Tujuan *</Label>
-                  <Popover open={warehouseOpen} onOpenChange={setWarehouseOpen}>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" role="combobox" aria-expanded={warehouseOpen} className="w-full justify-between bg-transparent">
-                        {selectedWarehouse ? (
-                          <div className="text-left">
-                            <div className="font-medium">{selectedWarehouse.name}</div>
-                            <div className="text-sm text-gray-500">{selectedWarehouse.address}</div>
-                          </div>
-                        ) : (
-                          'Pilih Gudang'
-                        )}
-                        <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-full p-0">
-                      <Command>
-                        <CommandInput placeholder="Cari gudang..." onValueChange={setWarehouseSearch} />
-                        <CommandList>
-                          <CommandEmpty>Gudang tidak ditemukan.</CommandEmpty>
-                          <CommandGroup>
-                            {warehouses.map((warehouse) => (
-                              <CommandItem
-                                key={warehouse.id}
-                                value={`${warehouse.name} ${warehouse.address}`}
-                                onSelect={() => {
-                                  setFormData({ ...formData, destination_warehouse_id: warehouse.id });
-                                  setWarehouseOpen(false);
-                                }}
-                              >
-                                <div>
-                                  <div className="font-medium">{warehouse.name}</div>
-                                  <div className="text-sm text-gray-500">{warehouse.address}</div>
-                                </div>
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+                  <WarehouseSearchCombobox value={formData.destination_warehouse_id?.toString() || ''} onChange={(value) => setFormData({ ...formData, destination_warehouse_id: value ? parseInt(value, 10) : undefined })} />
                 </div>
 
                 <div className="space-y-2">
