@@ -20,7 +20,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { checkPermission } = usePermission();
   const pathname = usePathname();
   const router = useRouter();
-  const { state } = useSidebar();
+  const { state, setOpenMobile } = useSidebar();
   const { expandedGroup, setExpandedGroup } = useSidebarMenu();
   const { user } = useAuthStore();
   const isSuperAdmin = user?.role.role_name === 'Super Admin';
@@ -37,6 +37,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const handleNavigation = (item: any) => {
     router.push(item.url);
+    if (window.innerWidth < 768) {
+      setOpenMobile(false);
+    }
   };
 
   const isItemActive = (item: any) => {

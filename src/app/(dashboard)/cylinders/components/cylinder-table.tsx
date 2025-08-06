@@ -1,7 +1,6 @@
 'use client';
 
 import { useDebounce } from '@/hooks/use-debounce';
-import { usePermission } from '@/hooks/use-permission';
 import { getCylinders } from '@/services/cylinderService';
 import { Cylinder } from '@/types/cylinder';
 import { PaginationState } from '@tanstack/react-table';
@@ -9,7 +8,6 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { getColumns } from './columns';
-import { PERMISSIONS } from '@/config/permissions';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
@@ -17,14 +15,11 @@ import CylinderFilter from './cylinder-filter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { DataTable } from '@/components/ui/data-table/data-table';
 import { BarcodeScanner } from '@/components/features/barcode-scanner';
-import { useAuthStore } from '@/stores/authStore';
 
 export default function CylinderTable() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { checkPermission } = usePermission();
-  const { user } = useAuthStore();
 
   const [showScanner, setShowScanner] = useState(false);
 
@@ -73,7 +68,6 @@ export default function CylinderTable() {
     router.push(`${pathname}?${params.toString()}`);
   };
   const columns = useMemo(() => getColumns(), []);
-  const canCreate = checkPermission(PERMISSIONS.warehouse.create);
 
   const handleResetFilter = () => {
     const params = new URLSearchParams(searchParams.toString());

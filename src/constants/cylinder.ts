@@ -14,7 +14,7 @@ export const CYLINDER_STATUSES: CylinderStatus[] = [
   'Tidak Aktif',
 ];
 
-export const EDITABLE_STATUSES: CylinderStatus[] = ['Di Gudang - Kosong', 'Di Gudang - Terisi'];
+export const EDITABLE_STATUSES: CylinderStatus[] = ['Di Gudang - Kosong', 'Di Gudang - Terisi', 'Perlu Inspeksi', 'Rusak', 'Tidak Aktif'];
 
 export const STATUS_COLORS: Record<CylinderStatus, string> = {
   'Di Gudang - Kosong': 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400',

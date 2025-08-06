@@ -9,7 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { PageTransition } from '@/components/page-transition';
 import { CancelOrderModal } from '../components/cancel-order-modal';
 import Link from 'next/link';
-import { cancelOrder } from '@/services/orderService';
+import { cancelOrder, getOrderById } from '@/services/orderService';
 import { Order } from '@/types/order';
 import useSWR from 'swr';
 import { toast } from 'sonner';
@@ -41,7 +41,7 @@ export default function OrderDetailPage({ initialOrder }: OrderDetailViewProps) 
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
 
-  const { mutate } = useSWR(`/orders/${order.id}`, null, {
+  const { mutate } = useSWR(`/orders/${order.id}`, () => getOrderById(order.id), {
     fallbackData: initialOrder,
     onSuccess: (data) => {
       setOrder(data);

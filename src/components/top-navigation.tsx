@@ -81,7 +81,7 @@ export function TopNavigation() {
         <div className="flex items-center gap-2">
           <SidebarTrigger className="-ml-1" />
 
-          <Breadcrumb className="hidden md:flex">
+          {/* <Breadcrumb className="hidden md:flex">
             <BreadcrumbList>
               {breadcrumbs.map((crumb, index) => (
                 <React.Fragment key={crumb.path}>
@@ -94,7 +94,7 @@ export function TopNavigation() {
                 </React.Fragment>
               ))}
             </BreadcrumbList>
-          </Breadcrumb>
+          </Breadcrumb> */}
         </div>
 
         <div className="ml-auto flex items-center gap-2">

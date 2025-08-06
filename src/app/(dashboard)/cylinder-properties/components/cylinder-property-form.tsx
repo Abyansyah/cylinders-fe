@@ -19,7 +19,12 @@ import { ChevronLeft } from 'lucide-react';
 
 const formSchema = z.object({
   name: z.string().min(3, { message: 'Nama minimal terdiri dari 3 karakter.' }),
-  size_cubic_meter: z.coerce.number({ invalid_type_error: 'Ukuran harus berupa angka.' }).positive({ message: 'Size must be a positive number.' }),
+  size_cubic_meter: z.coerce
+    .number({ invalid_type_error: 'Ukuran harus berupa angka.' })
+    .positive({ message: 'Size must be a positive number.' })
+    .refine((val) => /^\d+\.\d+$/.test(val.toString()), {
+      message: 'Size harus berupa angka desimal (misal: 6.0, 1.25)',
+    }),
   material: z.string().optional(),
   max_age_years: z.coerce.number({ invalid_type_error: 'Usia maksimal harus berupa angka.' }).int({ message: 'Max age must be a whole number.' }).positive({ message: 'Max age must be positive.' }),
   notes: z.string().optional(),
@@ -133,7 +138,22 @@ export function CylinderPropertyForm({ initialData }: CylinderPropertyFormProps)
                       <FormItem>
                         <FormLabel>Size (m³)</FormLabel>
                         <FormControl>
-                          <Input type="number" step="0.01" placeholder="e.g., 6.0" {...field} value={field.value ?? ''} />
+                          <Input
+                            type="number"
+                            inputMode="decimal"
+                            pattern="^\d+\.\d{1,2}$"
+                            onKeyDown={(e) => {
+                              if (!/[0-9.]/.test(e.key) && !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key)) {
+                                e.preventDefault();
+                              }
+                              if (e.key === '.' && (e.currentTarget.value.includes('.') || e.currentTarget.value === '')) {
+                                e.preventDefault();
+                              }
+                            }}
+                            placeholder="e.g., 6.0"
+                            {...field}
+                            value={field.value ?? ''}
+                          />
                         </FormControl>
                         <FormDescription>Kapasitas volume dalam meter kubik.</FormDescription>
                         <FormMessage />
@@ -147,7 +167,27 @@ export function CylinderPropertyForm({ initialData }: CylinderPropertyFormProps)
                       <FormItem>
                         <RequiredFormLabel>Usia Maksimal (Years)</RequiredFormLabel>
                         <FormControl>
-                          <Input type="number" placeholder="e.g., 10" {...field} value={field.value ?? ''} />
+                          <Input
+                            type="number"
+                            placeholder="e.g., 10"
+                            min={1}
+                            inputMode="numeric"
+                            pattern="\d*"
+                            max={99}
+                            onKeyDown={(e) => {
+                              if (['e', 'E', '+', '-', '.'].includes(e.key)) {
+                                e.preventDefault();
+                              }
+                            }}
+                            onInput={(e) => {
+                              const input = e.currentTarget;
+                              if (input.value.length > 2) {
+                                input.value = input.value.slice(0, 2);
+                              }
+                            }}
+                            {...field}
+                            value={field.value ?? ''}
+                          />
                         </FormControl>
                         <FormDescription>Masa pakai maksimum yang direkomendasikan.</FormDescription>
                         <FormMessage />

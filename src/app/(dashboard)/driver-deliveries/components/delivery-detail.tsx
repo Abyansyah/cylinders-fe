@@ -218,23 +218,27 @@ export default function DeliveryDetailView({ initialDelivery }: { initialDeliver
 
   return (
     <div className="flex-1 space-y-6 p-4 md:p-8">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="">
+        <div className="items-center space-x-4">
           <Button variant="outline" size="sm" asChild>
             <Link href="/driver-deliveries">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Kembali
             </Link>
           </Button>
+        </div>
+        <div className="flex justify-between mt-4">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Detail Pengiriman</h1>
             <p className="text-muted-foreground">{delivery.order_info.order_number}</p>
           </div>
+          <div>
+            <Badge className={`${config.color} border text-sm mt-2 px-3 py-1 text-center`}>
+              <StatusIcon className="w-4 h-4 mr-2" />
+              {delivery.delivery_status}
+            </Badge>
+          </div>
         </div>
-        <Badge className={`${config.color} border text-sm px-3 py-1`}>
-          <StatusIcon className="w-4 h-4 mr-2" />
-          {delivery.delivery_status}
-        </Badge>
       </motion.div>
 
       <div className="grid gap-6 lg:grid-cols-2">

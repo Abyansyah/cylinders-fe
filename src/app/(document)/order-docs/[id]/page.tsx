@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { PageTransition } from '@/components/page-transition';
 import { getDeliveryDocument } from '@/services/orderService';
 import DeliveryDocumentView from '../components/delivery-document-view';
 
@@ -26,11 +25,7 @@ export default async function DeliveryDocumentPage(props: Props) {
   const params = await props.params;
   try {
     const document = await getDeliveryDocument(params.id);
-    return (
-      <PageTransition>
-        <DeliveryDocumentView initialDocument={document} />
-      </PageTransition>
-    );
+    return <DeliveryDocumentView initialDocument={document} />;
   } catch (error) {
     console.error(`Gagal mengambil data dokumen dengan ID ${params.id}:`, error);
     notFound();

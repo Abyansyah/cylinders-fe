@@ -284,7 +284,7 @@ export default function DriverDeliveriesList() {
                     <div>
                       <h3 className="font-semibold text-lg">{delivery.order.order_number}</h3>
                     </div>
-                    <Badge className={`${config.color} border`}>
+                    <Badge className={`${config.color} border text-center`}>
                       <StatusIcon className="w-3 h-3 mr-1" />
                       {delivery.status}
                     </Badge>
@@ -315,7 +315,7 @@ export default function DriverDeliveriesList() {
 
                   <Separator className="my-4" />
 
-                  <div className="flex gap-2">
+                  <div className="flex flex-col md:flex-row gap-2">
                     <Button variant="outline" size="sm" asChild>
                       <Link href={`/driver-deliveries/${delivery.id}`}>
                         <Eye className="w-4 h-4 mr-2" />

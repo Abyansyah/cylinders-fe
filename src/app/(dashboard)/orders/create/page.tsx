@@ -493,6 +493,7 @@ export default function CreateOrderPage() {
                                                     updateItem(index, 'product_id', product.id);
                                                     setOpenProduct(null);
                                                   }}
+                                                  className={item.product_id === product.id ? 'bg-green-100 !hover:bg-green-100' : ''}
                                                 >
                                                   <div className="flex items-center gap-3 py-1">
                                                     <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg flex items-center justify-center">
