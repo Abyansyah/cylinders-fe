@@ -210,12 +210,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     asChild
                     tooltip={item.title}
                     isActive={pathname === item.url}
-                    className={`h-10 ${state === 'collapsed' ? 'justify-center' : ''} ${pathname === item.url ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20' : ''} hover:bg-gray-100 dark:hover:bg-gray-800`}
+                    className={`h-10 ${state === 'collapsed' ? 'justify-center' : ''} ${pathname === item.url ? '!bg-blue-600 !text-white !hover:bg-blue-700' : ''} hover:bg-gray-100 dark:hover:bg-gray-800`}
                   >
                     <button onClick={() => handleNavigation(item)}>
                       {item.icon && (
-                        <div className={`flex h-6 w-6 items-center justify-center rounded-lg ${item.iconBg || 'bg-gray-100 dark:bg-gray-800'} ${state === 'expanded' ? 'mr-2' : ''}`}>
-                          <item.icon className={`h-4 w-4 ${item.iconColor || 'text-gray-600'}`} />
+                        <div className={`flex h-6 w-6 items-center justify-center rounded-lg ${state === 'expanded' ? 'mr-2' : ''}`}>
+                          <item.icon className={`h-4 w-4`} />
                         </div>
                       )}
                       {state === 'expanded' && <span>{item.title}</span>}

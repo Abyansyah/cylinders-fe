@@ -4,6 +4,7 @@ import { cache } from 'react';
 import { GasType } from '@/types/gas-type';
 import { format } from 'date-fns';
 import { CylinderForReplacement } from '@/types/replacement-barcode';
+import { CylinderStatusUpdateRequest, CylinderStatusUpdateResponse } from '@/types/cylinder-status-update';
 
 export type CylinderCreatePayload = {
   barcode_id: string;
@@ -95,4 +96,9 @@ export const getCylinderForReplacement = async (serialNumber: string): Promise<C
 
 export const replaceBarcode = async (payload: { serial_number: string; new_barcode_id: string }): Promise<void> => {
   await api.put('/cylinders/replace-barcode', payload);
+};
+
+export const bulkUpdateCylinderStatus = async (payload: CylinderStatusUpdateRequest): Promise<CylinderStatusUpdateResponse> => {
+  const { data } = await api.put('/cylinders/warehouse/bulk-status-update', payload);
+  return data;
 };

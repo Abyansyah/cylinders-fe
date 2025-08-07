@@ -1,17 +1,13 @@
 'use client';
 import { motion } from 'framer-motion';
 import React from 'react';
-
-import { Minimize, Maximize, Search, Sun, Moon, ChevronRight } from 'lucide-react';
+import { Minimize, Maximize, Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { SidebarTrigger, useSidebar } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useCommandPalette } from '@/hooks/use-command-palette';
 import { useFullscreen } from '@/hooks/use-fullscreen';
 import { useTheme } from '@/hooks/use-theme';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { usePathname } from 'next/navigation';
 import { SIDEBAR_ITEMS } from '@/constants/sidebar';
 import { useAuthStore } from '@/stores/authStore';
@@ -20,7 +16,6 @@ import { useCurrentUser } from '@/hooks/use-current-user';
 
 export function TopNavigation() {
   const { state } = useSidebar();
-  const { openCommandPalette } = useCommandPalette();
   const { isFullscreen, toggleFullscreen } = useFullscreen();
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
@@ -58,8 +53,6 @@ export function TopNavigation() {
 
     return breadcrumbs;
   };
-
-  const breadcrumbs = getBreadcrumbs();
 
   const { mutate: mutateUser } = useCurrentUser();
 
@@ -106,11 +99,10 @@ export function TopNavigation() {
             </kbd>
           </div> */}
 
-          <Button variant="ghost" size="icon" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} className="h-8 w-8">
+          {/* <Button variant="ghost" size="icon" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} className="h-8 w-8">
             {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-          </Button>
+          </Button> */}
 
-          {/* Hide fullscreen on mobile, show on desktop */}
           <Button variant="ghost" size="icon" onClick={toggleFullscreen} className="h-8 w-8 hidden md:flex">
             {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
           </Button>
@@ -135,35 +127,6 @@ export function TopNavigation() {
                   <p className="text-xs text-muted-foreground">{user?.email}</p>
                 </div>
               </div>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <span className="flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-                    <circle cx="12" cy="12" r="10" />
-                    <circle cx="12" cy="10" r="3" />
-                    <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
-                  </svg>
-                  Account
-                </span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <span className="flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-                    <rect width="20" height="14" x="2" y="5" rx="2" />
-                    <line x1="2" x2="22" y1="10" y2="10" />
-                  </svg>
-                  Billing
-                </span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <span className="flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-                    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-                    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-                  </svg>
-                  Notifications
-                </span>
-              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout}>
                 <span className="flex items-center">

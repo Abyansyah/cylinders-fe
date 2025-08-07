@@ -44,6 +44,7 @@ export const PERMISSIONS = {
     view: 'cylinder:view_all',
     create: 'cylinder:create',
     update: 'cylinder:update_status',
+    bulk_update_status: 'cylinder:bulk_update_status',
   },
   warehousePrepare: {
     view: 'warehouse:view_orders_to_prepare',

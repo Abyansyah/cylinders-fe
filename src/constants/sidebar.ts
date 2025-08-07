@@ -7,8 +7,6 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     url: '/',
     icon: LayoutDashboard,
     isActive: true,
-    iconColor: 'text-blue-600',
-    iconBg: 'bg-blue-100 dark:bg-blue-900/30',
     items: [
       {
         title: 'Console',
@@ -21,8 +19,6 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     title: 'Manajemen Gas',
     url: '/gas-type',
     id: 'gas-type',
-    iconColor: 'text-orange-600',
-    iconBg: 'bg-orange-100 dark:bg-orange-900/30',
     icon: Flame,
     items: [
       {
@@ -107,6 +103,14 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     permissionKey: 'replacementBarcode',
   },
   {
+    title: 'Update Status tabung',
+    url: '/cylinder-status-update',
+    icon: BrickWallFire,
+    isActive: false,
+    permissionKey: 'cylinderStatusUpdate',
+    onlyPermission: true,
+  },
+  {
     title: 'Alih Fungsi Gas',
     url: '/gas-conversions',
     icon: Zap,
@@ -138,8 +142,6 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     title: 'Manajemen Gudang',
     icon: Warehouse,
     id: 'warehouse',
-    iconColor: 'text-green-600',
-    iconBg: 'bg-green-100 dark:bg-green-900/30',
     url: '/warehouses',
     permissionKey: 'warehouse',
   },
@@ -154,8 +156,6 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     url: '/users',
     icon: Users,
     id: 'users',
-    iconColor: 'text-purple-600',
-    iconBg: 'bg-purple-100 dark:bg-purple-900/30',
     items: [
       {
         title: 'Users',

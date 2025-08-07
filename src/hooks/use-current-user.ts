@@ -9,7 +9,7 @@ export function useCurrentUser() {
       }
       return true;
     },
-    revalidateOnFocus: true,
+    revalidateOnFocus: false,
   });
 
   return {
