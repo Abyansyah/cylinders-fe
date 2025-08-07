@@ -1,9 +1,19 @@
-import React from 'react'
+import { Metadata } from 'next';
+import { PageTransition } from '@/components/page-transition';
+import DashboardView from './components/dashboard-view';
+import { getDashboardData } from '@/services/dashboarService';
 
-const DashboardPage = () => {
+export const metadata: Metadata = {
+  title: 'Dashboard',
+  description: 'Dashboard with key performance indicators and reports.',
+};
+
+export default async function DashboardPage() {
+  const initialDashboardData = await getDashboardData();
+
   return (
-    <div>DashboardPage</div>
-  )
+    <PageTransition>
+      <DashboardView initialData={initialDashboardData} />
+    </PageTransition>
+  );
 }
-
-export default DashboardPage

@@ -4,16 +4,9 @@ import type { SidebarItem } from '@/types/sidebar';
 export const SIDEBAR_ITEMS: SidebarItem[] = [
   {
     title: 'Dashboard',
-    url: '/',
+    url: '/dashboard',
     icon: LayoutDashboard,
     isActive: true,
-    items: [
-      {
-        title: 'Console',
-        url: '/',
-        id: 'console',
-      },
-    ],
   },
   {
     title: 'Manajemen Gas',
