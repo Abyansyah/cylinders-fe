@@ -21,19 +21,21 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import useSWR from 'swr';
 import { toast } from 'sonner';
-import { getCustomers } from '@/services/customerService';
-import { getWarehouses } from '@/services/warehouseService';
 import { getProductsByWarehouse, createOrder } from '@/services/orderService';
+import { getCustomersSelectList, getWarehousesSelectList } from '@/services/SearchListService';
 import { useDebounce } from '@/hooks/use-debounce';
 import { Product } from '@/types/product';
-import { Customer } from '@/types/customer';
-import { Warehouse } from '@/types/warehouse';
 
 interface OrderItem {
   product_id: number;
   quantity: number;
   unit: 'btl' | 'pcs' | 'unit' | 'lot';
   is_rental: boolean;
+}
+
+interface SelectListItem {
+  value: number;
+  label: string;
 }
 
 const containerVariants = {
@@ -82,8 +84,8 @@ export default function CreateOrderPage() {
   const debouncedWarehouseSearch = useDebounce(warehouseSearch, 300);
   const debouncedProductSearch = useDebounce(productSearch, 300);
 
-  const { data: customersResponse, isLoading: isLoadingCustomers } = useSWR(`/customers?search=${debouncedCustomerSearch}&limit=20`, () => getCustomers({ search: debouncedCustomerSearch, limit: 20 }));
-  const { data: warehousesResponse, isLoading: isLoadingWarehouses } = useSWR(`/warehouses?search=${debouncedWarehouseSearch}&limit=20`, () => getWarehouses({ search: debouncedWarehouseSearch, limit: 20 }));
+  const { data: customersResponse, isLoading: isLoadingCustomers } = useSWR(`/select-lists/customers?search=${debouncedCustomerSearch}`, () => getCustomersSelectList({ search: debouncedCustomerSearch }));
+  const { data: warehousesResponse, isLoading: isLoadingWarehouses } = useSWR(`/select-lists/warehouses?search=${debouncedWarehouseSearch}`, () => getWarehousesSelectList({ search: debouncedWarehouseSearch }));
   const { data: productsResponse, isLoading: isLoadingProducts } = useSWR(formData.assigned_warehouse_id > 0 ? `/products?warehouse_id=${formData.assigned_warehouse_id}&search=${debouncedProductSearch}` : null, () =>
     getProductsByWarehouse(formData.assigned_warehouse_id)
   );
@@ -151,8 +153,8 @@ export default function CreateOrderPage() {
     setItems(newItems);
   };
   const getSelectedProduct = (productId: number) => products.find((p: Product) => p.id === productId);
-  const getSelectedCustomer = () => customers.find((c: Customer) => c.id === formData.customer_id);
-  const getSelectedWarehouse = () => warehouses.find((w: Warehouse) => w.id === formData.assigned_warehouse_id);
+  const getSelectedCustomer = () => customers.find((c: SelectListItem) => c.value === formData.customer_id);
+  const getSelectedWarehouse = () => warehouses.find((w: SelectListItem) => w.value === formData.assigned_warehouse_id);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -286,7 +288,7 @@ export default function CreateOrderPage() {
                           <Popover open={openCustomer} onOpenChange={setOpenCustomer}>
                             <PopoverTrigger asChild>
                               <Button variant="outline" role="combobox" aria-expanded={openCustomer} className="w-full h-10 justify-between text-left font-normal bg-transparent">
-                                {formData.customer_id > 0 ? getSelectedCustomer()?.customer_name : 'Cari dan pilih pelanggan...'}
+                                {formData.customer_id > 0 ? getSelectedCustomer()?.label : 'Cari dan pilih pelanggan...'}
                                 <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                               </Button>
                             </PopoverTrigger>
@@ -299,10 +301,10 @@ export default function CreateOrderPage() {
                                   <CommandGroup>
                                     {customers.map((customer) => (
                                       <CommandItem
-                                        key={customer.id}
-                                        value={customer.customer_name}
+                                        key={customer.value}
+                                        value={customer.label}
                                         onSelect={() => {
-                                          setFormData((prev) => ({ ...prev, customer_id: customer.id }));
+                                          setFormData((prev) => ({ ...prev, customer_id: customer.value }));
                                           setOpenCustomer(false);
                                         }}
                                       >
@@ -311,8 +313,7 @@ export default function CreateOrderPage() {
                                             <User className="w-4 h-4 text-blue-600" />
                                           </div>
                                           <div>
-                                            <div className="font-medium text-sm">{customer.customer_name}</div>
-                                            <div className="text-xs text-gray-500">{customer.company_name}</div>
+                                            <div className="font-medium text-sm">{customer.label}</div>
                                           </div>
                                         </div>
                                       </CommandItem>
@@ -326,9 +327,7 @@ export default function CreateOrderPage() {
                             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                               <div className="flex items-center gap-2 text-blue-800 dark:text-blue-300">
                                 <CheckCircle className="w-4 h-4" />
-                                <span className="text-sm font-medium">
-                                  {getSelectedCustomer()?.customer_name} - {getSelectedCustomer()?.company_name}
-                                </span>
+                                <span className="text-sm font-medium">{getSelectedCustomer()?.label}</span>
                               </div>
                             </motion.div>
                           )}
@@ -342,7 +341,7 @@ export default function CreateOrderPage() {
                           <Popover open={openWarehouse} onOpenChange={setOpenWarehouse}>
                             <PopoverTrigger asChild>
                               <Button variant="outline" role="combobox" aria-expanded={openWarehouse} className="w-full h-10 justify-between text-left font-normal bg-transparent">
-                                {formData.assigned_warehouse_id > 0 ? getSelectedWarehouse()?.name : 'Cari dan pilih gudang...'}
+                                {formData.assigned_warehouse_id > 0 ? getSelectedWarehouse()?.label : 'Cari dan pilih gudang...'}
                                 <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                               </Button>
                             </PopoverTrigger>
@@ -355,10 +354,10 @@ export default function CreateOrderPage() {
                                   <CommandGroup>
                                     {warehouses.map((warehouse) => (
                                       <CommandItem
-                                        key={warehouse.id}
-                                        value={warehouse.name}
+                                        key={warehouse.value}
+                                        value={warehouse.label}
                                         onSelect={() => {
-                                          setFormData((prev) => ({ ...prev, assigned_warehouse_id: warehouse.id }));
+                                          setFormData((prev) => ({ ...prev, assigned_warehouse_id: warehouse.value }));
                                           setOpenWarehouse(false);
                                         }}
                                       >
@@ -367,8 +366,7 @@ export default function CreateOrderPage() {
                                             <MapPin className="w-4 h-4 text-green-600" />
                                           </div>
                                           <div>
-                                            <div className="font-medium text-sm">{warehouse.name}</div>
-                                            <div className="text-xs text-gray-500">{warehouse.address}</div>
+                                            <div className="font-medium text-sm">{warehouse.label}</div>
                                           </div>
                                         </div>
                                       </CommandItem>
@@ -382,7 +380,7 @@ export default function CreateOrderPage() {
                             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
                               <div className="flex items-center gap-2 text-green-800 dark:text-green-300">
                                 <CheckCircle className="w-4 h-4" />
-                                <span className="text-sm font-medium">{getSelectedWarehouse()?.name}</span>
+                                <span className="text-sm font-medium">{getSelectedWarehouse()?.label}</span>
                               </div>
                             </motion.div>
                           )}
@@ -630,15 +628,11 @@ export default function CreateOrderPage() {
                             <div className="space-y-3">
                               <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
                                 <span className="text-gray-600 dark:text-gray-400 text-sm font-medium">Pelanggan:</span>
-                                <span className="font-semibold text-sm">{getSelectedCustomer()?.customer_name}</span>
-                              </div>
-                              <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                                <span className="text-gray-600 dark:text-gray-400 text-sm font-medium">Perusahaan:</span>
-                                <span className="font-semibold text-sm">{getSelectedCustomer()?.company_name}</span>
+                                <span className="font-semibold text-sm">{getSelectedCustomer()?.label}</span>
                               </div>
                               <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
                                 <span className="text-gray-600 dark:text-gray-400 text-sm font-medium">Gudang:</span>
-                                <span className="font-semibold text-sm">{getSelectedWarehouse()?.name}</span>
+                                <span className="font-semibold text-sm">{getSelectedWarehouse()?.label}</span>
                               </div>
                               <div className="flex justify-between items-center py-2">
                                 <span className="text-gray-600 dark:text-gray-400 text-sm font-medium">Tipe Order:</span>

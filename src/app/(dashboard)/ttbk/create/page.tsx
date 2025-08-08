@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function CreateTTBKPage() {
   return (
-    <PermissionGuard requiredPermission={PERMISSIONS.warehouse.view}>
+    <PermissionGuard requiredPermission={PERMISSIONS.returnreceipt.create}>
       <PageTransition>
         <CreateTTBKForm />
       </PageTransition>

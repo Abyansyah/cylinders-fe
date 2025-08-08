@@ -54,12 +54,6 @@ export default function CreateTTBKForm() {
   const { data: customersResponse } = useSWR(`/customers?search=${debouncedCustomerSearch}`, () => getCustomers({ search: debouncedCustomerSearch }));
   const { data: warehousesResponse } = useSWR(`/warehouses?search=${debouncedWarehouseSearch}`, () => getWarehouses({ search: debouncedWarehouseSearch }));
 
-  const customers = customersResponse?.data || [];
-  const warehouses = warehousesResponse?.data || [];
-
-  const selectedCustomer = customers.find((c) => c.id === formData.customer_id);
-  const selectedWarehouse = warehouses.find((w) => w.id === formData.destination_warehouse_id);
-
   const addBarcode = (barcodeToAdd?: string) => {
     const barcode = (barcodeToAdd || newBarcode).trim();
     if (!barcode) {
