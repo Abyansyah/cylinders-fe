@@ -7,6 +7,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     url: '/dashboard',
     icon: LayoutDashboard,
     isActive: true,
+    permissionKey: 'dashboard',
   },
   {
     title: 'Manajemen Gas',
@@ -100,7 +101,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     url: '/cylinder-status-update',
     icon: BrickWallFire,
     isActive: false,
-    permissionKey: 'cylinderStatusUpdate',
+    permissionKey: 'updateStatusTabung',
     onlyPermission: true,
   },
   {

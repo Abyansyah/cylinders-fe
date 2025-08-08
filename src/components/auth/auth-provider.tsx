@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useAuthStore } from '@/stores/authStore';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCurrentUser } from '@/hooks/use-current-user';
+import Loading from '@/app/loading';
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const { authStatus, setUser, setAuthStatus } = useAuthStore();
@@ -39,7 +40,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   }, [user, isLoading, error, setAuthStatus, setUser, pathname, router]);
 
   if (authStatus === 'loading') {
-    return null;
+    return <Loading />;
   }
 
   return <>{children}</>;

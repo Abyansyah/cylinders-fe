@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function CylinderStatusUpdatePage() {
   return (
-    <PermissionGuard requiredPermission={PERMISSIONS.cylinder.bulk_update_status}>
+    <PermissionGuard requiredPermission={PERMISSIONS.updateStatusTabung.view}>
       <PageTransition>
         <CylinderStatusUpdateForm />
       </PageTransition>

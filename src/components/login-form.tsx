@@ -31,7 +31,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
       toast.success('Login successful!', {
         description: 'Redirecting to your dashboard...',
       });
-      router.push('/dashboard');
+      router.push(state.redirectUrl || '/dashboard');
     } else if (state.message) {
       toast.error(state.message);
     }
@@ -53,7 +53,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
             <Label htmlFor="password">Password</Label>
           </div>
           <div className="relative">
-            <Input id="password" name="password" type={showPassword ? 'text' : 'password'} required className="pr-10" placeholder='•••••••' />
+            <Input id="password" name="password" type={showPassword ? 'text' : 'password'} required className="pr-10" placeholder="•••••••" />
             <Button type="button" variant="ghost" size="sm" className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent" onClick={() => setShowPassword((prev) => !prev)}>
               {showPassword ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
               <span className="sr-only">{showPassword ? 'Hide password' : 'Show password'}</span>

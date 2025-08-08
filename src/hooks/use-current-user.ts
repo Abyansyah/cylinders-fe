@@ -13,7 +13,7 @@ export function useCurrentUser() {
   });
 
   return {
-    user: data?.user,
+    user: data,
     isLoading,
     error,
     mutate,

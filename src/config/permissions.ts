@@ -1,4 +1,7 @@
 export const PERMISSIONS = {
+  dashboard: {
+    view: 'dashboard:view',
+  },
   users: {
     view: 'user:view_all',
     create: 'user:create',
@@ -44,7 +47,6 @@ export const PERMISSIONS = {
     view: 'cylinder:view_all',
     create: 'cylinder:create',
     update: 'cylinder:update_status',
-    bulk_update_status: 'cylinder:bulk_update_status',
   },
   warehousePrepare: {
     view: 'warehouse:view_orders_to_prepare',
@@ -97,5 +99,8 @@ export const PERMISSIONS = {
   },
   gasConversionWarehouse: {
     view_all: 'gas_conversion:execute',
+  },
+  updateStatusTabung: {
+    view: 'cylinder:bulk_update_status',
   },
 } as const;

@@ -1,3 +1,6 @@
+import { Role } from './role';
+import { Warehouse } from './warehouse';
+
 export interface User {
   id: string;
   username: string;
@@ -8,15 +11,6 @@ export interface User {
   createdAt: string;
   lastLogin?: string;
   avatar?: string;
-}
-
-export interface Role {
-  id: string;
-  name: string;
-  description: string;
-  permissions: Permission[];
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface Permission {
@@ -32,11 +26,6 @@ export interface UserRole {
   role_name: string;
 }
 
-export interface Warehouse {
-  id: number;
-  name: string;
-}
-
 export interface ApiUser {
   id: number;
   username: string;
@@ -47,7 +36,7 @@ export interface ApiUser {
   is_active: boolean;
   createdAt: string;
   updatedAt: string;
-  role: UserRole;
+  role: Role;
   avatar?: string;
   warehouse?: Warehouse | null;
 }

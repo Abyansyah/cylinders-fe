@@ -27,7 +27,7 @@ import { getProductsByWarehouse, createOrder } from '@/services/orderService';
 import { useDebounce } from '@/hooks/use-debounce';
 import { Product } from '@/types/product';
 import { Customer } from '@/types/customer';
-import { Warehouse } from '@/types/user';
+import { Warehouse } from '@/types/warehouse';
 
 interface OrderItem {
   product_id: number;

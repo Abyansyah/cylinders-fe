@@ -19,12 +19,7 @@ import { ChevronLeft } from 'lucide-react';
 
 const formSchema = z.object({
   name: z.string().min(3, { message: 'Nama minimal terdiri dari 3 karakter.' }),
-  size_cubic_meter: z.coerce
-    .number({ invalid_type_error: 'Ukuran harus berupa angka.' })
-    .positive({ message: 'Size must be a positive number.' })
-    .refine((val) => /^\d+\.\d+$/.test(val.toString()), {
-      message: 'Size harus berupa angka desimal (misal: 6.0, 1.25)',
-    }),
+  size_cubic_meter: z.coerce.number({ invalid_type_error: 'Ukuran harus berupa angka.' }).positive({ message: 'Size must be a positive number.' }),
   material: z.string().optional(),
   max_age_years: z.coerce.number({ invalid_type_error: 'Usia maksimal harus berupa angka.' }).int({ message: 'Max age must be a whole number.' }).positive({ message: 'Max age must be positive.' }),
   notes: z.string().optional(),
