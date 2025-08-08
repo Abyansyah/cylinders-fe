@@ -38,11 +38,9 @@ export default async function DriverPreparePage(props: Props) {
   try {
     const order = await getPrepareOrderDetails(id);
     return (
-      <PermissionGuard requiredPermission={PERMISSIONS.warehouse.view}>
-        <PageTransition>
-          <DriverPrepareForm initialOrder={order} />
-        </PageTransition>
-      </PermissionGuard>
+      <PageTransition>
+        <DriverPrepareForm initialOrder={order} />
+      </PageTransition>
     );
   } catch (error) {
     console.error(`Gagal mengambil data order dengan ID ${id}:`, error);

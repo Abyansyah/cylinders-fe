@@ -19,6 +19,8 @@ import { toast } from 'sonner';
 import useSWR from 'swr';
 import { getGasTypes } from '@/services/gasTypeService';
 import { bulkUpdateCylinderStatus } from '@/services/cylinderService';
+import { GenericSearchCombobox } from '@/components/ui/GenericSearchCombobox';
+import { getGasTypeSelectList } from '@/services/SearchListService';
 
 const CYLINDER_STATUS_OPTIONS: { value: CylinderStatusOption; label: string }[] = [
   { value: 'Di Gudang - Terisi', label: 'Di Gudang - Terisi' },
@@ -265,18 +267,7 @@ export default function CylinderStatusUpdateForm() {
             {requiresGasType && (
               <div className="space-y-3">
                 <Label htmlFor="gasType">Jenis Gas *</Label>
-                <Select value={selectedGasType} onValueChange={setSelectedGasType}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Pilih jenis gas" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {gasTypes.map((gasType) => (
-                      <SelectItem key={gasType.id} value={gasType.id.toString()}>
-                        {gasType.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <GenericSearchCombobox<any> value={selectedGasType} onChange={setSelectedGasType} fetcher={getGasTypeSelectList} labelExtractor={(item) => item.name} placeholder="Pilih jenis gas" searchKey="/gas-types" />
                 <Alert>
                   <AlertCircle className="h-4 w-4" />
                   <AlertDescription>Jenis gas wajib dipilih untuk status "Di Gudang - Terisi"</AlertDescription>

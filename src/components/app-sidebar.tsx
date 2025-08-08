@@ -15,6 +15,7 @@ import { logoutAction } from '@/lib/actions';
 import type { SidebarItem } from '@/types/sidebar';
 import { usePermission } from '@/hooks/use-permission';
 import { PERMISSIONS } from '@/config/permissions';
+import Image from 'next/image';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { checkPermission } = usePermission();
@@ -99,13 +100,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           }}
           transition={{ duration: 0.2, ease: 'easeInOut' }}
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white flex-shrink-0">
-            <Triangle className="h-4 w-4" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg  flex-shrink-0">
+           <Image src={'/logo-KAP.png'} width={40} height={40} alt={'Karya Agung Pratama'} />
           </div>
           <AnimatePresence>
             {state === 'expanded' && (
               <motion.span className="font-semibold text-lg whitespace-nowrap" initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }} exit={{ opacity: 0, width: 0 }} transition={{ duration: 0.2, ease: 'easeInOut' }}>
-                Art Design Pro
+                Karya Agung Pratama
               </motion.span>
             )}
           </AnimatePresence>

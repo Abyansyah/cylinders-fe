@@ -10,3 +10,8 @@ export const getWarehousesSelectList = async (params: { search: string }): Promi
   const { data } = await api.get('/select-lists/warehouses', { params });
   return data;
 };
+
+export const getGasTypeSelectList = async (params: { search: string }): Promise<SelectListApiResponse> => {
+  const { data } = await api.get('/select-lists/gas-types', { params });
+  return data;
+};
