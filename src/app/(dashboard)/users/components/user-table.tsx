@@ -12,18 +12,11 @@ import { Button } from '@/components/ui/button';
 import { DeleteAlertDialog } from '@/components/ui/alert-dialog-custom';
 import { PageTransition } from '@/components/page-transition';
 import { getColumns } from './columns';
-import { getUsers } from '@/services/userService';
+import { getRoles, getUsers } from '@/services/userService';
 import { useDebounce } from '@/hooks/use-debounce';
 import type { ApiUser } from '@/types/user';
 import { deleteUserAction } from '../actions/userActions';
-
-const roleOptions = [
-  { label: 'Admin', value: '2' },
-  { label: 'Sales', value: '3' },
-  { label: 'Petugas Gudang', value: '4' },
-  { label: 'Driver', value: '5' },
-  { label: 'Customer', value: '6' },
-];
+import { Role } from '@/types/role';
 
 const statusOptions = [
   { label: 'Active', value: 'true' },
@@ -46,6 +39,19 @@ export default function UserTable() {
 
   const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
   const debouncedSearchTerm = useDebounce(localSearchTerm, 500);
+
+  const { data: roles, error: rolesError } = useSWR<Role[]>('/roles', getRoles);
+
+  const roleOptionsFromApi = useMemo(() => {
+    return (
+      roles
+        ?.filter((role) => role.role_name.toLowerCase() !== 'customer') 
+        .map((role) => ({
+          label: role.role_name,
+          value: role.id.toString(),
+        })) ?? []
+    );
+  }, [roles]);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
@@ -130,7 +136,7 @@ export default function UserTable() {
 
   const filterableColumns = [
     { id: 'is_active', title: 'Status', options: statusOptions },
-    { id: 'role_id', title: 'Role', options: roleOptions },
+    { id: 'role_id', title: 'Role', options: roleOptionsFromApi },
   ];
 
   if (error) return <div>Failed to load users.</div>;

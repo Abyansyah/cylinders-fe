@@ -37,7 +37,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
   },
   {
     id: 'orders',
-    title: 'Buar Order',
+    title: 'Buat Order',
     icon: ShoppingCart,
     isActive: false,
     url: '/orders',

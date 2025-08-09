@@ -5,7 +5,7 @@ import { useFormStatus } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
 import { toast } from 'sonner';
-import {  ChevronLeft, Loader2 } from 'lucide-react';
+import { ChevronLeft, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -113,11 +113,13 @@ export function UserForm({ initialData }: UserFormProps) {
                         Loading roles...
                       </SelectItem>
                     )}
-                    {roles?.map((role) => (
-                      <SelectItem key={role.id} value={role.id.toString()}>
-                        {role.role_name}
-                      </SelectItem>
-                    ))}
+                    {roles
+                      ?.filter((role) => role.role_name.toLowerCase() !== 'customer')
+                      .map((role) => (
+                        <SelectItem key={role.id} value={role.id.toString()}>
+                          {role.role_name}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
                 {getError('role_id') && <p className="text-sm text-red-500">{getError('role_id')}</p>}

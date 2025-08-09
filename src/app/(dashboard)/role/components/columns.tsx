@@ -66,7 +66,7 @@ export const getColumns = (onDelete: (role: Role) => void): ColumnDef<Role>[] =>
                 </Link>
               </DropdownMenuItem>
             )}
-            {canDelete && (
+            {/* {canDelete && (
               <>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="text-red-600" onClick={() => onDelete(role)}>
@@ -74,7 +74,7 @@ export const getColumns = (onDelete: (role: Role) => void): ColumnDef<Role>[] =>
                   Delete
                 </DropdownMenuItem>
               </>
-            )}
+            )} */}
           </DropdownMenuContent>
         </DropdownMenu>
       );
