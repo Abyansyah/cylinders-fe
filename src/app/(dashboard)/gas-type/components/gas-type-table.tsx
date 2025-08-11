@@ -89,9 +89,9 @@ export default function GasTypeTable() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Manajemen Tipe Gas</h1>
+        <h1 className="text-2xl font-bold">Manajemen Jenis Gas</h1>
         <Button onClick={() => router.push('/gas-type/create')}>
-          <Plus className="mr-2 h-4 w-4" /> Tambah Tipe Gas
+          <Plus className="mr-2 h-4 w-4" /> Tambah Jenis Gas
         </Button>
       </div>
       <DataTable

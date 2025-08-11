@@ -207,6 +207,14 @@ export default function CylinderFormCreate() {
         setSuccessDialog({ open: true, barcode: values.barcode_id });
       })
       .catch((error: any) => {
+        let responseData = error.response?.data;
+        console.log(error?.response?.data?.errors);
+        if (error?.response?.data?.errors) {
+          const errorMessages = responseData?.errors?.map((err: { msg: string }) => `${err.msg}`).join(', ');
+          toast.error(` ${errorMessages}`);
+          return;
+        }
+
         toast.error(error.response?.data?.message || 'Gagal menambahkan tabung baru.');
       })
       .finally(() => {

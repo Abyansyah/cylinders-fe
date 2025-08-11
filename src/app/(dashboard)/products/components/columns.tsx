@@ -25,7 +25,7 @@ export const getColumns = (onDelete: (item: Product) => void): ColumnDef<Product
   {
     accessorKey: 'gasType',
     header: 'Tipe Gas',
-    cell: ({ row }) => row.original.gasType.name,
+    cell: ({ row }) => <span className="text-sm text-muted-foreground">{row.original?.gasType?.name ? row.original.gasType.name : 'Tabung Kosong'}</span>,
   },
   {
     accessorKey: 'cylinderProperty',

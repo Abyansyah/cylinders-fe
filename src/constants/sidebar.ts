@@ -16,7 +16,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     icon: Flame,
     items: [
       {
-        title: 'Tipe Gas',
+        title: 'Jenis Gas',
         url: '/gas-type',
         id: 'gas-type-list',
         permissionKey: 'gasType',

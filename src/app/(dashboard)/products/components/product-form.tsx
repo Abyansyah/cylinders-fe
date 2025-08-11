@@ -6,16 +6,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-
 import { createProductAction, updateProductAction } from '../actions/productActions';
 import type { Product } from '@/types/product';
 import type { GasTypesApiResponse } from '@/types/gas-type';
@@ -23,6 +20,7 @@ import type { CylinderPropertiesApiResponse } from '@/types/cylinder-property';
 import { ChevronLeft } from 'lucide-react';
 import { GasTypeSearchCombobox } from './gas-type-combobox';
 import { CylinderPropertySearchCombobox } from './cylinder-property-combobox';
+import { Label } from '@/components/ui/label';
 
 interface ProductFormProps {
   initialData?: Product | null;
@@ -36,7 +34,7 @@ const formSchema = z.object({
   description: z.string().optional(),
   is_active: z.boolean(),
   cylinder_properties_id: z.coerce.number({ required_error: 'Properti tabung wajib dipilih.' }),
-  gas_type_id: z.coerce.number({ required_error: 'Tipe gas wajib dipilih.' }),
+  gas_type_id: z.coerce.number(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -113,22 +111,22 @@ export function ProductForm({ initialData, gasTypes, cylinderProperties }: Produ
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <FormField
                   control={form.control}
-                  name="gas_type_id"
+                  name="cylinder_properties_id"
                   render={({ field }) => (
                     <FormItem>
-                      <RequiredFormLabel>Tipe Gas</RequiredFormLabel>
-                      <GasTypeSearchCombobox value={String(field.value)} onChange={(val) => field.onChange(Number(val))} />
+                      <RequiredFormLabel>Properti Tabung</RequiredFormLabel>
+                      <CylinderPropertySearchCombobox value={String(field.value)} onChange={(val) => field.onChange(Number(val))} />
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <FormField
                   control={form.control}
-                  name="cylinder_properties_id"
+                  name="gas_type_id"
                   render={({ field }) => (
                     <FormItem>
-                      <RequiredFormLabel>Properti Tabung</RequiredFormLabel>
-                      <CylinderPropertySearchCombobox value={String(field.value)} onChange={(val) => field.onChange(Number(val))} />
+                      <Label>Jenis Gas</Label>
+                      <GasTypeSearchCombobox value={String(field.value)} onChange={(val) => field.onChange(Number(val))} />
                       <FormMessage />
                     </FormItem>
                   )}
@@ -187,7 +185,7 @@ export function ProductForm({ initialData, gasTypes, cylinderProperties }: Produ
                   Batal
                 </Button>
                 <Button type="submit" disabled={isPending}>
-                  {isPending ? 'Menyimpan...' : 'Simpan Perubahan'}
+                  {isPending ? 'Menyimpan...' : isEditMode ? 'Perbarui Produk' : 'Tambah Produk'}
                 </Button>
               </div>
             </form>

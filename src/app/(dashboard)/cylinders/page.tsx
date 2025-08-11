@@ -1,5 +1,4 @@
 import { PermissionGuard } from '@/components/guards/permission-guard';
-import { PageTransition } from '@/components/page-transition';
 import { PERMISSIONS } from '@/config/permissions';
 import React from 'react';
 import CylinderTable from './components/cylinder-table';

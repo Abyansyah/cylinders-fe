@@ -48,13 +48,6 @@ export default function ProductTable() {
     setLocalSearch(search);
   }, [search]);
 
-  const handleResetSearch = () => {
-    setLocalSearch('');
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete('search');
-    router.push(`${pathname}?${params.toString()}`);
-  };
-
   const swrKey = useMemo(() => `/products?page=${page}&limit=${limit}&search=${search}`, [page, limit, search]);
   const { data: apiResponse, isLoading } = useSWR(swrKey, () => getProducts({ page, limit, search }), { keepPreviousData: true });
 
