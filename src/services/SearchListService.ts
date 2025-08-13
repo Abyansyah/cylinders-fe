@@ -15,3 +15,8 @@ export const getGasTypeSelectList = async (params: { search: string }): Promise<
   const { data } = await api.get('/select-lists/gas-types', { params });
   return data;
 };
+
+export const getCylinderPropertiesSelectList = async (): Promise<SelectListApiResponse> => {
+  const { data } = await api.get('/select-lists/cylinder-properties');
+  return data;
+};

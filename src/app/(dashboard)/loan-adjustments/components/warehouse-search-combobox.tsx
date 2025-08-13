@@ -10,7 +10,7 @@ interface Props {
 
 export function WarehouseSearchCombobox({ value, onChange, selectedData }: Props) {
   return (
-    <GenericSearchCombobox<Warehouse>
+    <GenericSearchCombobox<any>
       value={value}
       onChange={onChange}
       selectedData={selectedData}

@@ -170,11 +170,6 @@ export default function CylinderFormCreate() {
   }, [isPetugasGudang, user?.warehouse_id, form]);
 
   const handleBarcodeCheck = async (barcode: string) => {
-    if (!/^\d{9}$/.test(barcode)) {
-      toast.error('Barcode harus terdiri dari 9 digit angka.');
-      return;
-    }
-
     setIsCheckingBarcode(true);
     try {
       const { existing } = await checkBarcodeExists(barcode);
@@ -498,9 +493,9 @@ export default function CylinderFormCreate() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <Input id="manual-barcode" placeholder="Contoh: 123456789" maxLength={9} value={manualBarcode} className="font-mono text-center text-lg h-12" onChange={(e) => setManualBarcode(e.target.value.replace(/\D/g, ''))} />
+                  <Input id="manual-barcode" placeholder="Contoh: 123456789" value={manualBarcode} className="font-mono text-center text-lg h-12" onChange={(e) => setManualBarcode(e.target.value.replace(/\D/g, ''))} />
                 </div>
-                <Button onClick={() => handleBarcodeCheck(manualBarcode)} className="w-full mt-3" disabled={isCheckingBarcode || manualBarcode.length !== 9}>
+                <Button onClick={() => handleBarcodeCheck(manualBarcode)} className="w-full mt-3" disabled={isCheckingBarcode || manualBarcode.length < 3}>
                   {isCheckingBarcode && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Periksa Barcode
                 </Button>

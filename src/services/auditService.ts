@@ -26,7 +26,7 @@ export const getAuditForScan = async (id: number): Promise<AuditScanData> => {
   return data;
 };
 
-export const scanAuditBarcode = async (id: number, payload: { barcode_id: string }): Promise<void> => {
+export const scanAuditBarcode = async (id: number, payload: { scan_input: string }): Promise<void> => {
   await api.post(`/audits/${id}/scan`, payload);
 };
 

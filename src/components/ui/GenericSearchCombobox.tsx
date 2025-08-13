@@ -12,23 +12,40 @@ import { useDebounce } from '@/hooks/use-debounce';
 interface GenericSearchComboboxProps<T> {
   value: string;
   onChange: (value: string) => void;
-  selectedData?: (item: T) => void;
-  fetcher: (params: { search: string }) => Promise<{ data: T[] }>;
+  selectedData?: (item: T | null) => void;
+  fetcher?: (params: { search: string }) => Promise<{ data: T[] }>;
   labelExtractor: (item: T) => string;
   descriptionExtractor?: (item: T) => string;
   placeholder?: string;
   searchKey?: string;
+  excludeId?: number;
+  options?: T[];
+  disableRemoteSearch?: boolean;
 }
 
-export function GenericSearchCombobox<T>({ value, onChange, selectedData, fetcher, labelExtractor, descriptionExtractor, placeholder = 'Pilih item...', searchKey = 'search' }: GenericSearchComboboxProps<T>) {
+export function GenericSearchCombobox<T extends { id: number }>({
+  value,
+  onChange,
+  selectedData,
+  fetcher,
+  labelExtractor,
+  descriptionExtractor,
+  placeholder = 'Pilih item...',
+  searchKey = 'search',
+  excludeId,
+  options = [],
+  disableRemoteSearch = false,
+}: GenericSearchComboboxProps<T>) {
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState('');
   const debouncedSearch = useDebounce(search, 800);
 
-  const { data: response, isLoading } = useSWR(`${searchKey}?search=${debouncedSearch}`, () => fetcher({ search: debouncedSearch }));
+  const { data: response, isLoading } = useSWR(!disableRemoteSearch && fetcher ? `${searchKey}?search=${debouncedSearch}` : null, () => fetcher!({ search: debouncedSearch }));
 
-  const items = response?.data || [];
-  const selectedItem = items.find((item) => (item as any).id.toString() === value);
+  const allItems = disableRemoteSearch ? options : response?.data || [];
+  const itemsToDisplay = allItems.filter((item) => item.id !== excludeId);
+
+  const selectedItem = allItems.find((item) => item.id.toString() === value);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -45,7 +62,7 @@ export function GenericSearchCombobox<T>({ value, onChange, selectedData, fetche
           <ChevronsUpDown className="opacity-50 ml-2 h-4 w-4" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-full p-0">
         <Command>
           <CommandInput placeholder="Cari..." value={search} onValueChange={setSearch} />
           <CommandList>
@@ -57,18 +74,16 @@ export function GenericSearchCombobox<T>({ value, onChange, selectedData, fetche
             )}
             <CommandEmpty>Data tidak ditemukan.</CommandEmpty>
             <CommandGroup>
-              {items.map((item) => {
+              {itemsToDisplay.map((item) => {
                 const label = labelExtractor(item);
                 return (
                   <CommandItem
-                    key={(item as any).id}
+                    key={item.id}
                     value={label}
                     onSelect={() => {
-                      const selected = items.find((i) => labelExtractor(i) === label);
-                      if (selected) {
-                        onChange((selected as any).id.toString());
-                        selectedData?.(selected);
-                      }
+                      const newId = item.id.toString();
+                      onChange(newId === value ? '' : newId);
+                      selectedData?.(item);
                       setOpen(false);
                     }}
                   >
@@ -76,7 +91,7 @@ export function GenericSearchCombobox<T>({ value, onChange, selectedData, fetche
                       <p className="text-sm font-medium leading-none">{label}</p>
                       {descriptionExtractor && <p className="text-xs text-muted-foreground">{descriptionExtractor(item)}</p>}
                     </div>
-                    <Check className={cn('ml-auto', value === (item as any).id.toString() ? 'opacity-100' : 'opacity-0')} />
+                    <Check className={cn('ml-auto', value === item.id.toString() ? 'opacity-100' : 'opacity-0')} />
                   </CommandItem>
                 );
               })}

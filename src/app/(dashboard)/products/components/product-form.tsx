@@ -21,6 +21,7 @@ import { ChevronLeft } from 'lucide-react';
 import { GasTypeSearchCombobox } from './gas-type-combobox';
 import { CylinderPropertySearchCombobox } from './cylinder-property-combobox';
 import { Label } from '@/components/ui/label';
+import { CylinderProperySelect } from './cylinder-property-select';
 
 interface ProductFormProps {
   initialData?: Product | null;
@@ -115,7 +116,7 @@ export function ProductForm({ initialData, gasTypes, cylinderProperties }: Produ
                   render={({ field }) => (
                     <FormItem>
                       <RequiredFormLabel>Properti Tabung</RequiredFormLabel>
-                      <CylinderPropertySearchCombobox value={String(field.value)} onChange={(val) => field.onChange(Number(val))} />
+                      <CylinderProperySelect value={String(field.value)} onChange={(val) => field.onChange(Number(val))} />
                       <FormMessage />
                     </FormItem>
                   )}

@@ -4,7 +4,7 @@ import type React from 'react';
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Plus, X, Scan, Search } from 'lucide-react';
+import { ArrowLeft, Plus, X, Scan } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -13,18 +13,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Badge } from '@/components/ui/badge';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { CreateTTBKRequest } from '@/types/ttbk';
-import { getCustomers } from '@/services/customerService';
-import { getWarehouses } from '@/services/warehouseService';
 import { createTTBK } from '@/services/ttbkService';
-import useSWR from 'swr';
-import { useDebounce } from '@/hooks/use-debounce';
 import { BarcodeScanner } from '@/components/features/barcode-scanner';
 import { CustomerSearchCombobox } from '../../loan-adjustments/components/customer-search-combobox';
 import { WarehouseSearchCombobox } from '../../loan-adjustments/components/warehouse-search-combobox';
@@ -42,17 +37,7 @@ export default function CreateTTBKForm() {
   });
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [newBarcode, setNewBarcode] = useState('');
-  const [customerOpen, setCustomerOpen] = useState(false);
-  const [warehouseOpen, setWarehouseOpen] = useState(false);
   const [isScannerOpen, setIsScannerOpen] = useState(false);
-  const [customerSearch, setCustomerSearch] = useState('');
-  const [warehouseSearch, setWarehouseSearch] = useState('');
-
-  const debouncedCustomerSearch = useDebounce(customerSearch, 300);
-  const debouncedWarehouseSearch = useDebounce(warehouseSearch, 300);
-
-  const { data: customersResponse } = useSWR(`/customers?search=${debouncedCustomerSearch}`, () => getCustomers({ search: debouncedCustomerSearch }));
-  const { data: warehousesResponse } = useSWR(`/warehouses?search=${debouncedWarehouseSearch}`, () => getWarehouses({ search: debouncedWarehouseSearch }));
 
   const addBarcode = (barcodeToAdd?: string) => {
     const barcode = (barcodeToAdd || newBarcode).trim();

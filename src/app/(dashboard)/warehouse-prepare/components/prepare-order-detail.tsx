@@ -68,7 +68,7 @@ export default function PrepareOrderDetailClient({ initialOrder }: PrepareOrderD
     }
 
     try {
-      const validation = await validateCylinderForOrderItem(item.order_item_id, barcode);
+      const validation: any = await validateCylinderForOrderItem(item.order_item_id, barcode);
       if (!validation.isValid) {
         toast.error(validation.message);
         return;
@@ -77,7 +77,7 @@ export default function PrepareOrderDetailClient({ initialOrder }: PrepareOrderD
       setItems((prev) =>
         prev.map((currentItem, index) => {
           if (index === itemIndex) {
-            const newBarcodes = [...currentItem.assignedBarcodes, barcode];
+            const newBarcodes = [...currentItem.assignedBarcodes, validation?.cylinder?.barcode_id];
             return {
               ...currentItem,
               assignedBarcodes: newBarcodes,

@@ -2,6 +2,7 @@
 
 import { GenericSearchCombobox } from '@/components/ui/GenericSearchCombobox';
 import { getGasTypes } from '@/services/gasTypeService';
+import { getGasTypeSelectList } from '@/services/SearchListService';
 import { GasType } from '@/types/gas-type';
 
 interface Props {
@@ -10,5 +11,5 @@ interface Props {
 }
 
 export function GasTypeSearchCombobox({ value, onChange }: Props) {
-  return <GenericSearchCombobox<GasType> value={value} onChange={(val) => onChange(val)} fetcher={getGasTypes} labelExtractor={(b) => b.name} placeholder="Pilih Jenis Gas..." searchKey="/gas-types" />;
+  return <GenericSearchCombobox<any> value={value} onChange={(val) => onChange(val)} fetcher={getGasTypeSelectList} disableRemoteSearch={true} labelExtractor={(b) => b.name} placeholder="Pilih Jenis Gas..." searchKey="/gas-types" />;
 }

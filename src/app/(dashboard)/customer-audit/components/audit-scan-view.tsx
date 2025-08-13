@@ -44,7 +44,7 @@ export default function AuditScanView({ initialAuditData }: { initialAuditData: 
     setIsLoading(true);
 
     try {
-      await scanAuditBarcode(auditId, { barcode_id: barcode });
+      await scanAuditBarcode(auditId, { scan_input: barcode });
       mutate();
       toast.success('Berhasil Scan', {
         description: `Barcode ${barcode} berhasil discan`,
@@ -176,7 +176,7 @@ export default function AuditScanView({ initialAuditData }: { initialAuditData: 
                 <div className="flex gap-2">
                   <div className="flex-1">
                     <Input
-                      placeholder="Masukkan barcode manual..."
+                      placeholder="Masukkan barcode atau nomor tabung manual..."
                       value={manualBarcode}
                       onChange={(e) => setManualBarcode(e.target.value)}
                       onKeyDown={(e) => {

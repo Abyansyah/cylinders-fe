@@ -73,8 +73,8 @@ export const getPrepareOrderDetails = cache(async (id: number): Promise<PrepareO
   return data;
 });
 
-export const validateCylinderForOrderItem = async (orderItemId: number, barcode: string): Promise<{ isValid: boolean; message: string }> => {
-  const { data } = await api.post(`/orders/warehouse/order-items/${orderItemId}/validate-cylinder`, { barcode });
+export const validateCylinderForOrderItem = async (orderItemId: number, scan_input: string): Promise<{ isValid: boolean; message: string }> => {
+  const { data } = await api.post(`/orders/warehouse/order-items/${orderItemId}/validate-cylinder`, { scan_input });
   return data;
 };
 
