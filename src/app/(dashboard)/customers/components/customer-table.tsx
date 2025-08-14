@@ -3,7 +3,7 @@
 import { useMemo, useState, useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import useSWR, { mutate } from 'swr';
-import { Link, Plus, Upload } from 'lucide-react';
+import { Plus, Upload } from 'lucide-react';
 import { toast } from 'sonner';
 import type { PaginationState } from '@tanstack/react-table';
 import { useDebounce } from '@/hooks/use-debounce';
@@ -16,6 +16,7 @@ import type { Customer } from '@/types/customer';
 import { usePermission } from '@/hooks/use-permission';
 import { PERMISSIONS } from '@/config/permissions';
 import { getCustomers } from '@/services/customerService';
+import Link from 'next/link';
 
 export default function CustomerTable() {
   const router = useRouter();
@@ -79,11 +80,9 @@ export default function CustomerTable() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Manajemen Pelanggan</h1>
         <div className="flex gap-2">
-          <Button asChild variant="outline">
-            <Link href="/customers/import">
-              <Upload className="mr-2 h-4 w-4" /> Import Data
-            </Link>
-          </Button>
+          <Link href="/customers/import" className="focus:outline-none text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 flex items-center font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">
+            <Upload className="mr-2 h-4 w-4" /> Import Data
+          </Link>
           {canCreate && (
             <Button onClick={() => router.push('/customers/create')}>
               <Plus className="mr-2 h-4 w-4" /> Tambah Pelanggan
