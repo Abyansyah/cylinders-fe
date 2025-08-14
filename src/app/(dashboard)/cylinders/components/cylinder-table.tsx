@@ -10,11 +10,12 @@ import useSWR from 'swr';
 import { getColumns } from './columns';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { Plus, Upload } from 'lucide-react';
 import CylinderFilter from './cylinder-filter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { DataTable } from '@/components/ui/data-table/data-table';
 import { BarcodeScanner } from '@/components/features/barcode-scanner';
+import Link from 'next/link';
 
 export default function CylinderTable() {
   const router = useRouter();
@@ -58,7 +59,7 @@ export default function CylinderTable() {
 
   const swrKey = useMemo(() => ['/cylinders', JSON.stringify(queryParams)], [queryParams]);
   const { data: apiResponse, isLoading } = useSWR(swrKey, () => getCylinders(queryParams), { keepPreviousData: true });
-  
+
   const pagination = useMemo<PaginationState>(() => ({ pageIndex: page - 1, pageSize: limit }), [page, limit]);
   const handlePaginationChange = (updater: any) => {
     const newPagination = typeof updater === 'function' ? updater(pagination) : updater;
@@ -90,10 +91,16 @@ export default function CylinderTable() {
           <h1 className="text-2xl font-bold">Manajemen Tabung Gas</h1>
           <p className="text-muted-foreground">Kelola data tabung gas dan pantau status pergerakan tabung</p>
         </div>
-        <Button onClick={() => router.push('/cylinders/create')} className="w-full sm:w-auto">
-          <Plus className="mr-2 h-4 w-4" />
-          Tambah Tabung Gas
-        </Button>
+        <div className="flex gap-2">
+          <Link href="/cylinders/import" className="focus:outline-none text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 flex items-center font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">
+            <Upload className="mr-2 h-4 w-4" /> Import Data
+          </Link>
+
+          <Button onClick={() => router.push('/cylinders/create')} className="w-full sm:w-auto">
+            <Plus className="mr-2 h-4 w-4" />
+            Tambah Tabung Gas
+          </Button>
+        </div>
       </motion.div>
       <CylinderFilter
         searchTerm={localSearch}

@@ -2,7 +2,7 @@
 
 import type React from 'react';
 import { useState, useRef, useCallback } from 'react';
-import { Upload, FileSpreadsheet, AlertCircle, CheckCircle2, X, Loader2, ArrowLeft } from 'lucide-react';
+import { Upload, FileSpreadsheet, AlertCircle, CheckCircle2, X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,12 +10,11 @@ import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { IMPORT_RESULT_STORAGE_KEY } from '@/constants/customer-import';
-import type { ImportResponse, ImportResult } from '@/types/customer-import';
-import { importCustomers } from '@/services/customerService';
-import Link from 'next/link';
+import { IMPORT_RESULT_STORAGE_KEY } from '@/constants/cylinder-import';
+import type { ImportResponse, ImportResult } from '@/types/cylinder-import';
+import { importCylinders } from '@/services/cylinderService';
 
-export default function CustomerImport() {
+export default function CylinderImport() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -101,7 +100,7 @@ export default function CustomerImport() {
     setUploadProgress(0);
 
     try {
-      const response = await importCustomers(selectedFile, (progress) => {
+      const response: any = await importCylinders(selectedFile, (progress) => {
         setUploadProgress(progress);
       });
 
@@ -114,7 +113,7 @@ export default function CustomerImport() {
           fileInputRef.current.value = '';
         }
       } else {
-        router.push('/customers/import/result');
+        router.push('/cylinders/import/result');
       }
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Terjadi kesalahan saat mengimpor data. Silakan coba lagi.');
@@ -125,21 +124,17 @@ export default function CustomerImport() {
   };
 
   return (
-    <div className="flex-1 space-y-4 p-4 md:p-4">
-      <Button variant="ghost" size="sm" onClick={() => router.push('/customers')}>
-        <ArrowLeft className="h-4 w-4 mr-2" />
-        Kembali
-      </Button>
+    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <div className="flex items-center justify-between space-y-2">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Import Customer</h2>
-          <p className="text-muted-foreground">Import data customer dari file Excel</p>
+          <h2 className="text-3xl font-bold tracking-tight">Import Tabung</h2>
+          <p className="text-muted-foreground">Import data tabung dari file Excel</p>
         </div>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Import Data Customer</CardTitle>
+          <CardTitle>Import Data Tabung</CardTitle>
           <CardDescription>Klik tombol atau drag & drop file Excel untuk memulai proses import</CardDescription>
         </CardHeader>
         <CardContent>
@@ -201,7 +196,7 @@ export default function CustomerImport() {
               </div>
             )}
 
-            {selectedFile && (
+            {selectedFile && !isUploading && (
               <div className="flex justify-center">
                 <Button onClick={handleUpload} size="lg" className="min-w-[200px]" disabled={isUploading}>
                   {isUploading ? (
@@ -212,7 +207,7 @@ export default function CustomerImport() {
                   ) : (
                     <>
                       <Upload className="mr-2 h-4 w-4" />
-                      Import Data Customer
+                      Import Data Tabung
                     </>
                   )}
                 </Button>
@@ -232,37 +227,23 @@ export default function CustomerImport() {
               <h4 className="font-medium mb-2">Format File Excel</h4>
               <ul className="text-sm text-muted-foreground space-y-1 ml-4">
                 <li>• File harus berformat .xlsx atau .xls</li>
-                <li>• Maksimal ukuran file 5MB</li>
+                <li>• Maksimal ukuran file 10MB</li>
                 <li>• Baris pertama harus berisi header kolom</li>
-                <li>
-                  • Untuk format excel dapat di unduh{' '}
-                  <Link className="underline text-blue-600 font-medium" href="https://tinyurl.com/y5z8nsxp" target="_blank" rel="noopener noreferrer">
-                    disini
-                  </Link>
-                </li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-medium mb-2">Kolom yang Diperlukan</h4>
               <ul className="text-sm text-muted-foreground space-y-1 ml-4">
-                <li>• customer_name (Nama Customer)</li>
-                <li>• phone_number (Nomor Telepon)</li>
-                <li>• email (Email)</li>
-                <li>• company_name (Nama Perusahaan)</li>
-                <li>• shipping_address_default (Alamat Pengiriman)</li>
-                <li>• contact_person (Nama Kontak)</li>
-                <li>• customer_type (Corporate/Individual)</li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-medium mb-2">Cara Menggunakan</h4>
-              <ul className="text-sm text-muted-foreground space-y-1 ml-4">
-                <li>• Klik tombol "Pilih File Excel" untuk membuka file explorer</li>
-                <li>• Atau drag & drop file Excel langsung ke area upload</li>
-                <li>• File akan divalidasi secara otomatis</li>
-                <li>• Klik "Import Data Customer" untuk memulai proses</li>
+                <li>• barcode_id (Barcode Tabung, wajib)</li>
+                <li>• serial_number (Nomor Tabung, wajib)</li>
+                <li>• cylinder_property_id (ID Tipe Tabung, wajib)</li>
+                <li>• manufacture_date (Tanggal Produksi, contoh: 2023-10-14, wajib)</li>
+                <li>• warehouse_id (ID Gudang, wajib)</li>
+                <li>• status ('Di Gudang - Kosong'/'Di Gudang - Terisi', wajib)</li>
+                <li>• gas_type_id (ID Jenis Gas, wajib jika status 'Di Gudang - Terisi')</li>
+                <li>• last_fill_date (Tanggal pengisian terakhir, contoh: 2025-08-14, wajib jika status 'Di Gudang - Terisi')</li>
+                <li>• notes (Catatan, opsional)</li>
               </ul>
             </div>
           </div>

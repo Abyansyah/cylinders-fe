@@ -5,6 +5,7 @@ import { GasType } from '@/types/gas-type';
 import { format } from 'date-fns';
 import { CylinderForReplacement } from '@/types/replacement-barcode';
 import { CylinderStatusUpdateRequest, CylinderStatusUpdateResponse } from '@/types/cylinder-status-update';
+import { ImportResponse } from '@/types/customer-import';
 
 export type CylinderCreatePayload = {
   barcode_id: string;
@@ -100,5 +101,22 @@ export const replaceBarcode = async (payload: { serial_number: string; new_barco
 
 export const bulkUpdateCylinderStatus = async (payload: CylinderStatusUpdateRequest): Promise<CylinderStatusUpdateResponse> => {
   const { data } = await api.put('/cylinders/warehouse/bulk-status-update', payload);
+  return data;
+};
+
+export const importCylinders = async (file: File, onUploadProgress: (progress: number) => void): Promise<ImportResponse> => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const { data } = await api.post('/cylinders/import', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    onUploadProgress: (progressEvent) => {
+      const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total!);
+      onUploadProgress(percentCompleted);
+    },
+  });
+
   return data;
 };
