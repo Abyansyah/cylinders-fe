@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { IMPORT_RESULT_STORAGE_KEY } from '@/constants/customer-import';
 import type { ImportResponse, ImportResult } from '@/types/customer-import';
 import { importCustomers } from '@/services/customerService';
+import Link from 'next/link';
 
 export default function CustomerImport() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -125,10 +126,10 @@ export default function CustomerImport() {
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-4">
-        <Button variant="ghost" size="sm" onClick={() => router.push('/customers/import')}>
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Kembali
-        </Button>
+      <Button variant="ghost" size="sm" onClick={() => router.push('/customers/import')}>
+        <ArrowLeft className="h-4 w-4 mr-2" />
+        Kembali
+      </Button>
       <div className="flex items-center justify-between space-y-2">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Import Customer</h2>
@@ -231,8 +232,14 @@ export default function CustomerImport() {
               <h4 className="font-medium mb-2">Format File Excel</h4>
               <ul className="text-sm text-muted-foreground space-y-1 ml-4">
                 <li>• File harus berformat .xlsx atau .xls</li>
-                <li>• Maksimal ukuran file 10MB</li>
+                <li>• Maksimal ukuran file 5MB</li>
                 <li>• Baris pertama harus berisi header kolom</li>
+                <li>
+                  • Untuk format excel dapat di unduh{' '}
+                  <Link className="underline text-blue-600 font-medium" href="https://tinyurl.com/y5z8nsxp" target="_blank" rel="noopener noreferrer">
+                    disini
+                  </Link>
+                </li>
               </ul>
             </div>
 
