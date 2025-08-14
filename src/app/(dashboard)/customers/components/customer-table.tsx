@@ -3,7 +3,7 @@
 import { useMemo, useState, useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import useSWR, { mutate } from 'swr';
-import { Plus } from 'lucide-react';
+import { Link, Plus, Upload } from 'lucide-react';
 import { toast } from 'sonner';
 import type { PaginationState } from '@tanstack/react-table';
 import { useDebounce } from '@/hooks/use-debounce';
@@ -35,7 +35,6 @@ export default function CustomerTable() {
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set('page', '1');
     if (debouncedSearch) params.set('search', debouncedSearch);
     else params.delete('search');
     if (searchParams.get('search') !== debouncedSearch) router.push(`${pathname}?${params.toString()}`);
@@ -79,11 +78,18 @@ export default function CustomerTable() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Manajemen Pelanggan</h1>
-        {canCreate && (
-          <Button onClick={() => router.push('/customers/create')}>
-            <Plus className="mr-2 h-4 w-4" /> Tambah Pelanggan
+        <div className="flex gap-2">
+          <Button asChild variant="outline">
+            <Link href="/customers/import">
+              <Upload className="mr-2 h-4 w-4" /> Import Data
+            </Link>
           </Button>
-        )}
+          {canCreate && (
+            <Button onClick={() => router.push('/customers/create')}>
+              <Plus className="mr-2 h-4 w-4" /> Tambah Pelanggan
+            </Button>
+          )}
+        </div>
       </div>
       <DataTable
         columns={columns}
