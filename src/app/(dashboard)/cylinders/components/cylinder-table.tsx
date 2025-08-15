@@ -16,11 +16,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { DataTable } from '@/components/ui/data-table/data-table';
 import { BarcodeScanner } from '@/components/features/barcode-scanner';
 import Link from 'next/link';
+import { usePermission } from '@/hooks/use-permission';
+import { PERMISSIONS } from '@/config/permissions';
 
 export default function CylinderTable() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { checkPermission } = usePermission();
 
   const [showScanner, setShowScanner] = useState(false);
 
@@ -84,6 +87,8 @@ export default function CylinderTable() {
     setLocalSearch(barcode);
   };
 
+  const canImportData = checkPermission(PERMISSIONS.importDataCylinder.view);
+
   return (
     <div className="space-y-6">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -92,9 +97,11 @@ export default function CylinderTable() {
           <p className="text-muted-foreground">Kelola data tabung gas dan pantau status pergerakan tabung</p>
         </div>
         <div className="flex gap-2">
-          <Link href="/cylinders/import" className="focus:outline-none text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 flex items-center font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">
-            <Upload className="mr-2 h-4 w-4" /> Import Data
-          </Link>
+          {canImportData && (
+            <Link href="/cylinders/import" className="focus:outline-none text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 flex items-center font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">
+              <Upload className="mr-2 h-4 w-4" /> Import Data
+            </Link>
+          )}
 
           <Button onClick={() => router.push('/cylinders/create')} className="w-full sm:w-auto">
             <Plus className="mr-2 h-4 w-4" />

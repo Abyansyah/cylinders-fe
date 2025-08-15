@@ -104,4 +104,10 @@ export const PERMISSIONS = {
   updateStatusTabung: {
     view: 'cylinder:bulk_update_status',
   },
+  importDataCustomer: {
+    view: 'customer:import',
+  },
+  importDataCylinder: {
+    view: 'cylinder:import',
+  },
 } as const;

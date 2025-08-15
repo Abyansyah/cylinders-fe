@@ -74,15 +74,18 @@ export default function CustomerTable() {
   };
   const columns = useMemo(() => getColumns(handleDelete), []);
   const canCreate = checkPermission(PERMISSIONS.customer.create);
+  const canImportData = checkPermission(PERMISSIONS.importDataCustomer.view);
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Manajemen Pelanggan</h1>
         <div className="flex gap-2">
-          <Link href="/customers/import" className="focus:outline-none text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 flex items-center font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">
-            <Upload className="mr-2 h-4 w-4" /> Import Data
-          </Link>
+          {canImportData && (
+            <Link href="/customers/import" className="focus:outline-none text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 flex items-center font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">
+              <Upload className="mr-2 h-4 w-4" /> Import Data
+            </Link>
+          )}
           {canCreate && (
             <Button onClick={() => router.push('/customers/create')}>
               <Plus className="mr-2 h-4 w-4" /> Tambah Pelanggan

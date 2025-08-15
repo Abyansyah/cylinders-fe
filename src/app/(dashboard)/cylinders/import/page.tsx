@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import { PageTransition } from '@/components/page-transition';
 import CylinderImport from '../components/cylinder-import';
+import { PermissionGuard } from '@/components/guards/permission-guard';
+import { PERMISSIONS } from '@/config/permissions';
 
 export const metadata: Metadata = {
   title: 'Import Tabung',
@@ -9,8 +11,10 @@ export const metadata: Metadata = {
 
 export default function CylinderImportPage() {
   return (
-    <PageTransition>
-      <CylinderImport />
-    </PageTransition>
+    <PermissionGuard requiredPermission={PERMISSIONS.importDataCustomer.view}>
+      <PageTransition>
+        <CylinderImport />
+      </PageTransition>
+    </PermissionGuard>
   );
 }
