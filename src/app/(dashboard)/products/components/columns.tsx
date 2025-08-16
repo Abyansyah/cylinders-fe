@@ -23,14 +23,14 @@ export const getColumns = (onDelete: (item: Product) => void): ColumnDef<Product
     ),
   },
   {
-    accessorKey: 'gasType',
-    header: 'Tipe Gas',
-    cell: ({ row }) => <span className="text-sm text-muted-foreground">{row.original?.gasType?.name ? row.original.gasType.name : 'Tabung Kosong'}</span>,
+    accessorKey: 'sku',
+    header: 'SKU',
+    cell: ({ row }) => <span className="text-sm text-muted-foreground">{row.original?.sku}</span>,
   },
   {
-    accessorKey: 'cylinderProperty',
-    header: 'Properti Tabung',
-    cell: ({ row }) => row.original.cylinderProperty.name,
+    accessorKey: 'unit',
+    header: 'Unit',
+    cell: ({ row }) => row.original.unit,
   },
   {
     accessorKey: 'is_active',

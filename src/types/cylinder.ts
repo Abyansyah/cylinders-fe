@@ -1,5 +1,4 @@
-import { CylinderProperty } from './cylinder-property';
-import { GasType } from './gas-type';
+import { Product } from './product';
 import { User } from './user';
 
 export interface Cylinder {
@@ -18,8 +17,7 @@ export interface Cylinder {
   current_order_item_id: number | null;
   createdAt: string;
   updatedAt: string;
-  cylinderProperty: Pick<CylinderProperty, 'id' | 'name' | 'size_cubic_meter' | 'material' | 'max_age_years'>;
-  gasType: Pick<GasType, 'id' | 'name' | 'description'>;
+  products: Pick<Product, 'id' | 'name' | 'sku' | 'description' | 'is_active'>;
   currentWarehouse: {
     name: string;
     address?: string;
@@ -34,8 +32,7 @@ export interface CylinderDetail extends Omit<Cylinder, 'cylinderProperty' | 'gas
   is_owned_by_customer: boolean;
   notes: string | null;
   customer_id: number | null;
-  cylinderProperty: CylinderProperty;
-  gasType: GasType | null;
+  product: Product;
   currentWarehouse: Warehouse;
   stockMovements: StockMovement[];
 }

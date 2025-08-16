@@ -14,9 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { createProductAction, updateProductAction } from '../actions/productActions';
-import type { Product } from '@/types/product';
-import type { GasTypesApiResponse } from '@/types/gas-type';
-import type { CylinderPropertiesApiResponse } from '@/types/cylinder-property';
+import type { Product, ProductsApiResponse } from '@/types/product';
 import { ChevronLeft } from 'lucide-react';
 import { GasTypeSearchCombobox } from './gas-type-combobox';
 import { CylinderPropertySearchCombobox } from './cylinder-property-combobox';
@@ -25,17 +23,14 @@ import { CylinderProperySelect } from './cylinder-property-select';
 
 interface ProductFormProps {
   initialData?: Product | null;
-  gasTypes: GasTypesApiResponse;
-  cylinderProperties: CylinderPropertiesApiResponse;
 }
 
 const formSchema = z.object({
   name: z.string().min(3, { message: 'Nama produk wajib diisi.' }),
   sku: z.string().min(3, { message: 'SKU produk wajib diisi.' }),
-  description: z.string().optional(),
+  description: z.string(),
   is_active: z.boolean(),
-  cylinder_properties_id: z.coerce.number({ required_error: 'Properti tabung wajib dipilih.' }),
-  gas_type_id: z.coerce.number(),
+  unit: z.string(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -47,7 +42,7 @@ const RequiredFormLabel = ({ children }: { children: React.ReactNode }) => (
   </FormLabel>
 );
 
-export function ProductForm({ initialData, gasTypes, cylinderProperties }: ProductFormProps) {
+export function ProductForm({ initialData }: ProductFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const isEditMode = !!initialData;
@@ -58,9 +53,8 @@ export function ProductForm({ initialData, gasTypes, cylinderProperties }: Produ
       name: initialData?.name || '',
       sku: initialData?.sku || '',
       description: initialData?.description || '',
+      unit: initialData?.unit || '',
       is_active: initialData?.is_active ?? true,
-      cylinder_properties_id: initialData?.cylinder_properties_id,
-      gas_type_id: initialData?.gas_type_id,
     },
   });
 
@@ -109,33 +103,6 @@ export function ProductForm({ initialData, gasTypes, cylinderProperties }: Produ
                 )}
               />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <FormField
-                  control={form.control}
-                  name="cylinder_properties_id"
-                  render={({ field }) => (
-                    <FormItem>
-                      <RequiredFormLabel>Properti Tabung</RequiredFormLabel>
-                      <CylinderProperySelect value={String(field.value)} onChange={(val) => field.onChange(Number(val))} />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="gas_type_id"
-                  render={({ field }) => (
-                    <FormItem>
-                      <Label>Jenis Gas</Label>
-                      <GasTypeSearchCombobox value={String(field.value)} onChange={(val) => field.onChange(Number(val))} />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <Separator />
-
               <FormField
                 control={form.control}
                 name="sku"
@@ -153,10 +120,25 @@ export function ProductForm({ initialData, gasTypes, cylinderProperties }: Produ
 
               <FormField
                 control={form.control}
+                name="unit"
+                render={({ field }) => (
+                  <FormItem>
+                    <RequiredFormLabel>Unit</RequiredFormLabel>
+                    <FormControl>
+                      <Input placeholder="Unit" {...field} />
+                    </FormControl>
+                    <FormDescription>Masukkan satuan produk.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Deskripsi</FormLabel>
+                    <RequiredFormLabel>Deskripsi</RequiredFormLabel>
                     <FormControl>
                       <Textarea rows={4} placeholder="Jelaskan tentang produk ini..." {...field} />
                     </FormControl>

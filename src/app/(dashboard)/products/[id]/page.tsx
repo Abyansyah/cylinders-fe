@@ -66,9 +66,14 @@ export default async function ProductDetailPage(props: Props) {
                 <CardTitle>Informasi Produk</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <DetailItem icon={<FileText size={18} />} label="Deskripsi">
-                  <p>{product.description || '-'}</p>
-                </DetailItem>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <DetailItem icon={<FileText size={18} />} label="Deskripsi">
+                    <p>{product.description || '-'}</p>
+                  </DetailItem>
+                  <DetailItem icon={<FileText size={18} />} label="Unit">
+                    <p>{product.unit || '-'}</p>
+                  </DetailItem>
+                </div>
                 <Separator />
                 <div className="grid sm:grid-cols-2 gap-4">
                   <DetailItem icon={<Hash size={18} />} label="SKU">
@@ -78,37 +83,6 @@ export default async function ProductDetailPage(props: Props) {
                     <Badge variant={product.is_active ? 'default' : 'destructive'}>{product.is_active ? 'Aktif' : 'Nonaktif'}</Badge>
                   </DetailItem>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Tipe Gas</CardTitle>
-                <CardDescription>{product.gasType.name}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <DetailItem icon={<Beaker size={18} />} label="Deskripsi Gas">
-                  <p>{product.gasType.description || '-'}</p>
-                </DetailItem>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Properti Tabung</CardTitle>
-                <CardDescription>{product.cylinderProperty.name}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <DetailItem icon={<Package size={18} />} label="Material & Ukuran">
-                  <p>
-                    {product.cylinderProperty.material}, {product.cylinderProperty.size_cubic_meter} m³
-                  </p>
-                </DetailItem>
-                <Separator />
-                <DetailItem icon={<Calendar size={18} />} label="Masa Pakai Maksimal">
-                  <p>{product.cylinderProperty.max_age_years} tahun</p>
-                </DetailItem>
               </CardContent>
             </Card>
           </div>

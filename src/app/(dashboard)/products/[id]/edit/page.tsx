@@ -5,8 +5,6 @@ import { PermissionGuard } from '@/components/guards/permission-guard';
 import { PERMISSIONS } from '@/config/permissions';
 import { getProductById } from '@/services/productService';
 import { ProductForm } from '../../components/product-form';
-import { getGasTypes } from '@/services/gasTypeService';
-import { getCylinderProperties } from '@/services/cylinderPropertyService';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -22,14 +20,14 @@ export default async function EditProductPage(props: Props) {
   const params = await props.params;
   const id = Number(params.id);
 
-  const [product, gasTypes, cylinderProperties] = await Promise.all([getProductById(id), getGasTypes({ limit: 100 }), getCylinderProperties({ limit: 100 })]);
+  const product = await getProductById(id);
 
   if (!product) notFound();
 
   return (
     <PermissionGuard requiredPermission={PERMISSIONS.products.view}>
       <PageTransition>
-        <ProductForm initialData={product} gasTypes={gasTypes} cylinderProperties={cylinderProperties} />
+        <ProductForm initialData={product} />
       </PageTransition>
     </PermissionGuard>
   );

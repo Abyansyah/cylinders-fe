@@ -7,8 +7,7 @@ export type ProductPayload = {
   sku?: string;
   description?: string;
   is_active: boolean;
-  cylinder_properties_id: number;
-  gas_type_id: number;
+  unit?: string;
 };
 
 interface GetProductsParams {
