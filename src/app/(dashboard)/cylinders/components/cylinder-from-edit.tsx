@@ -12,15 +12,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { PageTransition } from '@/components/page-transition';
 import type { Cylinder, UpdateCylinderStatusRequest } from '@/types/cylinder';
-import type { GasType } from '@/types/gas-type';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { format, parseISO } from 'date-fns';
 import { id } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
-import { getValidGasTypes, updateCylinderStatus } from '@/services/cylinderService';
+import { updateCylinderStatus } from '@/services/cylinderService';
 import { toast } from 'sonner';
-import useSWR from 'swr';
 
 const EDITABLE_STATUSES = ['Di Gudang - Kosong', 'Di Gudang - Terisi', 'Perlu Inspeksi', 'Rusak', 'Tidak Aktif'];
 
@@ -42,18 +40,6 @@ export default function EditCylinderView({ cylinder }: EditCylinderViewProps) {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const shouldFetchGases = formData.status === 'Di Gudang - Terisi';
-
-  const { data: validGasesRes, isLoading: isLoadingValidGases } = useSWR(
-    shouldFetchGases ? `/cylinders/valid-gases?cylinder_properties_id=${cylinder.cylinder_properties_id}` : null,
-    () => getValidGasTypes(cylinder.cylinder_properties_id!),
-    {
-      keepPreviousData: true,
-    }
-  );
-
-  const validGasTypes: GasType[] = validGasesRes?.data || [];
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
@@ -62,7 +48,6 @@ export default function EditCylinderView({ cylinder }: EditCylinderViewProps) {
     const newErrors: Record<string, string> = {};
 
     if (formData.status === 'Di Gudang - Terisi') {
-      if (!formData.gas_type_id) newErrors.gas_type_id = 'Jenis gas wajib dipilih.';
       if (!lastFillDate) newErrors.last_fill_date = 'Tanggal pengisian wajib diisi.';
     }
     if (!formData.notes) {
@@ -86,7 +71,7 @@ export default function EditCylinderView({ cylinder }: EditCylinderViewProps) {
       toast.success('Status tabung gas berhasil diperbarui.', {
         duration: 3000,
       });
-      router.push(`/cylinders/${cylinder.barcode_id}`);
+      router.push(`/cylinders/${cylinder.serial_number}`);
       router.refresh();
     } catch (error) {
       console.error('Error updating cylinder:', error);
@@ -143,9 +128,9 @@ export default function EditCylinderView({ cylinder }: EditCylinderViewProps) {
                         <p className="font-mono">{cylinder.serial_number}</p>
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-muted-foreground">Jenis Tabung</label>
-                        <p className="font-medium">{cylinder.cylinderProperty.name}</p>
-                        <p className="text-sm text-muted-foreground">{cylinder.cylinderProperty.size_cubic_meter} m³</p>
+                        <label className="text-sm font-medium text-muted-foreground">Jenis Produk</label>
+                        <p className="font-medium">{cylinder.product.name}</p>
+                        <p className="text-sm text-muted-foreground">{cylinder.product.sku}</p>
                       </div>
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">Lokasi Saat Ini</label>
@@ -192,32 +177,6 @@ export default function EditCylinderView({ cylinder }: EditCylinderViewProps) {
 
                     {formData.status === 'Di Gudang - Terisi' && (
                       <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="gas_type_id">Jenis Gas *</Label>
-                          <Select
-                            value={formData.gas_type_id?.toString() || ''}
-                            onValueChange={(value) => {
-                              setFormData((prev) => ({ ...prev, gas_type_id: Number.parseInt(value) }));
-                              if (errors.gas_type_id) setErrors((e) => ({ ...e, gas_type_id: '' }));
-                            }}
-                            disabled={isLoadingValidGases}
-                          >
-                            <SelectTrigger>{isLoadingValidGases ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <SelectValue placeholder="Pilih jenis gas..." />}</SelectTrigger>
-                            <SelectContent>
-                              {validGasTypes.length > 0 ? (
-                                validGasTypes.map((gasType) => (
-                                  <SelectItem key={gasType.id} value={gasType.id.toString()}>
-                                    {gasType.name}
-                                  </SelectItem>
-                                ))
-                              ) : (
-                                <div className="p-4 text-sm text-muted-foreground">Tidak ada jenis gas yang valid untuk tabung ini.</div>
-                              )}
-                            </SelectContent>
-                          </Select>
-                          {errors.gas_type_id && <p className="text-sm text-red-600">{errors.gas_type_id}</p>}
-                        </div>
-
                         <div className="space-y-2">
                           <Label htmlFor="last_fill_date">Tanggal Pengisian Terakhir *</Label>
                           <Popover>
@@ -280,12 +239,6 @@ export default function EditCylinderView({ cylinder }: EditCylinderViewProps) {
                       <span className="text-muted-foreground">Status Baru:</span>
                       <span className="font-medium text-primary">{formData.status}</span>
                     </div>
-                    {formData.status === 'Di Gudang - Terisi' && formData.gas_type_id && (
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Jenis Gas:</span>
-                        <span>{validGasTypes.find((g) => g.id === formData.gas_type_id)?.name}</span>
-                      </div>
-                    )}
                     {lastFillDate && (
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Tanggal Isi:</span>

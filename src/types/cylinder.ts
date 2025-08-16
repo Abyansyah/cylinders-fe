@@ -17,7 +17,7 @@ export interface Cylinder {
   current_order_item_id: number | null;
   createdAt: string;
   updatedAt: string;
-  products: Pick<Product, 'id' | 'name' | 'sku' | 'description' | 'is_active'>;
+  product: Pick<Product, 'id' | 'name' | 'sku' | 'description' | 'is_active'>;
   currentWarehouse: {
     name: string;
     address?: string;

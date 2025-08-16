@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { getCylinderDetailsByBarcode } from '@/services/cylinderService';
-import { getGasTypes } from '@/services/gasTypeService';
 import EditCylinderView from '../../components/cylinder-from-edit';
 import { PageTransition } from '@/components/page-transition';
 import { Button } from '@/components/ui/button';

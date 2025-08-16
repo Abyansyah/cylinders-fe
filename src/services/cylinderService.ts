@@ -1,7 +1,6 @@
 import api from '@/lib/api';
 import type { Cylinder, CylindersApiResponse, CylinderDetail } from '@/types/cylinder';
 import { cache } from 'react';
-import { GasType } from '@/types/gas-type';
 import { format } from 'date-fns';
 import { CylinderForReplacement } from '@/types/replacement-barcode';
 import { CylinderStatusUpdateRequest, CylinderStatusUpdateResponse } from '@/types/cylinder-status-update';
@@ -64,11 +63,6 @@ export const getCylinderDetailsByBarcode = cache(async (barcode: string): Promis
   const { data } = await api.get(`/cylinders/details/${barcode}`);
   return data;
 });
-
-export const getValidGasTypes = async (cylinderPropertiesId: number): Promise<ApiResponse<GasType[]>> => {
-  const response = await api.get(`/cylinders/valid-gases?cylinder_properties_id=${cylinderPropertiesId}`);
-  return response.data;
-};
 
 export const exportCylinderHistory = async (cylinderId: number, formatType: 'pdf' | 'xlsx', fileName: string) => {
   const response = await api.get(`/cylinders/export-history/${cylinderId}?format=${formatType}`, {

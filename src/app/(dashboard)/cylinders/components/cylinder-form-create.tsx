@@ -6,12 +6,11 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { number, z } from 'zod';
 import { toast } from 'sonner';
 import useSWR from 'swr';
 import { format } from 'date-fns';
 import { id as indonesiaLocale } from 'date-fns/locale';
-
 import { ChevronLeft, Save, ScanLine, Keyboard, AlertCircle, Calendar, Loader2, Check, ChevronsUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,46 +28,21 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/stores/authStore';
-
-import { checkBarcodeExists, createCylinder, getValidGasTypes } from '@/services/cylinderService';
-import { getCylinderProperties } from '@/services/cylinderPropertyService';
-import { getGasTypes } from '@/services/gasTypeService';
+import { checkBarcodeExists, createCylinder } from '@/services/cylinderService';
 import { getWarehouses } from '@/services/warehouseService';
-
-import type { CylinderProperty } from '@/types/cylinder-property';
-import type { GasType } from '@/types/gas-type';
 import type { Warehouse } from '@/types/warehouse';
+import { getProductsSelect } from '@/services/SearchListService';
 
-const formSchema = z
-  .object({
-    barcode_id: z.string().min(1, 'Barcode ID wajib diisi.'),
-    serial_number: z.string().min(3, 'Serial number wajib diisi (minimal 3 karakter).'),
-    cylinder_properties_id: z.number({ required_error: 'Jenis tabung wajib dipilih.' }),
-    warehouse_id: z.number({ required_error: 'Gudang wajib dipilih.' }),
-    status: z.enum(['Di Gudang - Kosong', 'Di Gudang - Terisi']),
-    manufacture_date: z.date({ required_error: 'Tanggal produksi wajib diisi.' }),
-    notes: z.string().optional(),
-    gas_type_id: z.number().nullable(),
-    last_fill_date: z.date().optional().nullable(),
-  })
-  .superRefine((data, ctx) => {
-    if (data.status === 'Di Gudang - Terisi') {
-      if (!data.gas_type_id) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ['gas_type_id'],
-          message: 'Jenis gas wajib dipilih jika status terisi.',
-        });
-      }
-      if (!data.last_fill_date) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ['last_fill_date'],
-          message: 'Tanggal pengisian terakhir wajib diisi jika status terisi.',
-        });
-      }
-    }
-  });
+const formSchema = z.object({
+  barcode_id: z.string().min(1, 'Barcode ID wajib diisi.'),
+  serial_number: z.string().min(3, 'Serial number wajib diisi (minimal 3 karakter).'),
+  product_id: z.number({ required_error: 'Jenis tabung wajib dipilih.' }),
+  warehouse_id: z.number({ required_error: 'Gudang wajib dipilih.' }),
+  status: z.enum(['Di Gudang - Kosong', 'Di Gudang - Terisi']),
+  manufacture_date: z.date({ required_error: 'Tanggal produksi wajib diisi.' }),
+  notes: z.string().optional(),
+  last_fill_date: z.date().optional().nullable(),
+});
 
 type FormValues = z.infer<typeof formSchema>;
 
@@ -144,23 +118,15 @@ export default function CylinderFormCreate() {
       serial_number: '',
       status: 'Di Gudang - Kosong',
       notes: '',
-      gas_type_id: null,
+      product_id: undefined,
       last_fill_date: null,
       warehouse_id: user?.warehouse_id,
     },
   });
 
-  const selectedCylinderPropertyId = form.watch('cylinder_properties_id');
-
-  const { data: cylinderPropsRes, isLoading: isLoadingProps } = useSWR('/cylinder-properties?limit=1000', () => getCylinderProperties({ limit: 1000 }));
   const { data: warehousesRes, isLoading: isLoadingWarehouses } = useSWR(user?.role.role_name !== 'Petugas Gudang' ? '/warehouses?limit=1000' : null, () => getWarehouses({ limit: 1000 }));
-  const { data: validGasesRes, isLoading: isLoadingValidGases } = useSWR(
-    selectedCylinderPropertyId ? `/cylinders/valid-gases?cylinder_properties_id=${selectedCylinderPropertyId}` : null,
-    () => getValidGasTypes(selectedCylinderPropertyId!),
-    {
-      revalidateOnFocus: false,
-    }
-  );
+  const { data: productsSelectOptions, isLoading: isLoadingProducts } = useSWR('/select-list/products', () => getProductsSelect());
+
   const isPetugasGudang = user?.role.role_name === 'Petugas Gudang';
 
   useEffect(() => {
@@ -194,7 +160,6 @@ export default function CylinderFormCreate() {
       ...values,
       manufacture_date: format(values.manufacture_date, 'yyyy-MM-dd'),
       last_fill_date: values.last_fill_date ? format(values.last_fill_date, 'yyyy-MM-dd') : null,
-      gas_type_id: values.status === 'Di Gudang - Kosong' ? null : values.gas_type_id,
     };
 
     createCylinder(payload as any)
@@ -223,7 +188,6 @@ export default function CylinderFormCreate() {
       serial_number: '',
       status: 'Di Gudang - Kosong',
       notes: '',
-      gas_type_id: null,
       last_fill_date: null,
       manufacture_date: undefined,
       warehouse_id: isPetugasGudang ? user?.warehouse_id : undefined,
@@ -277,18 +241,18 @@ export default function CylinderFormCreate() {
 
                     <FormField
                       control={form.control}
-                      name="cylinder_properties_id"
+                      name="product_id"
                       render={({ field }) => (
                         <FormItem>
-                          <Label>Jenis Tabung *</Label>
+                          <Label>Jenis Product *</Label>
                           <Combobox
-                            options={cylinderPropsRes?.data.map((p: CylinderProperty) => ({ value: p.id, label: p.name, description: `${p.size_cubic_meter} m³ | ${p.material}` })) || []}
+                            options={productsSelectOptions?.data.map((g: any) => ({ value: g.value, label: g.label })) || []}
                             value={field.value}
                             onValueChange={field.onChange}
-                            placeholder="Pilih jenis tabung..."
-                            searchPlaceholder="Cari jenis tabung..."
-                            emptyText="Jenis tabung tidak ditemukan."
-                            isLoading={isLoadingProps}
+                            placeholder="Pilih jenis gas..."
+                            searchPlaceholder="Cari jenis gas..."
+                            emptyText="Jenis gas tidak ditemukan."
+                            isLoading={isLoadingProducts}
                           />
                           <FormMessage />
                         </FormItem>
@@ -337,7 +301,6 @@ export default function CylinderFormCreate() {
                                   const newStatus = val === 1 ? 'Di Gudang - Kosong' : 'Di Gudang - Terisi';
                                   controllerField.onChange(newStatus);
                                   if (newStatus === 'Di Gudang - Kosong') {
-                                    form.setValue('gas_type_id', null);
                                     form.setValue('last_fill_date', null);
                                   }
                                 }}
@@ -354,25 +317,6 @@ export default function CylinderFormCreate() {
 
                     {form.watch('status') === 'Di Gudang - Terisi' && (
                       <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="space-y-4">
-                        <FormField
-                          control={form.control}
-                          name="gas_type_id"
-                          render={({ field }) => (
-                            <FormItem>
-                              <Label>Jenis Gas *</Label>
-                              <Combobox
-                                options={validGasesRes?.data.map((g: GasType) => ({ value: g.id, label: g.name })) || []}
-                                value={field.value}
-                                onValueChange={field.onChange}
-                                placeholder="Pilih jenis gas..."
-                                searchPlaceholder="Cari jenis gas..."
-                                emptyText="Jenis gas tidak ditemukan."
-                                isLoading={isLoadingValidGases}
-                              />
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
                         <FormField
                           control={form.control}
                           name="last_fill_date"

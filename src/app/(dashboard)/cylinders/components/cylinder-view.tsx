@@ -57,7 +57,7 @@ export default function CylinderDetailView({ cylinder }: CylinderDetailViewProps
             </div>
           </div>
           {canEdit && (
-            <Button onClick={() => router.push(`/cylinders/${cylinder.barcode_id}/edit`)}>
+            <Button onClick={() => router.push(`/cylinders/${cylinder.serial_number}/edit`)}>
               <Edit className="mr-2 h-4 w-4" />
               Edit Status
             </Button>
@@ -95,19 +95,11 @@ export default function CylinderDetailView({ cylinder }: CylinderDetailViewProps
                     </div>
                     <div className="space-y-4">
                       <div>
-                        <label className="text-sm font-medium text-muted-foreground">Jenis Tabung</label>
-                        <p className="font-medium">{cylinder.cylinderProperty.name}</p>
+                        <label className="text-sm font-medium text-muted-foreground">Jenis Produk</label>
+                        <p className="font-medium">{cylinder.product.name}</p>
                         <p className="text-sm text-muted-foreground">
-                          {cylinder.cylinderProperty.size_cubic_meter} m³ - {cylinder.cylinderProperty.material}
+                          {cylinder.product.sku} - {cylinder.product.unit}
                         </p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-muted-foreground">Jenis Gas</label>
-                        <p>{cylinder.gasType?.name || 'Tidak ada'}</p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-muted-foreground">Umur Maksimal</label>
-                        <p>{cylinder.cylinderProperty.max_age_years} tahun</p>
                       </div>
                     </div>
                   </div>

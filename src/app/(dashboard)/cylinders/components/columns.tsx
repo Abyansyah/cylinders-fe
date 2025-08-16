@@ -16,28 +16,20 @@ export const getColumns = (): ColumnDef<Cylinder>[] => [
   },
   {
     accessorKey: 'serial_number',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Serial Number" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Nomor tabung" />,
     cell: ({ row }) => <div className="font-mono text-sm">{row.getValue('serial_number')}</div>,
   },
   {
-    accessorKey: 'cylinderProperty',
+    accessorKey: 'product',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Jenis Tabung" />,
     cell: ({ row }) => {
-      const property = row.original.cylinderProperty;
+      const property = row.original.product;
       return (
         <div>
           <div className="font-medium">{property.name}</div>
-          <div className="text-sm text-muted-foreground">{property.size_cubic_meter} m³</div>
+          <div className="text-sm text-muted-foreground">{property.sku} </div>
         </div>
       );
-    },
-  },
-  {
-    accessorKey: 'gasType',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Jenis Gas" />,
-    cell: ({ row }) => {
-      const gasType = row.original.gasType;
-      return gasType ? <div className="text-sm">{gasType.name}</div> : <div className="text-sm text-muted-foreground">-</div>;
     },
   },
   {
@@ -78,14 +70,14 @@ export const getColumns = (): ColumnDef<Cylinder>[] => [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Aksi</DropdownMenuLabel>
             <DropdownMenuItem>
-              <Link className="flex items-center" href={`/cylinders/${cylinder.barcode_id}`}>
+              <Link className="flex items-center" href={`/cylinders/${cylinder.serial_number}`}>
                 <Eye className="mr-2 h-4 w-4" />
                 <p>Detail</p>
               </Link>
             </DropdownMenuItem>
             {canEdit && (
               <DropdownMenuItem>
-                <Link className="flex items-center" href={`/cylinders/${cylinder.barcode_id}/edit`}>
+                <Link className="flex items-center" href={`/cylinders/${cylinder.serial_number}/edit`}>
                   <Edit className="mr-2 h-4 w-4" />
                   <p> Edit Status</p>
                 </Link>

@@ -20,3 +20,8 @@ export const getCylinderPropertiesSelectList = async (): Promise<SelectListApiRe
   const { data } = await api.get('/select-lists/cylinder-properties');
   return data;
 };
+
+export const getProductsSelect = async (): Promise<SelectListApiResponse> => {
+  const { data } = await api.get('/select-lists/products');
+  return data;
+};
