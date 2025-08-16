@@ -7,20 +7,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { AlertCircle, Plus, Scan, Trash2, Package, RefreshCw } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Plus, Scan, Trash2, Package, RefreshCw } from 'lucide-react';
 import { BarcodeScanner } from '@/components/features/barcode-scanner';
 import { UpdateResultsDialog } from './update-results-dialog';
 import { CylinderStatusUpdateRequest, CylinderStatusUpdateResponse, CylinderStatusOption } from '@/types/cylinder-status-update';
 import { toast } from 'sonner';
-import useSWR from 'swr';
-import { getGasTypes } from '@/services/gasTypeService';
 import { bulkUpdateCylinderStatus } from '@/services/cylinderService';
-import { GenericSearchCombobox } from '@/components/ui/GenericSearchCombobox';
-import { getGasTypeSelectList } from '@/services/SearchListService';
 
 const CYLINDER_STATUS_OPTIONS: { value: CylinderStatusOption; label: string }[] = [
   { value: 'Di Gudang - Terisi', label: 'Di Gudang - Terisi' },
@@ -37,14 +31,6 @@ export default function CylinderStatusUpdateForm() {
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [results, setResults] = useState<CylinderStatusUpdateResponse | null>(null);
   const [isResultsOpen, setIsResultsOpen] = useState(false);
-
-  const { data: gasTypesResponse } = useSWR('/gas-types', () => getGasTypes({ limit: 1000 }), {
-    revalidateOnFocus: false,
-    revalidateIfStale: false,
-    revalidateOnReconnect: false,
-    revalidateOnMount: true,
-  });
-  const gasTypes = gasTypesResponse?.data || [];
 
   const handleAddBarcode = () => {
     if (!currentBarcode.trim()) return;
@@ -91,10 +77,6 @@ export default function CylinderStatusUpdateForm() {
   const handleSubmit = async () => {
     if (barcodes.length === 0 || !selectedStatus) {
       toast.error('Error', { description: 'Harap isi semua field yang diperlukan.' });
-      return;
-    }
-    if (selectedStatus === 'Di Gudang - Terisi' && !selectedGasType) {
-      toast.error('Error', { description: "Jenis gas harus dipilih untuk status 'Di Gudang - Terisi'" });
       return;
     }
 
@@ -264,21 +246,10 @@ export default function CylinderStatusUpdateForm() {
               </Select>
             </div>
 
-            {requiresGasType && (
-              <div className="space-y-3">
-                <Label htmlFor="gasType">Jenis Gas *</Label>
-                <GenericSearchCombobox<any> value={selectedGasType} onChange={setSelectedGasType} fetcher={getGasTypeSelectList} labelExtractor={(item) => item.name} placeholder="Pilih jenis gas" searchKey="/gas-types" />
-                <Alert>
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>Jenis gas wajib dipilih untuk status "Di Gudang - Terisi"</AlertDescription>
-                </Alert>
-              </div>
-            )}
-
             <Separator />
 
             <div className="flex gap-3">
-              <Button onClick={handleSubmit} disabled={isLoading || barcodes.length === 0 || !selectedStatus || (requiresGasType && !selectedGasType)} className="flex-1">
+              <Button onClick={handleSubmit} disabled={isLoading || barcodes.length === 0 || !selectedStatus} className="flex-1">
                 {isLoading ? (
                   <>
                     <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
@@ -301,7 +272,7 @@ export default function CylinderStatusUpdateForm() {
                 <div className="text-sm">
                   <div className="font-medium text-blue-900">Ringkasan Update:</div>
                   <div className="text-blue-700 mt-1">
-                    • {barcodes.length} tabung akan diubah ke status "{selectedStatus}"{requiresGasType && selectedGasType && <div>• Jenis gas: {gasTypes.find((g) => g.id.toString() === selectedGasType)?.name}</div>}
+                    • {barcodes.length} tabung akan diubah ke status "{selectedStatus}"{requiresGasType && selectedGasType}
                   </div>
                 </div>
               </div>

@@ -14,6 +14,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     url: '/products',
     id: 'gas-type',
     icon: Flame,
+    permissionKey: 'products',
   },
   {
     id: 'orders',

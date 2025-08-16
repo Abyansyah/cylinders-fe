@@ -1,11 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
-import { Package, Clock, User, Calendar, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Package, CheckCircle, AlertCircle } from 'lucide-react';
 import { PageTransition } from '@/components/page-transition';
-import Link from 'next/link';
 import useSWRInfinite from 'swr/infinite';
 import { getOrdersToPrepare } from '@/services/orderService';
 import { useEffect, useMemo, useRef } from 'react';

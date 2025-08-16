@@ -169,13 +169,8 @@ export default function ReplacementBarcodeForm() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-muted-foreground">Jenis Tabung</Label>
-                <p className="font-semibold">{foundCylinder.cylinderProperty.name}</p>
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-muted-foreground">Jenis Gas</Label>
-                <p className="font-semibold">{foundCylinder.gasType?.name || 'Tidak ada'}</p>
+                <Label className="text-sm font-medium text-muted-foreground">Jenis Produk</Label>
+                <p className="font-semibold">{foundCylinder?.product?.name}</p>
               </div>
 
               <div className="space-y-2">

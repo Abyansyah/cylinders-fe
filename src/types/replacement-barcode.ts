@@ -8,12 +8,9 @@ export interface CylinderForReplacement {
   manufacture_date: string;
   gas_type_id: number | null;
   last_fill_date: string | null;
-  cylinderProperty: {
+  product: {
     name: string;
   };
-  gasType: {
-    name: string;
-  } | null;
   currentWarehouse: {
     name: string;
   };

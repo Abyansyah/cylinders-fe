@@ -12,14 +12,9 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
 import { createProductAction, updateProductAction } from '../actions/productActions';
 import type { Product, ProductsApiResponse } from '@/types/product';
 import { ChevronLeft } from 'lucide-react';
-import { GasTypeSearchCombobox } from './gas-type-combobox';
-import { CylinderPropertySearchCombobox } from './cylinder-property-combobox';
-import { Label } from '@/components/ui/label';
-import { CylinderProperySelect } from './cylinder-property-select';
 
 interface ProductFormProps {
   initialData?: Product | null;

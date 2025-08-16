@@ -68,7 +68,7 @@ const ItemsTable = ({ items }: { items: any[] }) => (
     <thead>
       <tr className="bg-gray-700 text-white">
         <th className="border border-gray-400 p-2 text-center w-12">No</th>
-        <th className="border border-gray-400 p-2 text-left">Nama Produk & Serial Number</th>
+        <th className="border border-gray-400 p-2 text-left">Nama Produk & Nomor Tabung</th>
         <th className="border border-gray-400 p-2 text-left w-36">Kode Produk</th>
         <th className="border border-gray-400 p-2 text-center w-20">Kuantitas</th>
         <th className="border border-gray-400 p-2 text-center w-16">Unit</th>

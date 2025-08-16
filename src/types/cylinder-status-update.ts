@@ -3,7 +3,6 @@ export type CylinderStatusOption = 'Di Gudang - Terisi' | 'Di Gudang - Kosong' |
 export interface CylinderStatusUpdateRequest {
   barcodes: string[];
   new_status: CylinderStatusOption;
-  gas_type_id?: number;
 }
 
 export interface CylinderStatusUpdateResponse {

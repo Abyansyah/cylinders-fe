@@ -62,12 +62,8 @@ export function ReplacementBarcodeDialog({ open, onOpenChange, cylinder, newBarc
                 <p className="font-medium font-mono">{cylinder.barcode_id}</p>
               </div>
               <div>
-                <span className="text-muted-foreground">Jenis Tabung:</span>
-                <p className="font-medium">{cylinder.cylinderProperty.name}</p>
-              </div>
-              <div>
-                <span className="text-muted-foreground">Jenis Gas:</span>
-                <p className="font-medium">{cylinder.gasType?.name || 'Tidak ada'}</p>
+                <span className="text-muted-foreground">Jenis Produk:</span>
+                <p className="font-medium">{cylinder.product.name}</p>
               </div>
             </div>
           </div>
