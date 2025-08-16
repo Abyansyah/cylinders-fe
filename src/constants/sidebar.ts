@@ -10,30 +10,10 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     permissionKey: 'dashboard',
   },
   {
-    title: 'Manajemen Gas',
-    url: '/gas-type',
+    title: 'Master Product',
+    url: '/products',
     id: 'gas-type',
     icon: Flame,
-    items: [
-      {
-        title: 'Jenis Gas',
-        url: '/gas-type',
-        id: 'gas-type-list',
-        permissionKey: 'gasType',
-      },
-      {
-        title: 'Tabung',
-        url: '/cylinder-properties',
-        id: 'gas-type-cylinder-properties',
-        permissionKey: 'cylinderProperty',
-      },
-      {
-        title: 'Produk',
-        url: '/products',
-        id: 'gas-type-products',
-        permissionKey: 'products',
-      },
-    ],
   },
   {
     id: 'orders',
