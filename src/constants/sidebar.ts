@@ -1,4 +1,4 @@
-import { BrickWallFire, ClipboardCheck, FileText, Flame, GitBranch, LayoutDashboard, Package, QrCode, ShoppingCart, TrendingUp, Truck, Users, UserSquare, Warehouse, Zap } from 'lucide-react';
+import { BrickWallFire, Building, ClipboardCheck, FileText, Flame, GitBranch, LayoutDashboard, Package, QrCode, ShoppingCart, TrendingUp, Truck, Users, UserSquare, Warehouse, Zap } from 'lucide-react';
 import type { SidebarItem } from '@/types/sidebar';
 
 export const SIDEBAR_ITEMS: SidebarItem[] = [
@@ -125,6 +125,13 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     icon: UserSquare,
     url: '/customers',
     permissionKey: 'customer',
+  },
+  {
+    title: 'Supplier',
+    icon: Building,
+    id: 'supplier',
+    url: '/suppliers',
+    permissionKey: 'warehouse',
   },
   {
     title: 'Manajemen Pengguna',

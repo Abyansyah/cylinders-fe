@@ -87,9 +87,7 @@ export default function CreateTTBKForm() {
       toast.success('TTBK berhasil dibuat');
       router.push('/ttbk');
     } catch (error: any) {
-      toast.error('Gagal membuat TTBK', {
-        description: error.response?.data?.message,
-      });
+      error?.response?.data?.invalid_items.map((item: { reason: string; input: string }) => toast.error(`"${item?.input}" ${item.reason}`));
     } finally {
       setLoading(false);
     }
