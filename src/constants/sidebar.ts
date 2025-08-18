@@ -1,4 +1,4 @@
-import { BrickWallFire, Building, ClipboardCheck, FileText, Flame, GitBranch, LayoutDashboard, Package, QrCode, ShoppingCart, TrendingUp, Truck, Users, UserSquare, Warehouse, Zap } from 'lucide-react';
+import { BrickWallFire, Building, ClipboardCheck, FileText, Flame, GitBranch, LayoutDashboard, Package, QrCode, Repeat, ShoppingCart, TrendingUp, Truck, Users, UserSquare, Warehouse, Zap } from 'lucide-react';
 import type { SidebarItem } from '@/types/sidebar';
 
 export const SIDEBAR_ITEMS: SidebarItem[] = [
@@ -106,6 +106,12 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     icon: TrendingUp,
     isActive: false,
     permissionKey: 'loanAdjustment',
+  },
+  {
+    title: 'Refill Order',
+    url: '/refill-orders',
+    icon: Repeat,
+    isActive: false,
   },
   {
     title: 'Cabang',

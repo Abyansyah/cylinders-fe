@@ -1,0 +1,144 @@
+export interface RefillOrder {
+  id: number;
+  refill_order_number: string;
+  supplier_name: string;
+  requester_name: string;
+  request_date: string;
+  status: 'PENDING_CONFIRMATION' | 'CONFIRMED' | 'PARTIALLY_RECEIVED' | 'COMPLETED' | 'CANCELLED';
+}
+
+export interface RefillOrderApiResponse {
+  data: RefillOrder[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+}
+
+export interface Supplier {
+  id: number;
+  name: string;
+}
+
+export interface RefillOrderDetail {
+  id: number;
+  status: string;
+  sjNumber: string | null;
+  systemNumber: string | null;
+  dispatchDate: string;
+  vehiclePlateNumber: string | null;
+  createdAt: string;
+  updatedAt: string;
+  supplier: {
+    id: number;
+    name: string;
+  };
+  requester: {
+    id: number;
+    name: string;
+  };
+  approver: {
+    id: number;
+    name: string;
+  } | null;
+  driver: {
+    id: number;
+    name: string;
+  } | null;
+  details: {
+    id: number;
+    cylinder: {
+      id: number;
+      barcode_id: string;
+      serial_number: string;
+      status: string;
+    };
+    product: {
+      id: number;
+      name: string;
+      sku: string;
+    };
+    isReturned: boolean;
+    returnedAt: string | null;
+  }[];
+}
+
+export interface DeliveryNoteItem {
+  item_name: string;
+  serial_numbers: string[];
+  unit: string;
+  quantity: number;
+}
+
+export interface DeliveryNoteHeader {
+  sj_number: string;
+  date: string;
+  vehicle_number: string;
+  driver_name: string;
+  system_number: string;
+  supplier: {
+    name: string;
+    address: string;
+  };
+}
+
+export interface RefillOrderDeliveryNote {
+  header: DeliveryNoteHeader;
+  items: DeliveryNoteItem[];
+}
+
+export interface CreateRefillOrderItem {
+  product_id: number;
+  identifiers: string[];
+}
+
+export interface CreateRefillOrderRequest {
+  supplier_id: number;
+  dispatch_date: string;
+  items: CreateRefillOrderItem[];
+}
+
+export interface RefillOrderItemDetail {
+  id: number;
+  cylinder: {
+    id: number;
+    barcode_id: string;
+    serial_number: string;
+    status: string;
+  };
+  product: {
+    id: number;
+    name: string;
+    sku: string;
+  };
+  isReturned: boolean;
+  returnedAt: string | null;
+}
+
+// Memastikan RefillOrderDetail menggunakan tipe baru ini
+export interface RefillOrderDetail {
+  id: number;
+  status: string;
+  sjNumber: string | null;
+  systemNumber: string | null;
+  dispatchDate: string;
+  vehiclePlateNumber: string | null;
+  createdAt: string;
+  updatedAt: string;
+  supplier: {
+    id: number;
+    name: string;
+  };
+  requester: {
+    id: number;
+    name: string;
+  };
+  approver: {
+    id: number;
+    name: string;
+  } | null;
+  driver: {
+    id: number;
+    name: string;
+  } | null;
+  details: RefillOrderItemDetail[];
+}

@@ -110,4 +110,7 @@ export const PERMISSIONS = {
   importDataCylinder: {
     view: 'cylinder:import',
   },
+  refillOrder: {
+    view_own: 'refill_order:view_own_refill_orders',
+  },
 } as const;
