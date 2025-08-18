@@ -19,6 +19,7 @@ import { PERMISSIONS } from '@/config/permissions';
 import useSWR from 'swr';
 import { getRefillOrders, getSuppliersForSelect } from '@/services/refillOrderService';
 import { useDebounce } from '@/hooks/use-debounce';
+import { useAuthStore } from '@/stores/authStore';
 
 const REFILL_ORDER_STATUSES = [
   { value: 'PENDING_CONFIRMATION', label: 'Menunggu Konfirmasi' },
@@ -112,6 +113,8 @@ export default function RefillOrderList() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { checkPermission } = usePermission();
+  const { user } = useAuthStore();
+  const isSuperAdmin = user?.role.role_name === 'Super Admin';
 
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
   const [statusFilter, setStatusFilter] = useState<string>(searchParams.get('status') || 'all');
@@ -132,8 +135,8 @@ export default function RefillOrderList() {
     router.push(`${pathname}?${params.toString()}`);
   }, [debouncedSearch, statusFilter, supplierFilter, router, pathname, limit]);
 
-  const canViewOwn = checkPermission(PERMISSIONS.refillOrder.view_own);
-  const apiEndpoint = canViewOwn ? '/refill-orders/my-orders' : '/refill-orders';
+  const canViewAll = checkPermission(PERMISSIONS.refillOrder.view_all);
+  const apiEndpoint = canViewAll ? '/refill-orders' : '/refill-orders/my-orders';
 
   const { data: ordersResponse, isLoading } = useSWR([apiEndpoint, searchParams.toString()], () => getRefillOrders(apiEndpoint, searchParams));
   const { data: suppliersResponse } = useSWR('/select-lists/suppliers', getSuppliersForSelect);

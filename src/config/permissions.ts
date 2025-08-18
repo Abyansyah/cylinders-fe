@@ -111,6 +111,11 @@ export const PERMISSIONS = {
     view: 'cylinder:import',
   },
   refillOrder: {
-    view_own: 'refill_order:view_own_refill_orders',
+    view_all: 'refill_order:view_all_refill_orders',
+    view: 'refill_order:view_own_refill_orders',
+    view_detail: 'refill_order:view_refill_order_details',
+    create: 'refill_order:create_refill_order',
+    recieve: 'refill_order:receive_refill_order',
+    approve: 'refill_order:confirm_refill_order',
   },
 } as const;

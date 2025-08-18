@@ -14,7 +14,7 @@ export default function NotFound() {
         <h2 className="mb-2 text-2xl font-semibold">Page Not Found</h2>
         <p className="mb-6 text-muted-foreground">The page you are looking for doesn't exist or has been moved.</p>
         <div className="flex space-x-4">
-          <Button variant="outline" onClick={() => router.back()}>
+          <Button variant="outline" onClick={() => router.push('/')}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Go Back
           </Button>

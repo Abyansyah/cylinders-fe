@@ -16,6 +16,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 
 import { getRefillOrderById } from '@/services/refillOrderService';
 import { ConfirmDispatchDialog } from './confirm-dispatch-dialog';
+import { usePermission } from '@/hooks/use-permission';
+import { PERMISSIONS } from '@/config/permissions';
 const getStatusBadgeColor = (status: string) => {
   switch (status) {
     case 'PENDING_CONFIRMATION':
@@ -49,6 +51,7 @@ export default function RefillOrderDetailView() {
   const orderId = Number(params.id as string);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const router = useRouter();
+  const { checkPermission } = usePermission();
 
   const { data: order, error } = useSWR(orderId ? `/refill-orders/${orderId}` : null, () => getRefillOrderById(orderId));
 
@@ -83,8 +86,8 @@ export default function RefillOrderDetailView() {
     return <div>Order not found</div>;
   }
 
-  const isPending = order.status === 'PENDING_CONFIRMATION';
-  const canReceive = order.status === 'IN_TRANSIT_TO_SUPPLIER' || order.status === 'PARTIALLY_RECEIVED';
+  const isPending = order.status === 'PENDING_CONFIRMATION' && checkPermission(PERMISSIONS.refillOrder.approve);
+  const canReceive = (order.status === 'IN_TRANSIT_TO_SUPPLIER' || order.status === 'PARTIALLY_RECEIVED') && checkPermission(PERMISSIONS.refillOrder.recieve);
   const returnedCount = order.details.filter((d) => d.isReturned).length;
   const totalCount = order.details.length;
 

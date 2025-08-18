@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import { PageTransition } from '@/components/page-transition';
 import RefillOrderList from './components/refill-order-list';
+import { PermissionGuard } from '@/components/guards/permission-guard';
+import { PERMISSIONS } from '@/config/permissions';
 
 export const metadata: Metadata = {
   title: 'Refill Order',
@@ -9,8 +11,10 @@ export const metadata: Metadata = {
 
 export default function RefillOrdersPage() {
   return (
-    <PageTransition>
-      <RefillOrderList />
-    </PageTransition>
+    <PermissionGuard requiredPermission={PERMISSIONS.refillOrder.view}>
+      <PageTransition>
+        <RefillOrderList />
+      </PageTransition>
+    </PermissionGuard>
   );
 }

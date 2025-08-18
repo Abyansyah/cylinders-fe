@@ -1,11 +1,9 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
 import { AlertTriangle, ArrowLeft, RefreshCcw } from 'lucide-react';
+import { logoutAction } from '@/lib/actions';
 
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
-  const router = useRouter();
 
   return (
     <div className="flex h-[calc(100vh-4rem)] w-full flex-col items-center justify-center">
@@ -16,14 +14,15 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
         <h1 className="mb-2 text-2xl font-semibold">Something went wrong!</h1>
         <p className="mb-6 text-muted-foreground">An error occurred while processing your request. Please try again later.</p>
         <div className="flex space-x-4">
-          <Button variant="outline" onClick={() => router.back()}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Go Back
-          </Button>
-          <Button onClick={() => reset()}>
-            <RefreshCcw className="mr-2 h-4 w-4" />
-            Try Again
-          </Button>
+          <form action={logoutAction}>
+            <button
+              type="submit"
+              className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+            >
+              <RefreshCcw className="mr-2 h-4 w-4" />
+              Try Again
+            </button>
+          </form>
         </div>
       </div>
     </div>

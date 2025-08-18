@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Plus, Trash2, Package, Building2, Search } from 'lucide-react'; // Menghapus Calendar karena sudah ada di DatePicker
+import { ArrowLeft, Plus, Trash2, Package, Building2, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
-import { format } from 'date-fns'; // Import 'format' dari date-fns
+import { format } from 'date-fns';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,12 +16,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { BarcodeScanner } from '@/components/features/barcode-scanner';
-import { DatePicker } from '@/components/ui/date-picker'; // Import DatePicker
-
+import { DatePicker } from '@/components/ui/date-picker';
 import { getSuppliersForSelect, createRefillOrder } from '@/services/refillOrderService';
-import { getProducts } from '@/services/productService';
 import type { CreateRefillOrderRequest } from '@/types/refill-order';
-import type { Product } from '@/types/product';
+import { getProductsSelect } from '@/services/SearchListService';
 
 interface OrderItem {
   product_id: number;
@@ -41,12 +39,11 @@ export default function CreateRefillOrderForm() {
   const [showScanner, setShowScanner] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Fetch data from API
   const { data: suppliersResponse } = useSWR('/select-lists/suppliers', getSuppliersForSelect);
-  const { data: productsResponse } = useSWR('/products?limit=1000', () => getProducts({ limit: 1000 }));
+  const { data: productsResponse } = useSWR('/select-lists/products', getProductsSelect);
 
   const suppliers = suppliersResponse?.data || [];
-  const products: Product[] = productsResponse?.data || [];
+  const products: any[] = productsResponse?.data || [];
 
   const handleBarcodeDetected = (barcode: string) => {
     setIdentifierInput(barcode);
@@ -54,13 +51,12 @@ export default function CreateRefillOrderForm() {
   };
 
   const handleAddItem = () => {
-    // ... (Fungsi ini tidak berubah)
     if (!selectedProductId || !identifierInput.trim()) {
       toast.error('Mohon lengkapi produk dan barcode/serial number.');
       return;
     }
 
-    const product = products.find((p) => p.id.toString() === selectedProductId);
+    const product = products.find((p) => p.value.toString() === selectedProductId);
     if (!product) return;
 
     const identifier = identifierInput.trim();
@@ -72,17 +68,19 @@ export default function CreateRefillOrderForm() {
     }
 
     setSelectedItems((prev) => {
-      const existingItem = prev.find((item) => item.product_id === product.id);
+      const existingItemIndex = prev.findIndex((item) => item.product_id === product.value);
 
-      if (existingItem) {
-        return prev.map((item) => (item.product_id === product.id ? { ...item, identifiers: [...item.identifiers, identifier] } : item));
+      if (existingItemIndex >= 0) {
+        const updatedItems = [...prev];
+        updatedItems[existingItemIndex].identifiers.push(identifier);
+        return updatedItems;
       } else {
         return [
           ...prev,
           {
-            product_id: product.id,
-            product_name: product.name,
-            product_sku: product.sku || '',
+            product_id: product.value,
+            product_name: product.label,
+            product_sku: '',
             identifiers: [identifier],
           },
         ];
@@ -94,7 +92,6 @@ export default function CreateRefillOrderForm() {
   };
 
   const handleRemoveIdentifier = (productId: number, identifier: string) => {
-    // ... (Fungsi ini tidak berubah)
     setSelectedItems((prev) =>
       prev
         .map((item) => {
@@ -121,7 +118,7 @@ export default function CreateRefillOrderForm() {
     try {
       const request: CreateRefillOrderRequest = {
         supplier_id: Number.parseInt(supplierId),
-        dispatch_date: format(dispatchDate, 'yyyy-MM-dd'), // Format tanggal sebelum dikirim
+        dispatch_date: format(dispatchDate, 'yyyy-MM-dd'),
         items: selectedItems.map((item) => ({
           product_id: item.product_id,
           identifiers: item.identifiers,
@@ -142,7 +139,6 @@ export default function CreateRefillOrderForm() {
   };
 
   const getTotalIdentifiers = () => {
-    // ... (Fungsi ini tidak berubah)
     return selectedItems.reduce((total, item) => total + item.identifiers.length, 0);
   };
 
@@ -197,7 +193,6 @@ export default function CreateRefillOrderForm() {
               </CardContent>
             </Card>
 
-            {/* Pemilihan Item (Tidak ada perubahan di sini) */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -215,8 +210,8 @@ export default function CreateRefillOrderForm() {
                       </SelectTrigger>
                       <SelectContent>
                         {products.map((product) => (
-                          <SelectItem key={product.id} value={product.id.toString()}>
-                            {product.name}
+                          <SelectItem key={product.value} value={product.value.toString()}>
+                            {product.label}
                           </SelectItem>
                         ))}
                       </SelectContent>
