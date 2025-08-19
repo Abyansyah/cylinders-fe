@@ -1,5 +1,5 @@
 import api from '@/lib/api';
-import type { Customer, CustomersApiResponse } from '@/types/customer';
+import type { Customer, CustomersApiResponse, PriceListRequestBody } from '@/types/customer';
 import { ImportResponse } from '@/types/customer-import';
 import { cache } from 'react';
 
@@ -61,4 +61,12 @@ export const importCustomers = async (file: File, onUploadProgress: (progress: n
   });
 
   return data;
+};
+
+export const updateCustomerPriceList = async (customerId: number, payload: PriceListRequestBody[]): Promise<void> => {
+  await api.post(`/customers/${customerId}/pricelists`, payload);
+};
+
+export const deleteCustomerPriceListItem = async (customerId: number, productId: number): Promise<void> => {
+  await api.delete(`/customers/${customerId}/pricelists/${productId}`);
 };

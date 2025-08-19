@@ -1,3 +1,15 @@
+interface PriceListProduct {
+  id: number;
+  name: string;
+  unit: string;
+}
+
+interface CustomerPriceListItem {
+  rentPrice: string | null;
+  buyPrice: string | null;
+  product: PriceListProduct;
+}
+
 export interface Customer {
   id: number;
   user_id: number;
@@ -21,6 +33,17 @@ export interface Customer {
     email: string;
     is_active: boolean;
   };
+  pricelists: CustomerPriceListItem[];
+  payment_term_days: number | null;
+}
+
+export interface CustomerFormData {
+  name: string;
+  address: string;
+  phone: string;
+  email: string;
+  branch_id: number;
+  payment_term_days: number | null;
 }
 
 export interface CustomersApiResponse {
@@ -28,4 +51,10 @@ export interface CustomersApiResponse {
   totalItems: number;
   totalPages: number;
   currentPage: number;
+}
+
+export interface PriceListRequestBody {
+  product_id: number;
+  rent_price: number | null;
+  buy_price: number | null;
 }

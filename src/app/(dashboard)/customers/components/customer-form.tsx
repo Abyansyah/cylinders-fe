@@ -49,6 +49,7 @@ export function CustomerForm({ initialData }: { initialData?: Customer | null })
       username: initialData?.userAccount.username || '',
       password: '',
       is_active: initialData?.userAccount.is_active ?? true,
+      payment_term_days: initialData?.payment_term_days || 0,
     },
   });
 
@@ -170,6 +171,19 @@ export function CustomerForm({ initialData }: { initialData?: Customer | null })
                               <FormLabel className="font-normal">Perusahaan</FormLabel>
                             </FormItem>
                           </RadioGroup>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="payment_term_days"
+                    render={({ field }) => (
+                      <FormItem>
+                        <RequiredFormLabel>Tempo Pembayaran (Hari)</RequiredFormLabel>
+                        <FormControl>
+                          <Input type="number" min={0} placeholder="Contoh: 30" {...field} value={field.value ?? ''} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

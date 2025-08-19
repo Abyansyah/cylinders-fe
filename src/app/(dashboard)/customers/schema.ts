@@ -12,6 +12,7 @@ export const createCustomerSchema = z.object({
   customer_type: z.enum(['Individual', 'Corporate'], { required_error: 'Tipe pelanggan wajib dipilih.' }),
   username: z.string().min(5, 'Username minimal 5 karakter.'),
   password: z.string().min(6, 'Password minimal 6 karakter.'),
+  payment_term_days: z.coerce.number(),
   is_active: z.boolean(),
 });
 

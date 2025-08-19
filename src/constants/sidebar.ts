@@ -17,6 +17,12 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     permissionKey: 'products',
   },
   {
+    title: 'Master Customer',
+    icon: UserSquare,
+    url: '/customers',
+    permissionKey: 'customer',
+  },
+  {
     id: 'orders',
     title: 'Buat Order',
     icon: ShoppingCart,
@@ -125,12 +131,6 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     id: 'warehouse',
     url: '/warehouses',
     permissionKey: 'warehouse',
-  },
-  {
-    title: 'Pelanggan',
-    icon: UserSquare,
-    url: '/customers',
-    permissionKey: 'customer',
   },
   {
     title: 'Supplier',
