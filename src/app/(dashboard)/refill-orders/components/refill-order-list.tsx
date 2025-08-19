@@ -19,11 +19,10 @@ import { PERMISSIONS } from '@/config/permissions';
 import useSWR from 'swr';
 import { getRefillOrders, getSuppliersForSelect } from '@/services/refillOrderService';
 import { useDebounce } from '@/hooks/use-debounce';
-import { useAuthStore } from '@/stores/authStore';
 
 const REFILL_ORDER_STATUSES = [
   { value: 'PENDING_CONFIRMATION', label: 'Menunggu Konfirmasi' },
-  { value: 'CONFIRMED', label: 'Dikonfirmasi' },
+  { value: 'IN_TRANSIT_TO_SUPPLIER', label: 'Sedang Di supplier' },
   { value: 'PARTIALLY_RECEIVED', label: 'Diterima Sebagian' },
   { value: 'COMPLETED', label: 'Selesai' },
   { value: 'CANCELLED', label: 'Dibatalkan' },
@@ -35,6 +34,8 @@ const getStatusBadgeColor = (status: string) => {
       return 'bg-yellow-100 text-yellow-800';
     case 'CONFIRMED':
       return 'bg-blue-100 text-blue-800';
+    case 'IN_TRANSIT_TO_SUPPLIER':
+      return 'bg-orange-100 text-orange-800';
     case 'PARTIALLY_RECEIVED':
       return 'bg-purple-100 text-purple-800';
     case 'COMPLETED':
@@ -113,8 +114,6 @@ export default function RefillOrderList() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { checkPermission } = usePermission();
-  const { user } = useAuthStore();
-  const isSuperAdmin = user?.role.role_name === 'Super Admin';
 
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
   const [statusFilter, setStatusFilter] = useState<string>(searchParams.get('status') || 'all');

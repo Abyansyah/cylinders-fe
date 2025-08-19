@@ -1,10 +1,9 @@
 'use client';
 
-import { AlertTriangle, ArrowLeft, RefreshCcw } from 'lucide-react';
+import { AlertTriangle, RefreshCcw } from 'lucide-react';
 import { logoutAction } from '@/lib/actions';
 
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
-
   return (
     <div className="flex h-[calc(100vh-4rem)] w-full flex-col items-center justify-center">
       <div className="mx-auto flex max-w-md flex-col items-center justify-center text-center">

@@ -35,3 +35,7 @@ export const receiveRefillOrderItems = async (id: number, payload: { identifiers
   const { data } = await api.post(`/refill-orders/${id}/receive`, payload);
   return data;
 };
+
+export const cancelRefillOrder = async (id: number): Promise<void> => {
+  await api.put(`/refill-orders/${id}/cancel`);
+};

@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Package, Building2, User, Calendar, Truck, FileText, CheckCircle, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,10 +14,12 @@ import { Separator } from '@/components/ui/separator';
 import { Label } from '@/components/ui/label';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
-import { getRefillOrderById } from '@/services/refillOrderService';
+import { cancelRefillOrder, getRefillOrderById } from '@/services/refillOrderService';
 import { ConfirmDispatchDialog } from './confirm-dispatch-dialog';
 import { usePermission } from '@/hooks/use-permission';
 import { PERMISSIONS } from '@/config/permissions';
+import { toast } from 'sonner';
+import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 const getStatusBadgeColor = (status: string) => {
   switch (status) {
     case 'PENDING_CONFIRMATION':
@@ -50,6 +52,7 @@ export default function RefillOrderDetailView() {
   const params = useParams();
   const orderId = Number(params.id as string);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
   const router = useRouter();
   const { checkPermission } = usePermission();
 
@@ -76,6 +79,20 @@ export default function RefillOrderDetailView() {
     }, {} as Record<string, { product: any; cylinders: any[] }>);
   }, [order]);
 
+  const handleCancelOrder = async () => {
+    if (!order) return;
+    try {
+      await cancelRefillOrder(order.id);
+      toast.success('Order berhasil dibatalkan.');
+      mutate(`/refill-orders/${order.id}`);
+      setIsCancelDialogOpen(false);
+    } catch (error: any) {
+      toast.error('Gagal membatalkan order.', {
+        description: error?.response?.data?.message || 'Terjadi kesalahan pada server.',
+      });
+    }
+  };
+
   const isLoading = !order && !error;
 
   if (isLoading) {
@@ -94,6 +111,16 @@ export default function RefillOrderDetailView() {
   return (
     <>
       {isPending && <ConfirmDispatchDialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen} order={order} />}
+
+      <ConfirmationDialog
+        open={isCancelDialogOpen}
+        onOpenChange={setIsCancelDialogOpen}
+        title="Batalkan Order Refill?"
+        description={`Anda yakin ingin membatalkan order RO/2025/08/${order.id.toString().padStart(3, '0')}? Aksi ini tidak dapat diurungkan.`}
+        confirmText="Ya, Batalkan"
+        onConfirm={handleCancelOrder}
+        variant="destructive"
+      />
 
       <div className="container mx-auto p-6 space-y-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
@@ -292,13 +319,15 @@ export default function RefillOrderDetailView() {
                         <Button className="w-full" variant="default" onClick={() => setIsConfirmDialogOpen(true)}>
                           Setujui Order
                         </Button>
+                        <Button className="w-full" variant="destructive" onClick={() => setIsCancelDialogOpen(true)}>
+                          Tolak Order
+                        </Button>
                       </div>
                     </>
                   )}
                 </CardContent>
               </Card>
 
-              {/* Aksi */}
               {!isPending && (
                 <Card>
                   <CardHeader>
@@ -311,11 +340,6 @@ export default function RefillOrderDetailView() {
                     {canReceive && (
                       <Button className="w-full" onClick={() => router.push(`/refill-orders/${order.id}/receive`)}>
                         Penerimaan Tabung
-                      </Button>
-                    )}
-                    {order.status === 'PARTIALLY_RECEIVED' && (
-                      <Button className="w-full" variant="default">
-                        Tandai Selesai
                       </Button>
                     )}
                   </CardContent>
