@@ -82,13 +82,15 @@ export default function WarehouseStockReportList() {
       header: ({ column }) => <DataTableColumnHeader column={column} title="Nama Produk" />,
     },
     {
-      accessorKey: 'status',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
-    },
-    {
       accessorKey: 'stock_count',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Jumlah Stok" />,
-      cell: ({ row }) => <div className="text-center font-medium">{row.original.stock_count}</div>,
+      cell: ({ row }) => (
+        <div className=" font-medium">
+          <p className="text-green-600">Stock Terisi: {row.original.filled_stock}</p>
+          <p className="text-red-600">Stock Kosong: {row.original.empty_stock}</p>
+          <p className="text-blue-600">Total Stok: {row.original.total_stock}</p>
+        </div>
+      ),
     },
   ];
 

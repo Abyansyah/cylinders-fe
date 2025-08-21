@@ -2,7 +2,9 @@ export interface WarehouseStockReportItem {
   warehouse_name: string;
   product_name: string;
   status: string;
-  stock_count: string;
+  total_stock: string;
+  filled_stock: string;
+  empty_stock: string;
 }
 
 export interface WarehouseStockReportApiResponse {
