@@ -118,7 +118,14 @@ export function CustomerForm({ initialData }: { initialData?: Customer | null })
                       <FormItem>
                         <RequiredFormLabel>Nomor Telepon</RequiredFormLabel>
                         <FormControl>
-                          <Input placeholder="Contoh: 08123456789" {...field} />
+                          <Input
+                            placeholder="Contoh: 08123456789"
+                            value={field.value ?? ''}
+                            onChange={(e) => {
+                              const onlyNums = e.target.value.replace(/\D/g, '');
+                              field.onChange(onlyNums);
+                            }}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

@@ -118,7 +118,6 @@ export default function CustomerPriceListForm() {
             <CardContent className="space-y-4">
               {fields.map((field, index) => (
                 <div key={field.id} className="grid grid-cols-12 gap-4 items-start p-4 border rounded-lg">
-                  {/* Product Select */}
                   <FormField
                     control={form.control}
                     name={`pricelists.${index}.product_id`}
@@ -151,7 +150,7 @@ export default function CustomerPriceListForm() {
                         <FormLabel>Harga Sewa</FormLabel>
                         <FormControl>
                           <Input
-                            type="number"
+                            type="text"
                             placeholder="Contoh: 45000"
                             value={formatRupiah(field.value ?? '')}
                             onChange={(e) => {
@@ -172,7 +171,7 @@ export default function CustomerPriceListForm() {
                         <FormLabel>Harga Beli</FormLabel>
                         <FormControl>
                           <Input
-                            type="number"
+                            type="text"
                             placeholder="Contoh: 1400000"
                             value={formatRupiah(field.value ?? '')}
                             onChange={(e) => {
