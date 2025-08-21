@@ -1,15 +1,13 @@
-// src/app/(dashboard)/customers/components/custome
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import useSWR from 'swr';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { toast } from 'sonner';
-import { ArrowLeft, Plus, Trash2, DollarSign } from 'lucide-react';
-
+import { ArrowLeft, Plus, Trash2 } from 'lucide-react';
 import { getCustomerById, updateCustomerPriceList } from '@/services/customerService';
 import { getProductsSelect } from '@/services/SearchListService';
 import { Button } from '@/components/ui/button';
@@ -18,6 +16,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { PriceListRequestBody } from '@/types/customer';
+import { formatRupiah, unformatRupiah } from '@/utils/format';
 
 const priceListSchema = z.object({
   product_id: z.string().min(1, 'Produk harus dipilih.'),
@@ -26,7 +25,22 @@ const priceListSchema = z.object({
 });
 
 const formSchema = z.object({
-  pricelists: z.array(priceListSchema).min(1, 'Minimal harus ada satu produk dalam daftar harga.'),
+  pricelists: z
+    .array(priceListSchema)
+    .min(1, 'Minimal harus ada satu produk dalam daftar harga.')
+    .superRefine((pricelists, ctx) => {
+      const seen = new Set<string>();
+      pricelists.forEach((item, index) => {
+        if (seen.has(item.product_id)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Produk ini sudah dipilih di daftar harga.',
+            path: [index, 'product_id'],
+          });
+        }
+        seen.add(item.product_id);
+      });
+    }),
 });
 
 type PriceListFormValues = z.infer<typeof formSchema>;
@@ -56,8 +70,8 @@ export default function CustomerPriceListForm() {
     if (customer?.pricelists) {
       const initialData = customer.pricelists.map((item) => ({
         product_id: item.product.id.toString(),
-        rent_price: item.rentPrice || '',
-        buy_price: item.buyPrice || '',
+        rent_price: item.rentPrice ? parseInt(item.rentPrice).toString() : '',
+        buy_price: item.buyPrice ? parseInt(item.buyPrice).toString() : '',
       }));
       form.reset({ pricelists: initialData });
     }
@@ -129,7 +143,6 @@ export default function CustomerPriceListForm() {
                       </FormItem>
                     )}
                   />
-                  {/* Rent Price */}
                   <FormField
                     control={form.control}
                     name={`pricelists.${index}.rent_price`}
@@ -137,13 +150,20 @@ export default function CustomerPriceListForm() {
                       <FormItem className="col-span-3">
                         <FormLabel>Harga Sewa</FormLabel>
                         <FormControl>
-                          <Input type="number" placeholder="Contoh: 45000" {...field} />
+                          <Input
+                            type="number"
+                            placeholder="Contoh: 45000"
+                            value={formatRupiah(field.value ?? '')}
+                            onChange={(e) => {
+                              const raw = unformatRupiah(e.target.value);
+                              field.onChange(raw);
+                            }}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  {/* Buy Price */}
                   <FormField
                     control={form.control}
                     name={`pricelists.${index}.buy_price`}
@@ -151,13 +171,20 @@ export default function CustomerPriceListForm() {
                       <FormItem className="col-span-3">
                         <FormLabel>Harga Beli</FormLabel>
                         <FormControl>
-                          <Input type="number" placeholder="Contoh: 1400000" {...field} />
+                          <Input
+                            type="number"
+                            placeholder="Contoh: 1400000"
+                            value={formatRupiah(field.value ?? '')}
+                            onChange={(e) => {
+                              const raw = unformatRupiah(e.target.value);
+                              field.onChange(raw);
+                            }}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  {/* Remove Button */}
                   <div className="col-span-1 flex items-end h-full">
                     <Button type="button" variant="destructive" size="icon" onClick={() => remove(index)}>
                       <Trash2 className="h-4 w-4" />
