@@ -2,7 +2,7 @@
 
 import type React from 'react';
 import { useState, useRef, useCallback } from 'react';
-import { Upload, FileSpreadsheet, AlertCircle, CheckCircle2, X, Loader2 } from 'lucide-react';
+import { Upload, FileSpreadsheet, X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { IMPORT_RESULT_STORAGE_KEY } from '@/constants/cylinder-import';
 import type { ImportResponse, ImportResult } from '@/types/cylinder-import';
 import { importCylinders } from '@/services/cylinderService';
+import Link from 'next/link';
 
 export default function CylinderImport() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -227,8 +228,14 @@ export default function CylinderImport() {
               <h4 className="font-medium mb-2">Format File Excel</h4>
               <ul className="text-sm text-muted-foreground space-y-1 ml-4">
                 <li>• File harus berformat .xlsx atau .xls</li>
-                <li>• Maksimal ukuran file 10MB</li>
+                <li>• Maksimal ukuran file 5MB</li>
                 <li>• Baris pertama harus berisi header kolom</li>
+                <li>
+                  • Untuk format excel dapat di unduh{' '}
+                  <Link className="underline text-blue-600 font-medium" href="https://tinyurl.com/mrkeufue" target="_blank" rel="noopener noreferrer">
+                    disini
+                  </Link>
+                </li>
               </ul>
             </div>
 
@@ -237,14 +244,16 @@ export default function CylinderImport() {
               <ul className="text-sm text-muted-foreground space-y-1 ml-4">
                 <li>• barcode_id (Barcode Tabung, wajib)</li>
                 <li>• serial_number (Nomor Tabung, wajib)</li>
-                <li>• cylinder_property_id (ID Tipe Tabung, wajib)</li>
+                <li>• product_id (ID Tipe Tabung, wajib)</li>
                 <li>• manufacture_date (Tanggal Produksi, contoh: 2023-10-14, wajib)</li>
                 <li>• warehouse_id (ID Gudang, wajib)</li>
                 <li>• status ('Di Gudang - Kosong'/'Di Gudang - Terisi', wajib)</li>
-                <li>• gas_type_id (ID Jenis Gas, wajib jika status 'Di Gudang - Terisi')</li>
                 <li>• last_fill_date (Tanggal pengisian terakhir, contoh: 2025-08-14, wajib jika status 'Di Gudang - Terisi')</li>
                 <li>• notes (Catatan, opsional)</li>
               </ul>
+            </div>
+            <div>
+              
             </div>
           </div>
         </CardContent>

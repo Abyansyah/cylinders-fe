@@ -12,6 +12,11 @@ import type { Warehouse } from '@/types/warehouse';
 
 export const getColumns = (onDelete: (item: Warehouse) => void): ColumnDef<Warehouse>[] => [
   {
+    accessorKey: 'id',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="ID" />,
+    cell: ({ row }) => <span className="font-medium">{row.original?.id}</span>,
+  },
+  {
     accessorKey: 'name',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Nama Gudang" />,
     cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,

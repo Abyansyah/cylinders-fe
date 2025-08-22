@@ -13,6 +13,11 @@ import type { Product } from '@/types/product';
 
 export const getColumns = (onDelete: (item: Product) => void): ColumnDef<Product>[] => [
   {
+    accessorKey: 'id',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="ID" />,
+    cell: ({ row }) => <span className="font-medium">{row.original?.id}</span>,
+  },
+  {
     accessorKey: 'name',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Nama Produk" />,
     cell: ({ row }) => (
