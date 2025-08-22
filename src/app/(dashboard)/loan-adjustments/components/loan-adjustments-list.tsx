@@ -5,7 +5,6 @@ import { useState, useMemo, useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
@@ -22,7 +21,6 @@ import { useDebounce } from '@/hooks/use-debounce';
 import useSWR from 'swr';
 import { getLoanAdjustments } from '@/services/loanAdjustmentService';
 import { format } from 'date-fns';
-import { getCustomers } from '@/services/customerService';
 import { CustomerSearchCombobox } from './customer-search-combobox';
 
 const container = {
@@ -57,7 +55,6 @@ export default function LoanAdjustmentsList() {
   });
   const [startDate, setStartDate] = useState<Date | undefined>(searchParams.get('start_date') ? new Date(searchParams.get('start_date')!) : undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(searchParams.get('end_date') ? new Date(searchParams.get('end_date')!) : undefined);
-  const [customerSearch, setCustomerSearch] = useState('');
 
   const page = Number(searchParams.get('page')) || 1;
   const limit = Number(searchParams.get('limit')) || 10;
@@ -65,7 +62,6 @@ export default function LoanAdjustmentsList() {
   const debouncedFilters = useDebounce(filters, 500);
   const debouncedStartDate = useDebounce(startDate, 500);
   const debouncedEndDate = useDebounce(endDate, 500);
-  const debouncedCustomerSearch = useDebounce(customerSearch, 500);
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -82,10 +78,8 @@ export default function LoanAdjustmentsList() {
   }, [debouncedFilters, debouncedStartDate, debouncedEndDate, router, pathname, limit]);
 
   const { data: loanAdjustmentsResponse, isLoading } = useSWR(['/loans/adjustments', searchParams.toString()], () => getLoanAdjustments(searchParams));
-  const { data: customersResponse } = useSWR(`/customers?search=${debouncedCustomerSearch}`, () => getCustomers({ search: debouncedCustomerSearch }));
   const filteredData = loanAdjustmentsResponse?.data || [];
   const totalPages = loanAdjustmentsResponse?.totalPages || 0;
-  const customers = customersResponse?.data || [];
   const stats = useMemo(() => {
     const total = loanAdjustmentsResponse?.totalItems || 0;
     const additions = filteredData.filter((item) => item.adjustment_type === 'ADDITION').length;
@@ -237,7 +231,7 @@ export default function LoanAdjustmentsList() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="type">Adjustment Type</Label>
+                <Label htmlFor="type">Tipe Penyesuaian</Label>
                 <Select value={filters.adjustment_type} onValueChange={(value) => setFilters((prev) => ({ ...prev, adjustment_type: value as any }))}>
                   <SelectTrigger>
                     <SelectValue placeholder="Pilih tipe" />
@@ -275,10 +269,7 @@ export default function LoanAdjustmentsList() {
         <Card>
           <CardHeader>
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <CardTitle>Loan Adjustments</CardTitle>
-              <div className="flex items-center gap-2">
-                <Input placeholder="Search adjustments..." value={filters.search} onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))} className="w-full md:w-64" />
-              </div>
+              <CardTitle>Alih Fungsi Gas</CardTitle>
             </div>
             <CardDescription>
               Menampilkan {filteredData.length} dari {loanAdjustmentsResponse?.totalItems || 0} penyesuaian

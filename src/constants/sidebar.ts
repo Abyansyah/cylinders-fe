@@ -118,6 +118,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     url: '/refill-orders',
     icon: Repeat,
     isActive: false,
+    permissionKey: 'refillOrder',
   },
   {
     title: 'Cabang',
@@ -137,7 +138,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     icon: Building,
     id: 'supplier',
     url: '/suppliers',
-    permissionKey: 'warehouse',
+    permissionKey: 'supplier',
   },
   {
     title: 'Manajemen Pengguna',

@@ -28,11 +28,7 @@ const item = {
 
 export default function LoanAdjustmentDetailView({ initialAdjustment }: { initialAdjustment: LoanAdjustmentDetail }) {
   const router = useRouter();
-  const {
-    data: adjustment,
-    error,
-    isLoading,
-  } = useSWR(`/loans/adjustments/${initialAdjustment.id}`, () => getLoanAdjustmentById(initialAdjustment.id), {
+  const { data: adjustment, isLoading } = useSWR(`/loans/adjustments/${initialAdjustment.id}`, () => getLoanAdjustmentById(initialAdjustment.id), {
     fallbackData: initialAdjustment,
   });
 
@@ -66,7 +62,7 @@ export default function LoanAdjustmentDetailView({ initialAdjustment }: { initia
               <ArrowLeft className="h-4 w-4" />
             </Button>
             <TrendingUp className="h-6 w-6 text-blue-600" />
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Loan Adjustment Detail</h1>
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Alih Fungsi Gas Detail</h1>
           </div>
           <p className="text-muted-foreground">Detail penyesuaian pinjaman #{adjustment.adjustment_number}</p>
         </div>

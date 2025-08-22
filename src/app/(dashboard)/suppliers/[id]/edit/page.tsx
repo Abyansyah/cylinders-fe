@@ -3,6 +3,8 @@ import { Metadata } from 'next';
 import { PageTransition } from '@/components/page-transition';
 import { getSupplierById } from '@/services/supplierService';
 import { SupplierForm } from '../../components/supplier-form';
+import { PermissionGuard } from '@/components/guards/permission-guard';
+import { PERMISSIONS } from '@/config/permissions';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -21,8 +23,10 @@ export default async function EditSupplierPage(props: Props) {
   if (!data) notFound();
 
   return (
-    <PageTransition>
-      <SupplierForm initialData={data} />
-    </PageTransition>
+    <PermissionGuard requiredPermission={PERMISSIONS.supplier.manage}>
+      <PageTransition>
+        <SupplierForm initialData={data} />
+      </PageTransition>
+    </PermissionGuard>
   );
 }

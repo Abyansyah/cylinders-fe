@@ -118,4 +118,8 @@ export const PERMISSIONS = {
     recieve: 'refill_order:receive_refill_order',
     approve: 'refill_order:confirm_refill_order',
   },
+  supplier: {
+    view: 'supplier:view',
+    manage: 'supplier:manage',
+  },
 } as const;
