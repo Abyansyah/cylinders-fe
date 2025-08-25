@@ -1,6 +1,7 @@
 import api from '@/lib/api';
 import type { Customer, CustomersApiResponse, PriceListRequestBody } from '@/types/customer';
 import { ImportResponse } from '@/types/customer-import';
+import { LoanCardApiResponse } from '@/types/loan-card';
 import { cache } from 'react';
 
 export type CustomerPayload = {
@@ -69,4 +70,9 @@ export const updateCustomerPriceList = async (customerId: number, payload: Price
 
 export const deleteCustomerPriceListItem = async (customerId: number, productId: number): Promise<void> => {
   await api.delete(`/customers/${customerId}/pricelists/${productId}`);
+};
+
+export const getCustomerLoanCard = async (customerId: number, params: URLSearchParams): Promise<LoanCardApiResponse> => {
+  const { data } = await api.get(`/customers/${customerId}/cylinders`, { params });
+  return data;
 };

@@ -114,6 +114,13 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     permissionKey: 'loanAdjustment',
   },
   {
+    title: 'Kartu Pinjaman Relasi',
+    url: '/loan-card',
+    icon: TrendingUp,
+    isActive: false,
+    permissionKey: 'loanAdjustment',
+  },
+  {
     title: 'Refill Order',
     url: '/refill-orders',
     icon: Repeat,

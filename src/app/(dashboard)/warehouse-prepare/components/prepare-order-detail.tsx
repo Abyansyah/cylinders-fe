@@ -52,7 +52,7 @@ export default function PrepareOrderDetailClient({ initialOrder }: PrepareOrderD
         }))
       );
     }
-  }, [order]);
+  }, []);
 
   const handleBarcodeInput = async (itemIndex: number, barcode: string) => {
     if (!barcode.trim()) return;
