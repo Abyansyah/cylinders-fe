@@ -19,7 +19,6 @@ export default function ReplacementBarcodeForm() {
   const [foundCylinder, setFoundCylinder] = React.useState<CylinderForReplacement | null>(null);
   const [showDialog, setShowDialog] = React.useState(false);
 
-  // Form states
   const [serialNumberConfirmation, setSerialNumberConfirmation] = React.useState('');
   const [newBarcode, setNewBarcode] = React.useState('');
 

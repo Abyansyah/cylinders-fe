@@ -1,4 +1,4 @@
-import { BrickWallFire, Building, ClipboardCheck, FileText, Flame, GitBranch, LayoutDashboard, Package, QrCode, Repeat, ShoppingCart, TrendingUp, Truck, Users, UserSquare, Warehouse, Zap } from 'lucide-react';
+import { BrickWallFire, Building, ClipboardCheck, FileText, Flame, GitBranch, LayoutDashboard, Package, PackagePlus, QrCode, Repeat, ShoppingCart, TrendingUp, Truck, Users, UserSquare, Warehouse, Zap } from 'lucide-react';
 import type { SidebarItem } from '@/types/sidebar';
 
 export const SIDEBAR_ITEMS: SidebarItem[] = [
@@ -119,6 +119,13 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     icon: Repeat,
     isActive: false,
     permissionKey: 'refillOrder',
+  },
+  {
+    title: 'Penerimaan Masal Supplier',
+    url: '/bulk-receive-supplier',
+    icon: PackagePlus,
+    isActive: false,
+    permissionKey: 'refillOrderBulk',
   },
   {
     title: 'Cabang',

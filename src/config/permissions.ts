@@ -122,4 +122,7 @@ export const PERMISSIONS = {
     view: 'supplier:view',
     manage: 'supplier:manage',
   },
+  refillOrderBulk: {
+    view: 'refill_order:receive_bulk_refill_order',
+  },
 } as const;

@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { PageTransition } from '@/components/page-transition';
-import ReplacementBarcodeForm from './components/eplacement-barcode-form';
+import ReplacementBarcodeForm from './components/replacement-barcode-form';
 import { PermissionGuard } from '@/components/guards/permission-guard';
 import { PERMISSIONS } from '@/config/permissions';
 

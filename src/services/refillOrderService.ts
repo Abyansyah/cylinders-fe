@@ -1,5 +1,5 @@
 import api from '@/lib/api';
-import { CreateRefillOrderRequest, RefillOrderApiResponse, RefillOrderDeliveryNote, RefillOrderDetail, Supplier } from '@/types/refill-order';
+import { BulkReceiveResponse, CreateRefillOrderRequest, RefillOrderApiResponse, RefillOrderDeliveryNote, RefillOrderDetail, Supplier } from '@/types/refill-order';
 import { cache } from 'react';
 
 export const getRefillOrders = async (endpoint: string, params: URLSearchParams): Promise<RefillOrderApiResponse> => {
@@ -38,4 +38,9 @@ export const receiveRefillOrderItems = async (id: number, payload: { identifiers
 
 export const cancelRefillOrder = async (id: number): Promise<void> => {
   await api.put(`/refill-orders/${id}/cancel`);
+};
+
+export const bulkReceiveFromSupplier = async (payload: { supplier_id: number; warehouse_id?: number; identifiers: string[] }): Promise<BulkReceiveResponse> => {
+  const { data } = await api.post('/refill-orders/receive-by-supplier', payload);
+  return data;
 };

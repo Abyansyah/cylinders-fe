@@ -114,7 +114,6 @@ export interface RefillOrderItemDetail {
   returnedAt: string | null;
 }
 
-// Memastikan RefillOrderDetail menggunakan tipe baru ini
 export interface RefillOrderDetail {
   id: number;
   status: string;
@@ -141,4 +140,22 @@ export interface RefillOrderDetail {
     name: string;
   } | null;
   details: RefillOrderItemDetail[];
+}
+
+export interface BulkReceiveResponse {
+  status: string;
+  message: string;
+  summary: {
+    total_scanned: number;
+    successfully_received: number;
+    failed_items: number;
+  };
+  failed_items: Array<{
+    identifier: string;
+    reason: string;
+  }>;
+  affected_refill_orders: Array<{
+    refill_order_number: string;
+    status: string;
+  }>;
 }
