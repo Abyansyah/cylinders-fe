@@ -2,7 +2,7 @@
 
 import type { ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
-import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { Eye, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { DataTableColumnHeader } from '@/components/ui/data-table/data-table-column-header';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -48,6 +48,12 @@ export const getColumns = (onDelete: (item: Supplier) => void): ColumnDef<Suppli
                 <Link href={`/suppliers/${row.original.id}/edit`}>
                   <Pencil className="mr-2 h-4 w-4" />
                   Ubah
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={`/suppliers/${row.original.id}`}>
+                  <Eye className="mr-2 h-4 w-4" />
+                  Detail
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem className="text-red-500" onClick={() => onDelete(row.original)}>

@@ -7,6 +7,7 @@ export interface Supplier {
   is_active: boolean;
   createdAt: string;
   updatedAt: string;
+  pricelists?: SupplierPriceListItem[];
 }
 
 export interface SuppliersApiResponse {
@@ -16,4 +17,21 @@ export interface SuppliersApiResponse {
   currentPage: number;
 }
 
+interface PriceListProduct {
+  id: number;
+  name: string;
+  unit: string;
+}
+
 export type SupplierPayload = Omit<Supplier, 'id' | 'createdAt' | 'updatedAt'>;
+
+export interface SupplierPriceListItem {
+  buyPrice: string | null;
+  product: PriceListProduct;
+}
+
+export interface PriceListRequestBody {
+  product_id: number;
+  rent_price: number | null;
+  buy_price: number | null;
+}

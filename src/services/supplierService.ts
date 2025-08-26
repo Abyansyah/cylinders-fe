@@ -1,5 +1,5 @@
 import api from '@/lib/api';
-import type { Supplier, SuppliersApiResponse, SupplierPayload } from '@/types/supplier';
+import type { Supplier, SuppliersApiResponse, SupplierPayload, PriceListRequestBody } from '@/types/supplier';
 import { cache } from 'react';
 
 interface GetSuppliersParams {
@@ -30,4 +30,12 @@ export const updateSupplier = async (id: number, payload: SupplierPayload): Prom
 
 export const deleteSupplier = async (id: number): Promise<void> => {
   await api.delete(`/suppliers/${id}`);
+};
+
+export const updateSupplierPriceList = async (customerId: number, payload: PriceListRequestBody[]): Promise<void> => {
+  await api.post(`/suppliers/${customerId}/pricelists`, payload);
+};
+
+export const deleteSupplierPriceListItem = async (customerId: number, productId: number): Promise<void> => {
+  await api.delete(`/suppliers/${customerId}/pricelists/${productId}`);
 };
