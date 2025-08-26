@@ -1,5 +1,6 @@
 import { BrickWallFire, Building, ClipboardCheck, FileText, Flame, GitBranch, LayoutDashboard, Package, PackagePlus, QrCode, Repeat, ShoppingCart, TrendingUp, Truck, Users, UserSquare, Warehouse, Zap } from 'lucide-react';
 import type { SidebarItem } from '@/types/sidebar';
+import { title } from 'process';
 
 export const SIDEBAR_ITEMS: SidebarItem[] = [
   {
@@ -14,21 +15,106 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     url: '/products',
     id: 'gas-type',
     icon: Flame,
-    permissionKey: 'products',
+    items: [
+      {
+        title: 'Product',
+        url: '/products',
+        id: 'product-list',
+        permissionKey: 'products',
+      },
+      {
+        title: 'Tabung Gas',
+        url: '/cylinders',
+        id: 'cylinder-list',
+        permissionKey: 'cylinder',
+      },
+    ],
+  },
+  {
+    title: 'Manajemen Tabung',
+    url: '/replacement-barcode',
+    icon: BrickWallFire,
+    items: [
+      {
+        title: 'Customer Audit',
+        url: '/customer-audit',
+        id: 'customer-audit',
+        permissionKey: 'audit',
+      },
+      {
+        title: 'Replacement Barcode',
+        url: '/replacement-barcode',
+        id: 'replacement-barcode',
+        permissionKey: 'replacementBarcode',
+      },
+      {
+        title: 'Alih Fungsi Gas',
+        url: 'gas-conversions',
+        id: 'gas-conversion',
+        permissionKey: 'gasConversion',
+      },
+    ],
   },
   {
     title: 'Master Customer',
     icon: UserSquare,
     url: '/customers',
-    permissionKey: 'customer',
+    items: [
+      {
+        title: 'Customer',
+        url: '/customers',
+        id: 'customer-list',
+        permissionKey: 'customer',
+      },
+      {
+        title: 'Cabang Customer',
+        url: '/branches',
+        id: 'branch-list',
+        permissionKey: 'branch',
+      },
+    ],
   },
   {
-    id: 'orders',
-    title: 'Buat Order',
+    title: 'Kartu Pinjaman',
+    url: '/loan-adjustments',
+    icon: TrendingUp,
+    isActive: false,
+    permissionKey: 'loanAdjustment',
+    items: [
+      {
+        title: 'Update Pinjaman Relasi',
+        url: '/loan-adjustments',
+        id: 'loan-adjustment-list',
+        permissionKey: 'loanAdjustment',
+      },
+      {
+        title: 'Kartu Pinjaman Relasi',
+        url: '/loan-card',
+        id: 'loan-card-list',
+        permissionKey: 'loanAdjustment',
+      },
+    ],
+  },
+  {
+    title: 'Master Order',
     icon: ShoppingCart,
     isActive: false,
     url: '/orders',
     permissionKey: 'order',
+    items: [
+      {
+        title: 'Buat Order',
+        url: '/orders',
+        id: 'order-list',
+        permissionKey: 'order',
+      },
+      {
+        title: 'Refill Order',
+        url: '/refill-orders',
+        id: 'refill-order-list',
+        permissionKey: 'refillOrder',
+      },
+    ],
   },
   {
     title: 'Menyiapkan Tabung',
@@ -63,40 +149,12 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     onlyPermission: true,
   },
   {
-    title: 'Tabung Gas',
-    url: '/cylinders',
-    icon: BrickWallFire,
-    isActive: false,
-    permissionKey: 'cylinder',
-  },
-  {
-    title: 'Customer Audit',
-    url: '/customer-audit',
-    icon: ClipboardCheck,
-    isActive: false,
-    permissionKey: 'audit',
-  },
-  {
-    title: 'Replacement Barcode',
-    url: '/replacement-barcode',
-    icon: QrCode,
-    isActive: false,
-    permissionKey: 'replacementBarcode',
-  },
-  {
     title: 'Update Status tabung',
     url: '/cylinder-status-update',
     icon: BrickWallFire,
     isActive: false,
     permissionKey: 'updateStatusTabung',
     onlyPermission: true,
-  },
-  {
-    title: 'Alih Fungsi Gas',
-    url: '/gas-conversions',
-    icon: Zap,
-    isActive: false,
-    permissionKey: 'gasConversion',
   },
   {
     title: 'Permintaan Alih Fungsi Gas',
@@ -107,38 +165,11 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     onlyPermission: true,
   },
   {
-    title: 'Update Pinjaman Relasi',
-    url: '/loan-adjustments',
-    icon: TrendingUp,
-    isActive: false,
-    permissionKey: 'loanAdjustment',
-  },
-  {
-    title: 'Kartu Pinjaman Relasi',
-    url: '/loan-card',
-    icon: TrendingUp,
-    isActive: false,
-    permissionKey: 'loanAdjustment',
-  },
-  {
-    title: 'Refill Order',
-    url: '/refill-orders',
-    icon: Repeat,
-    isActive: false,
-    permissionKey: 'refillOrder',
-  },
-  {
     title: 'Penerimaan Masal Supplier',
     url: '/bulk-receive-supplier',
     icon: PackagePlus,
     isActive: false,
     permissionKey: 'refillOrderBulk',
-  },
-  {
-    title: 'Cabang',
-    icon: GitBranch,
-    url: '/branches',
-    permissionKey: 'branch',
   },
   {
     title: 'Manajemen Gudang',
@@ -148,7 +179,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     permissionKey: 'warehouse',
   },
   {
-    title: 'Supplier',
+    title: 'Master Vendor',
     icon: Building,
     id: 'supplier',
     url: '/suppliers',

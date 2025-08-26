@@ -74,10 +74,10 @@ export default function SupplierTable() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Manajemen Supplier</h1>
+        <h1 className="text-2xl font-bold">Manajemen Vendor</h1>
         <div className="flex gap-2">
           <Button onClick={() => router.push('/suppliers/create')}>
-            <Plus className="mr-2 h-4 w-4" /> Tambah Supplier
+            <Plus className="mr-2 h-4 w-4" /> Tambah Vendor
           </Button>
         </div>
       </div>

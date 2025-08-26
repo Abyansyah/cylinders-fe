@@ -12,7 +12,7 @@ import type { Supplier } from '@/types/supplier';
 export const getColumns = (onDelete: (item: Supplier) => void): ColumnDef<Supplier>[] => [
   {
     accessorKey: 'name',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Nama Supplier" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Nama Vendor" />,
     cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
   },
   {

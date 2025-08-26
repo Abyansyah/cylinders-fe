@@ -69,12 +69,12 @@ export function SupplierForm({ initialData }: SupplierFormProps) {
         <Button variant="outline" size="icon" onClick={() => router.push('/suppliers')}>
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        <h1 className="text-xl font-bold">{isEditMode ? 'Ubah Data Supplier' : 'Tambah Supplier Baru'}</h1>
+        <h1 className="text-xl font-bold">{isEditMode ? 'Ubah Data Vendor' : 'Tambah Vendor Baru'}</h1>
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>{isEditMode ? 'Ubah Data Supplier' : 'Tambah Supplier Baru'}</CardTitle>
-          <CardDescription>Lengkapi detail supplier di bawah ini.</CardDescription>
+          <CardTitle>{isEditMode ? 'Ubah Data Vendor' : 'Tambah Vendor Baru'}</CardTitle>
+          <CardDescription>Lengkapi detail vendor di bawah ini.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -84,7 +84,7 @@ export function SupplierForm({ initialData }: SupplierFormProps) {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nama Supplier *</FormLabel>
+                    <FormLabel>Nama Vendor *</FormLabel>
                     <FormControl>
                       <Input placeholder="Contoh: PT Gas Sejahtera" {...field} />
                     </FormControl>
