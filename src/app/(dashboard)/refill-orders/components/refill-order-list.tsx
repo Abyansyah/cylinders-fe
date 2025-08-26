@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Search, Filter, Eye, Calendar, User, Building2 } from 'lucide-react';
+import { Plus, Search, Filter, Eye, Calendar, User, Building2, ChartLine, Package } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -17,8 +17,9 @@ import type { ColumnDef, PaginationState } from '@tanstack/react-table';
 import { usePermission } from '@/hooks/use-permission';
 import { PERMISSIONS } from '@/config/permissions';
 import useSWR from 'swr';
-import { getRefillOrders, getSuppliersForSelect } from '@/services/refillOrderService';
+import { getRefillOrders, getSuppliersForSelect, viewSummarySuppliers } from '@/services/refillOrderService';
 import { useDebounce } from '@/hooks/use-debounce';
+import { StatCard } from '@/components/stat-card';
 
 const REFILL_ORDER_STATUSES = [
   { value: 'PENDING_CONFIRMATION', label: 'Menunggu Konfirmasi' },
@@ -124,6 +125,8 @@ export default function RefillOrderList() {
   const page = Number(searchParams.get('page')) || 1;
   const limit = Number(searchParams.get('limit')) || 10;
 
+  const canFetchSummarySuppliers = !!supplierFilter && supplierFilter !== 'all';
+
   useEffect(() => {
     const params = new URLSearchParams();
     params.set('page', '1');
@@ -139,6 +142,7 @@ export default function RefillOrderList() {
 
   const { data: ordersResponse, isLoading } = useSWR([apiEndpoint, searchParams.toString()], () => getRefillOrders(apiEndpoint, searchParams));
   const { data: suppliersResponse } = useSWR('/select-lists/suppliers', getSuppliersForSelect);
+  const { data: supplierSummaryResponse } = useSWR(canFetchSummarySuppliers ? [`/refill-orders/summary-by-supplier?supplier_id=${supplierFilter}`] : null, () => viewSummarySuppliers(Number(supplierFilter)));
 
   const filteredOrders = ordersResponse?.data || [];
   const totalPages = ordersResponse?.totalPages || 0;
@@ -227,6 +231,22 @@ export default function RefillOrderList() {
               >
                 Reset Filter
               </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="my-4">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <ChartLine className="h-5 w-5" />
+              Summary Supplier
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <StatCard title="Total Tabung Terkirim" subtitle="" value={supplierSummaryResponse?.summary.total_cylinders_sent || 0} icon={Package} gradient="bg-gradient-to-r from-blue-500 to-blue-600" delay={0} />
+              <StatCard title="Total Tabung Kembali" subtitle="" value={supplierSummaryResponse?.summary.cylinders_returned || 0} icon={Package} gradient="bg-gradient-to-r from-green-500 to-green-600" delay={0.1} />
+              <StatCard title='Total Tabung Belum Kembali' subtitle='' value={supplierSummaryResponse?.summary?.cylinders_outstanding || 0} icon={Package} gradient='bg-gradient-to-r from-red-500 to-red-600' delay={0.2} />
             </div>
           </CardContent>
         </Card>

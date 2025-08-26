@@ -20,7 +20,6 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useDebounce } from '@/hooks/use-debounce';
 import { format } from 'date-fns';
 import { cancelOrder, getOrders, getOrderStats } from '@/services/orderService';
-import { getWarehouses } from '@/services/warehouseService';
 import { DateRange } from 'react-day-picker';
 import { DateRangePicker } from '@/components/date-range-picker';
 import { toast } from 'sonner';
@@ -42,7 +41,6 @@ const getStatusColor = (status: string) => {
 const getOrderTypeColor = (type: string) => {
   return type === 'Sewa' ? 'bg-orange-100 text-orange-800' : 'bg-indigo-100 text-indigo-800';
 };
-
 const StatCard = ({ title, value, subtitle, icon: Icon, gradient, delay = 0 }: { title: string; value: string | number; subtitle: string; icon: any; gradient: string; delay?: number }) => (
   <motion.div initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.5, delay, type: 'spring', stiffness: 100 }} whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}>
     <Card className={`relative overflow-hidden border-0 shadow-lg ${gradient} text-white`}>

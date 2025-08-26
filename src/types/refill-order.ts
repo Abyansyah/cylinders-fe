@@ -159,3 +159,15 @@ export interface BulkReceiveResponse {
     status: string;
   }>;
 }
+
+export interface viewSummarySupplierResponse {
+  supplier: {
+    id: number;
+    name: string;
+  };
+  summary: {
+    total_cylinders_sent: number;
+    cylinders_returned: number;
+    cylinders_outstanding: number;
+  };
+}
