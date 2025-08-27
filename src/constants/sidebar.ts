@@ -1,6 +1,5 @@
-import { BrickWallFire, Building, ClipboardCheck, FileText, Flame, GitBranch, LayoutDashboard, Package, PackagePlus, QrCode, Repeat, ShoppingCart, TrendingUp, Truck, Users, UserSquare, Warehouse, Zap } from 'lucide-react';
+import { BrickWallFire, Building, FileText, Flame, LayoutDashboard, Package, PackagePlus, ShoppingCart, TrendingUp, Truck, Users, UserSquare, Warehouse, Zap } from 'lucide-react';
 import type { SidebarItem } from '@/types/sidebar';
-import { title } from 'process';
 
 export const SIDEBAR_ITEMS: SidebarItem[] = [
   {
@@ -49,7 +48,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
       },
       {
         title: 'Alih Fungsi Gas',
-        url: 'gas-conversions',
+        url: '/gas-conversions',
         id: 'gas-conversion',
         permissionKey: 'gasConversion',
       },
