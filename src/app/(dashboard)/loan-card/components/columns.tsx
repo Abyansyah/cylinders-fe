@@ -22,6 +22,14 @@ export const columns: ColumnDef<any>[] = [
     cell: ({ row }) => <div className="font-mono">{row.getValue('serial_number')}</div>,
   },
   {
+    accessorKey: 'ownershipCylinders',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Kepemilikan" />,
+    cell: ({ row }) => {
+      const ownership: any = row.original.ownershipCylinders;
+      return <div className="text-sm">{ownership ? `${ownership.customer_name} ${ownership?.company_name !== '' ? `(${ownership?.company_name})` : ''}` : '-'}</div>;
+    },
+  },
+  {
     accessorKey: 'status',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
     cell: ({ row }) => {

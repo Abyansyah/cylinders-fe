@@ -1,5 +1,6 @@
 export interface LoanCardItem {
   id: number;
+  id_product: number;
   barcode_id: string;
   serial_number: string;
   product_name: string;

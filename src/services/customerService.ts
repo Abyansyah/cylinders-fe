@@ -8,6 +8,7 @@ export type CustomerPayload = {
   customer_name: string;
   company_name?: string;
   phone_number: string;
+  relation_type: 'SUPPLIER' | 'CLIENT' | 'SUPPLIER_AND_CLIENT';
   email: string;
   shipping_address_default: string;
   contact_person: string;

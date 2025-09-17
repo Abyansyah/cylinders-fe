@@ -31,7 +31,8 @@ import { useAuthStore } from '@/stores/authStore';
 import { checkBarcodeExists, createCylinder } from '@/services/cylinderService';
 import { getWarehouses } from '@/services/warehouseService';
 import type { Warehouse } from '@/types/warehouse';
-import { getProductsSelect } from '@/services/SearchListService';
+import { getCustomersSelectList, getProductsSelect } from '@/services/SearchListService';
+import { useDebounce } from '@/hooks/use-debounce';
 
 const formSchema = z.object({
   barcode_id: z.string().min(1, 'Barcode ID wajib diisi.'),
@@ -42,6 +43,7 @@ const formSchema = z.object({
   manufacture_date: z.date({ required_error: 'Tanggal produksi wajib diisi.' }),
   notes: z.string().optional(),
   last_fill_date: z.date().optional().nullable(),
+  owner_customer_id: z.number({ required_error: 'Ownership wajib dipilih.' }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -54,9 +56,11 @@ interface ComboboxProps {
   searchPlaceholder: string;
   emptyText: string;
   isLoading?: boolean;
+  valueSearch?: string;
+  setValueSearch?: (value: string) => void;
 }
 
-function Combobox({ options, value, onValueChange, placeholder, searchPlaceholder, emptyText, isLoading }: ComboboxProps) {
+export function Combobox({ options, value, onValueChange, placeholder, searchPlaceholder, emptyText, isLoading, valueSearch, setValueSearch }: ComboboxProps) {
   const [open, setOpen] = useState(false);
   const selectedLabel = options.find((option) => option.value === value)?.label;
 
@@ -70,7 +74,7 @@ function Combobox({ options, value, onValueChange, placeholder, searchPlaceholde
       </PopoverTrigger>
       <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
         <Command>
-          <CommandInput placeholder={searchPlaceholder} />
+          <CommandInput placeholder={searchPlaceholder} value={valueSearch} onValueChange={setValueSearch} />
           <CommandList>
             <CommandEmpty>{emptyText}</CommandEmpty>
             <CommandGroup>
@@ -107,6 +111,7 @@ export default function CylinderFormCreate() {
   const [isCheckingBarcode, setIsCheckingBarcode] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
   const [manualBarcode, setManualBarcode] = useState('');
+  const [customerSearch, setCustomerSearch] = useState('');
 
   const [barcodeDialog, setBarcodeDialog] = useState({ open: false, isExisting: false, barcode: '' });
   const [successDialog, setSuccessDialog] = useState({ open: false, barcode: '' });
@@ -121,11 +126,17 @@ export default function CylinderFormCreate() {
       product_id: undefined,
       last_fill_date: null,
       warehouse_id: user?.warehouse_id,
+      owner_customer_id: undefined,
     },
   });
 
+  const debouncedCustomerSearch = useDebounce(customerSearch, 300);
+
   const { data: warehousesRes, isLoading: isLoadingWarehouses } = useSWR(user?.role.role_name !== 'Petugas Gudang' ? '/warehouses?limit=1000' : null, () => getWarehouses({ limit: 1000 }));
   const { data: productsSelectOptions, isLoading: isLoadingProducts } = useSWR('/select-list/products', () => getProductsSelect());
+  const { data: customersResponse, isLoading: isLoadingCustomers } = useSWR(`/select-lists/customers?search=${debouncedCustomerSearch}`, () =>
+    getCustomersSelectList({ search: debouncedCustomerSearch, relation_type: 'SUPPLIER_AND_CLIENT' })
+  );
 
   const isPetugasGudang = user?.role.role_name === 'Petugas Gudang';
 
@@ -168,7 +179,6 @@ export default function CylinderFormCreate() {
       })
       .catch((error: any) => {
         let responseData = error.response?.data;
-        console.log(error?.response?.data?.errors);
         if (error?.response?.data?.errors) {
           const errorMessages = responseData?.errors?.map((err: { msg: string }) => `${err.msg}`).join(', ');
           toast.error(` ${errorMessages}`);
@@ -309,6 +319,28 @@ export default function CylinderFormCreate() {
                                 emptyText="Status tidak ditemukan"
                               />
                             )}
+                          />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="owner_customer_id"
+                      render={({ field }) => (
+                        <FormItem>
+                          <Label>Ownership *</Label>
+                          <Combobox
+                            options={customersResponse?.data.map((g: any) => ({ value: g.value, label: g.label })) || []}
+                            value={field.value}
+                            onValueChange={field.onChange}
+                            valueSearch={customerSearch}
+                            setValueSearch={setCustomerSearch}
+                            placeholder="Pilih customer..."
+                            searchPlaceholder="Cari customer..."
+                            emptyText="Customer tidak ditemukan."
+                            isLoading={isLoadingCustomers}
                           />
                           <FormMessage />
                         </FormItem>

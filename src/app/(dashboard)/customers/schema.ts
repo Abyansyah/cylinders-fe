@@ -10,6 +10,7 @@ export const createCustomerSchema = z.object({
   shipping_address_default: z.string().min(10, 'Alamat pengiriman wajib diisi.'),
   contact_person: z.string().min(3, 'Kontak person wajib diisi.'),
   customer_type: z.enum(['Individual', 'Corporate'], { required_error: 'Tipe pelanggan wajib dipilih.' }),
+  relation_type: z.enum(['SUPPLIER', 'CLIENT', 'SUPPLIER_AND_CLIENT'], { required_error: 'Tipe mitra wajib dipilih.' }),
   username: z.string().min(5, 'Username minimal 5 karakter.'),
   password: z.string().min(6, 'Password minimal 6 karakter.'),
   payment_term_days: z.coerce.number(),

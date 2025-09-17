@@ -43,6 +43,7 @@ export function CustomerForm({ initialData }: { initialData?: Customer | null })
       company_name: initialData?.company_name || '',
       phone_number: initialData?.phone_number || '',
       email: initialData?.email || '',
+      relation_type: initialData?.relation_type || 'SUPPLIER',
       shipping_address_default: initialData?.shipping_address_default || '',
       contact_person: initialData?.contact_person || '',
       customer_type: initialData?.customer_type || 'Individual',
@@ -191,6 +192,38 @@ export function CustomerForm({ initialData }: { initialData?: Customer | null })
                         <RequiredFormLabel>Tempo Pembayaran (Hari)</RequiredFormLabel>
                         <FormControl>
                           <Input type="number" min={0} placeholder="Contoh: 30" {...field} value={field.value ?? ''} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="relation_type"
+                    render={({ field }) => (
+                      <FormItem className="space-y-3">
+                        <RequiredFormLabel>Tipe Mitra</RequiredFormLabel>
+                        <FormControl>
+                          <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex items-center space-x-4">
+                            <FormItem className="flex items-center space-x-2 space-y-0">
+                              <FormControl>
+                                <RadioGroupItem value="SUPPLIER" />
+                              </FormControl>
+                              <FormLabel className="font-normal">Supplier</FormLabel>
+                            </FormItem>
+                            <FormItem className="flex items-center space-x-2 space-y-0">
+                              <FormControl>
+                                <RadioGroupItem value="CLIENT" />
+                              </FormControl>
+                              <FormLabel className="font-normal">Client</FormLabel>
+                            </FormItem>
+                            <FormItem className="flex items-center space-x-2 space-y-0">
+                              <FormControl>
+                                <RadioGroupItem value="SUPPLIER_AND_CLIENT" />
+                              </FormControl>
+                              <FormLabel className="font-normal">Supplier & Client</FormLabel>
+                            </FormItem>
+                          </RadioGroup>
                         </FormControl>
                         <FormMessage />
                       </FormItem>

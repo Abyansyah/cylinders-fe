@@ -12,6 +12,7 @@ export type CylinderCreatePayload = {
   cylinder_properties_id: number;
   gas_type_id: number | null;
   warehouse_id: number;
+  owner_customer_id: number | null;
   status: string;
   manufacture_date: string;
   notes?: string;

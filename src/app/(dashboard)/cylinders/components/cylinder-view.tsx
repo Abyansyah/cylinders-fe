@@ -101,6 +101,12 @@ export default function CylinderDetailView({ cylinder }: CylinderDetailViewProps
                           {cylinder.product.sku} - {cylinder.product.unit}
                         </p>
                       </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Ownership</label>
+                        <p className="">
+                          {!cylinder.ownershipCylinders ? 'Milik Sendiri' : `${cylinder?.ownershipCylinders?.customer_name} ${cylinder?.ownershipCylinders?.company_name !== '' ? `(${cylinder?.ownershipCylinders?.company_name})` : ''}`}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </CardContent>

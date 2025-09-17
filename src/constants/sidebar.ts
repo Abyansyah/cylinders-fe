@@ -189,13 +189,6 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     permissionKey: 'warehouse',
   },
   {
-    title: 'Master Vendor',
-    icon: Building,
-    id: 'supplier',
-    url: '/suppliers',
-    permissionKey: 'supplier',
-  },
-  {
     title: 'Manajemen Pengguna',
     url: '/users',
     icon: Users,

@@ -17,6 +17,7 @@ export interface Customer {
   company_name?: string;
   phone_number: string;
   email: string;
+  relation_type?: 'SUPPLIER' | 'CLIENT' | 'SUPPLIER_AND_CLIENT';
   shipping_address_default: string;
   contact_person: string;
   customer_type: 'Individual' | 'Corporate';

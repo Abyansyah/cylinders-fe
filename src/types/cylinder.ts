@@ -15,6 +15,7 @@ export interface Cylinder {
   notes: string | null;
   customer_id: number | null;
   current_order_item_id: number | null;
+  owner_customer_id: number | null;
   createdAt: string;
   updatedAt: string;
   product: Pick<Product, 'id' | 'name' | 'sku' | 'description' | 'is_active'>;
@@ -23,6 +24,7 @@ export interface Cylinder {
     address?: string;
   };
   stockMovements?: StockMovement[];
+  ownershipCylinders?: any;
 }
 
 export interface CylinderDetail extends Omit<Cylinder, 'cylinderProperty' | 'gasType' | 'currentWarehouse'> {
@@ -35,6 +37,7 @@ export interface CylinderDetail extends Omit<Cylinder, 'cylinderProperty' | 'gas
   product: Product;
   currentWarehouse: Warehouse;
   stockMovements: StockMovement[];
+  ownershipCylinders: any;
 }
 
 export interface StockMovement {
@@ -84,6 +87,7 @@ export interface UpdateCylinderStatusRequest {
   last_fill_date?: string;
   notes: string;
   warehouse_id_param?: number;
+  owner_customer_id?: number | null;
 }
 
 export interface CylindersApiResponse {

@@ -54,6 +54,14 @@ export const getColumns = (): ColumnDef<Cylinder>[] => [
     },
   },
   {
+    accessorKey: 'ownershipCylinders',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Kepemilikan" />,
+    cell: ({ row }) => {
+      const ownership: any = row.original.ownershipCylinders;
+      return <div className="text-sm">{ownership ? `${ownership.customer_name} ${ownership?.company_name !== '' ? `(${ownership?.company_name})` : ''}` : '-'}</div>;
+    },
+  },
+  {
     id: 'actions',
     cell: ({ row }) => {
       const cylinder = row.original;

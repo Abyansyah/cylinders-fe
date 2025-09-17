@@ -15,7 +15,6 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   useEffect(() => {
     if (isLoading) {
       if (authStatus !== 'loading') {
-        console.log('AuthProvider: SWR is loading, setting status to loading.');
         setAuthStatus('loading');
       }
       return;
@@ -32,7 +31,6 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
     if (user) {
       if (authStatus !== 'authenticated') {
-        console.log('AuthProvider: SWR returned user, setting status to authenticated.');
         setAuthStatus('authenticated');
         setUser(user);
       }

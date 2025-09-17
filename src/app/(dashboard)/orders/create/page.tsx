@@ -84,7 +84,7 @@ export default function CreateOrderPage() {
   const debouncedWarehouseSearch = useDebounce(warehouseSearch, 300);
   const debouncedProductSearch = useDebounce(productSearch, 300);
 
-  const { data: customersResponse, isLoading: isLoadingCustomers } = useSWR(`/select-lists/customers?search=${debouncedCustomerSearch}`, () => getCustomersSelectList({ search: debouncedCustomerSearch }));
+  const { data: customersResponse, isLoading: isLoadingCustomers } = useSWR(`/select-lists/customers?search=${debouncedCustomerSearch}`, () => getCustomersSelectList({ search: debouncedCustomerSearch, relation_type: 'CLIENT' }));
   const { data: warehousesResponse, isLoading: isLoadingWarehouses } = useSWR(`/select-lists/warehouses?search=${debouncedWarehouseSearch}`, () => getWarehousesSelectList({ search: debouncedWarehouseSearch }));
   const { data: productsResponse, isLoading: isLoadingProducts } = useSWR(formData.assigned_warehouse_id > 0 ? `/products?warehouse_id=${formData.assigned_warehouse_id}&search=${debouncedProductSearch}` : null, () =>
     getProductsByWarehouse(formData.assigned_warehouse_id)

@@ -1,6 +1,6 @@
 'use client';
 
-import { notFound, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -133,6 +133,14 @@ export default function CustomerDetailView() {
                 <Separator />
                 <DetailItem icon={<Home size={20} />} label="Alamat Pengiriman Utama">
                   <p className="whitespace-pre-wrap">{customer.shipping_address_default}</p>
+                </DetailItem>
+                <DetailItem icon={<Home size={20} />} label="Tipe Mitra">
+                  <p className="whitespace-pre-wrap">
+                    {customer.relation_type
+                      ?.toLocaleLowerCase()
+                      .replace(/_/g, ' ')
+                      .replace(/\b\w/g, (char) => char.toUpperCase())}
+                  </p>
                 </DetailItem>
               </CardContent>
             </Card>

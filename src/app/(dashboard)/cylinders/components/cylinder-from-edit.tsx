@@ -19,6 +19,10 @@ import { id } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { updateCylinderStatus } from '@/services/cylinderService';
 import { toast } from 'sonner';
+import { Combobox } from './cylinder-form-create';
+import { useDebounce } from '@/hooks/use-debounce';
+import { getCustomersSelectList } from '@/services/SearchListService';
+import useSWR from 'swr';
 
 const EDITABLE_STATUSES = ['Di Gudang - Kosong', 'Di Gudang - Terisi', 'Perlu Inspeksi', 'Rusak', 'Tidak Aktif'];
 
@@ -29,6 +33,7 @@ interface EditCylinderViewProps {
 export default function EditCylinderView({ cylinder }: EditCylinderViewProps) {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
+  const [customerSearch, setCustomerSearch] = useState('');
 
   const [lastFillDate, setLastFillDate] = useState<Date | undefined>(cylinder.last_fill_date ? parseISO(cylinder.last_fill_date) : undefined);
 
@@ -36,9 +41,15 @@ export default function EditCylinderView({ cylinder }: EditCylinderViewProps) {
     status: cylinder.status as any,
     gas_type_id: cylinder.gas_type_id ?? undefined,
     notes: cylinder.notes || '',
+    owner_customer_id: cylinder.owner_customer_id ?? undefined,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const debouncedCustomerSearch = useDebounce(customerSearch, 300);
+
+  const { data: customersResponse, isLoading: isLoadingCustomers } = useSWR(`/select-lists/customers?search=${debouncedCustomerSearch}`, () =>
+    getCustomersSelectList({ search: debouncedCustomerSearch, relation_type: 'SUPPLIER_AND_CLIENT', include_id: !debouncedCustomerSearch && formData.owner_customer_id ? formData.owner_customer_id : undefined })
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,6 +102,7 @@ export default function EditCylinderView({ cylinder }: EditCylinderViewProps) {
       if (formData.gas_type_id !== cylinder.gas_type_id) return true;
       if (lastFillDate?.getTime() !== initialLastFillDate?.getTime()) return true;
     }
+    if (formData?.owner_customer_id !== undefined && formData?.owner_customer_id !== cylinder?.owner_customer_id) return true;
 
     return false;
   }, [formData, lastFillDate, cylinder]);
@@ -99,7 +111,7 @@ export default function EditCylinderView({ cylinder }: EditCylinderViewProps) {
     <PageTransition>
       <div className="space-y-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2">
-          <Button variant="outline" size="icon" onClick={() => router.push(`/cylinders/${cylinder.barcode_id}`)}>
+          <Button variant="outline" size="icon" onClick={() => router.push(`/cylinders`)}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <div>
@@ -172,6 +184,27 @@ export default function EditCylinderView({ cylinder }: EditCylinderViewProps) {
                           ))}
                         </SelectContent>
                       </Select>
+                      {errors.status && <p className="text-sm text-red-600">{errors.status}</p>}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="status">Ownership *</Label>
+                      <Combobox
+                        options={customersResponse?.data.map((g: any) => ({ value: g.value, label: g.label })) || []}
+                        value={formData?.owner_customer_id}
+                        onValueChange={(value) => {
+                          setFormData((prev) => ({
+                            ...prev,
+                            owner_customer_id: value ? Number(value) : null,
+                          }));
+                        }}
+                        valueSearch={customerSearch}
+                        setValueSearch={setCustomerSearch}
+                        placeholder="Pilih customer..."
+                        searchPlaceholder="Cari customer..."
+                        emptyText="Customer tidak ditemukan."
+                        isLoading={isLoadingCustomers}
+                      />
                       {errors.status && <p className="text-sm text-red-600">{errors.status}</p>}
                     </div>
 
