@@ -253,6 +253,7 @@ export default function CustomerImport() {
                 <li>• shipping_address_default (Alamat Pengiriman)</li>
                 <li>• contact_person (Nama Kontak)</li>
                 <li>• customer_type (Corporate/Individual)</li>
+                <li>• relation_type ('SUPPLIER', 'CLIENT', 'SUPPLIER_AND_CLIENT')</li>
               </ul>
             </div>
 
