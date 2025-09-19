@@ -17,9 +17,11 @@ import type { ColumnDef, PaginationState } from '@tanstack/react-table';
 import { usePermission } from '@/hooks/use-permission';
 import { PERMISSIONS } from '@/config/permissions';
 import useSWR from 'swr';
-import { getRefillOrders, getSuppliersForSelect, viewSummarySuppliers } from '@/services/refillOrderService';
+import { getRefillOrders, viewSummarySuppliers } from '@/services/refillOrderService';
 import { useDebounce } from '@/hooks/use-debounce';
 import { StatCard } from '@/components/stat-card';
+import { getCustomersSelectList } from '@/services/SearchListService';
+import { Combobox } from '../../cylinders/components/cylinder-form-create';
 
 const REFILL_ORDER_STATUSES = [
   { value: 'PENDING_CONFIRMATION', label: 'Menunggu Konfirmasi' },
@@ -118,7 +120,8 @@ export default function RefillOrderList() {
 
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
   const [statusFilter, setStatusFilter] = useState<string>(searchParams.get('status') || 'all');
-  const [supplierFilter, setSupplierFilter] = useState<string>(searchParams.get('supplier_id') || 'all');
+  const [supplierFilter, setSupplierFilter] = useState<any>(searchParams.get('supplier_id') || 'all');
+  const [customerSearch, setCustomerSearch] = useState('');
 
   const debouncedSearch = useDebounce(searchTerm, 500);
 
@@ -140,8 +143,10 @@ export default function RefillOrderList() {
   const canViewAll = checkPermission(PERMISSIONS.refillOrder.view_all);
   const apiEndpoint = canViewAll ? '/refill-orders' : '/refill-orders/my-orders';
 
+  const debouncedCustomerSearch = useDebounce(customerSearch, 300);
+
   const { data: ordersResponse, isLoading } = useSWR([apiEndpoint, searchParams.toString()], () => getRefillOrders(apiEndpoint, searchParams));
-  const { data: suppliersResponse } = useSWR('/select-lists/suppliers', getSuppliersForSelect);
+  const { data: customersResponse, isLoading: isLoadingCustomers } = useSWR(`/select-lists/customers?search=${debouncedCustomerSearch}`, () => getCustomersSelectList({ search: debouncedCustomerSearch, relation_type: 'SUPPLIER' }));
   const { data: supplierSummaryResponse } = useSWR(canFetchSummarySuppliers ? [`/refill-orders/summary-by-supplier?supplier_id=${supplierFilter}`] : null, () => viewSummarySuppliers(Number(supplierFilter)));
 
   const filteredOrders = ordersResponse?.data || [];
@@ -207,19 +212,17 @@ export default function RefillOrderList() {
                 </SelectContent>
               </Select>
 
-              <Select value={supplierFilter} onValueChange={setSupplierFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Pilih Supplier" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Semua Supplier</SelectItem>
-                  {suppliersResponse?.data.map((supplier) => (
-                    <SelectItem key={supplier.id} value={supplier.id.toString()}>
-                      {supplier.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Combobox
+                options={customersResponse?.data.map((g: any) => ({ value: g.value, label: g.label })) || []}
+                value={supplierFilter}
+                onValueChange={setSupplierFilter}
+                valueSearch={customerSearch}
+                setValueSearch={setCustomerSearch}
+                placeholder="Pilih supplier..."
+                searchPlaceholder="Cari supplier..."
+                emptyText="Customer tidak ditemukan."
+                isLoading={isLoadingCustomers}
+              />
 
               <Button
                 variant="outline"
@@ -246,7 +249,7 @@ export default function RefillOrderList() {
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               <StatCard title="Total Tabung Terkirim" subtitle="" value={supplierSummaryResponse?.summary.total_cylinders_sent || 0} icon={Package} gradient="bg-gradient-to-r from-blue-500 to-blue-600" delay={0} />
               <StatCard title="Total Tabung Kembali" subtitle="" value={supplierSummaryResponse?.summary.cylinders_returned || 0} icon={Package} gradient="bg-gradient-to-r from-green-500 to-green-600" delay={0.1} />
-              <StatCard title='Total Tabung Belum Kembali' subtitle='' value={supplierSummaryResponse?.summary?.cylinders_outstanding || 0} icon={Package} gradient='bg-gradient-to-r from-red-500 to-red-600' delay={0.2} />
+              <StatCard title="Total Tabung Belum Kembali" subtitle="" value={supplierSummaryResponse?.summary?.cylinders_outstanding || 0} icon={Package} gradient="bg-gradient-to-r from-red-500 to-red-600" delay={0.2} />
             </div>
           </CardContent>
         </Card>

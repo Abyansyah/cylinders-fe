@@ -30,7 +30,8 @@ export interface RefillOrderDetail {
   updatedAt: string;
   supplier: {
     id: number;
-    name: string;
+    customer_name: string;
+    company_name: string;
   };
   requester: {
     id: number;
@@ -125,7 +126,8 @@ export interface RefillOrderDetail {
   updatedAt: string;
   supplier: {
     id: number;
-    name: string;
+    customer_name: string;
+    company_name: string;
   };
   requester: {
     id: number;

@@ -19,10 +19,11 @@ import { BarcodeScanner } from '@/components/features/barcode-scanner';
 import { ConfirmationDialog } from '@/app/(dashboard)/loan-adjustments/components/confirmation-dialog';
 
 import { useCurrentUser } from '@/hooks/use-current-user';
-import { getWarehousesSelectList } from '@/services/SearchListService';
+import { getCustomersSelectList, getWarehousesSelectList } from '@/services/SearchListService';
 import { bulkReceiveFromSupplier, getSuppliersForSelect } from '@/services/refillOrderService';
 import type { BulkReceiveResponse } from '@/types/refill-order';
 import { useDebounce } from '@/hooks/use-debounce';
+import { Combobox } from '../../cylinders/components/cylinder-form-create';
 
 interface ScannedItem {
   identifier: string;
@@ -31,25 +32,25 @@ interface ScannedItem {
 
 export default function BulkReceiveSupplierView() {
   const { user } = useCurrentUser();
-  const [supplierId, setSupplierId] = useState<string>('');
+  const [supplierId, setSupplierId] = useState<any>('');
   const [warehouseId, setWarehouseId] = useState<string>('');
   const [barcodeInput, setBarcodeInput] = useState('');
   const [scannedItems, setScannedItems] = useState<ScannedItem[]>([]);
-  const [isProcessing, setIsProcessing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [response, setResponse] = useState<BulkReceiveResponse | null>(null);
   const [showScanner, setShowScanner] = useState(false);
   const [isClearConfirmOpen, setClearConfirmOpen] = useState(false);
   const [isProcessConfirmOpen, setProcessConfirmOpen] = useState(false);
+  const [customerSearch, setCustomerSearch] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const [warehouseSearch, setWarehouseSearch] = useState('');
 
   const debouncedWarehouseSearch = useDebounce(warehouseSearch, 300);
+  const debouncedCustomerSearch = useDebounce(customerSearch, 300);
 
-  const { data: suppliersResponse } = useSWR('/select-lists/suppliers', getSuppliersForSelect);
+  const { data: customersResponse, isLoading: isLoadingCustomers } = useSWR(`/select-lists/customers?search=${debouncedCustomerSearch}`, () => getCustomersSelectList({ search: debouncedCustomerSearch, relation_type: 'SUPPLIER' }));
   const { data: warehousesResponse, isLoading: isLoadingWarehouses } = useSWR(`/select-lists/warehouses?search=${debouncedWarehouseSearch}`, () => getWarehousesSelectList({ search: debouncedWarehouseSearch }));
 
-  const suppliers = suppliersResponse?.data || [];
   const warehouses = warehousesResponse?.data || [];
 
   useEffect(() => {
@@ -161,18 +162,17 @@ export default function BulkReceiveSupplierView() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="supplier">Supplier *</Label>
-                  <Select value={supplierId} onValueChange={setSupplierId}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pilih supplier" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {suppliers.map((s) => (
-                        <SelectItem key={s.id} value={s.id.toString()}>
-                          {s.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Combobox
+                    options={customersResponse?.data.map((g: any) => ({ value: g.value, label: g.label })) || []}
+                    value={supplierId}
+                    onValueChange={setSupplierId}
+                    valueSearch={customerSearch}
+                    setValueSearch={setCustomerSearch}
+                    placeholder="Pilih supplier..."
+                    searchPlaceholder="Cari supplier..."
+                    emptyText="Customer tidak ditemukan."
+                    isLoading={isLoadingCustomers}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="warehouse">Warehouse *</Label>

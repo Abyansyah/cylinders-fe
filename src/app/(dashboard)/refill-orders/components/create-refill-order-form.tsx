@@ -19,7 +19,9 @@ import { BarcodeScanner } from '@/components/features/barcode-scanner';
 import { DatePicker } from '@/components/ui/date-picker';
 import { getSuppliersForSelect, createRefillOrder } from '@/services/refillOrderService';
 import type { CreateRefillOrderRequest } from '@/types/refill-order';
-import { getProductsSelect } from '@/services/SearchListService';
+import { getCustomersSelectList, getProductsSelect } from '@/services/SearchListService';
+import { useDebounce } from '@/hooks/use-debounce';
+import { Combobox } from '../../cylinders/components/cylinder-form-create';
 
 interface OrderItem {
   product_id: number;
@@ -31,18 +33,20 @@ interface OrderItem {
 export default function CreateRefillOrderForm() {
   const router = useRouter();
 
-  const [supplierId, setSupplierId] = useState<string>('');
-  const [dispatchDate, setDispatchDate] = useState<Date | undefined>(new Date()); // Mengubah state menjadi Date object
+  const [supplierId, setSupplierId] = useState<any>('');
+  const [dispatchDate, setDispatchDate] = useState<Date | undefined>(new Date());
   const [selectedItems, setSelectedItems] = useState<OrderItem[]>([]);
   const [selectedProductId, setSelectedProductId] = useState<string>('');
   const [identifierInput, setIdentifierInput] = useState('');
   const [showScanner, setShowScanner] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [customerSearch, setCustomerSearch] = useState('');
 
-  const { data: suppliersResponse } = useSWR('/select-lists/suppliers', getSuppliersForSelect);
+  const debouncedCustomerSearch = useDebounce(customerSearch, 300);
+
+  const { data: customersResponse, isLoading: isLoadingCustomers } = useSWR(`/select-lists/customers?search=${debouncedCustomerSearch}`, () => getCustomersSelectList({ search: debouncedCustomerSearch, relation_type: 'SUPPLIER' }));
   const { data: productsResponse } = useSWR('/select-lists/products', getProductsSelect);
 
-  const suppliers = suppliersResponse?.data || [];
   const products: any[] = productsResponse?.data || [];
 
   const handleBarcodeDetected = (barcode: string) => {
@@ -145,7 +149,6 @@ export default function CreateRefillOrderForm() {
   return (
     <div className="container mx-auto p-6 space-y-6">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-        {/* Header */}
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="sm" asChild>
             <Link href="/refill-orders">
@@ -160,7 +163,6 @@ export default function CreateRefillOrderForm() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
           <div className="lg:col-span-2 space-y-6">
-            {/* Informasi Dasar */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -172,18 +174,17 @@ export default function CreateRefillOrderForm() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="supplier">Supplier *</Label>
-                    <Select value={supplierId} onValueChange={setSupplierId}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Pilih Supplier" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {suppliers.map((supplier) => (
-                          <SelectItem key={supplier.id} value={supplier.id.toString()}>
-                            {supplier.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <Combobox
+                      options={customersResponse?.data.map((g: any) => ({ value: g.value, label: g.label })) || []}
+                      value={supplierId}
+                      onValueChange={setSupplierId}
+                      valueSearch={customerSearch}
+                      setValueSearch={setCustomerSearch}
+                      placeholder="Pilih supplier..."
+                      searchPlaceholder="Cari supplier..."
+                      emptyText="Customer tidak ditemukan."
+                      isLoading={isLoadingCustomers}
+                    />
                   </div>
 
                   <div className="space-y-2">
@@ -281,7 +282,6 @@ export default function CreateRefillOrderForm() {
             </Card>
           </div>
 
-          {/* Ringkasan */}
           <div>
             <Card className="sticky top-6">
               <CardHeader>
@@ -297,10 +297,7 @@ export default function CreateRefillOrderForm() {
                     <span>Total Item:</span>
                     <span className="font-medium">{getTotalIdentifiers()}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Supplier:</span>
-                    <span className="font-medium">{supplierId ? suppliers.find((s) => s.id.toString() === supplierId)?.name : '-'}</span>
-                  </div>
+
                   <div className="flex justify-between">
                     <span>Tanggal Kirim:</span>
                     <span className="font-medium">{dispatchDate ? format(dispatchDate, 'dd MMMM yyyy') : '-'}</span>
@@ -315,7 +312,6 @@ export default function CreateRefillOrderForm() {
           </div>
         </div>
 
-        {/* Barcode Scanner Modal */}
         {showScanner && <BarcodeScanner onScan={handleBarcodeDetected} onClose={() => setShowScanner(false)} />}
       </motion.div>
     </div>

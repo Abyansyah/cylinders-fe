@@ -156,7 +156,9 @@ export default function RefillOrderDetailView() {
                         <Label className="text-sm text-muted-foreground">Supplier</Label>
                         <div className="flex items-center gap-2 mt-1">
                           <Building2 className="h-4 w-4 text-muted-foreground" />
-                          <span className="font-medium">{order.supplier.name}</span>
+                          <span className="font-medium">
+                            {order.supplier.customer_name} {order?.supplier?.company_name !== '' ? `(${order?.supplier?.company_name})` : ''}
+                          </span>
                         </div>
                       </div>
 
