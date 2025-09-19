@@ -39,7 +39,6 @@ export function ConfirmDispatchDialog({ open, onOpenChange, order }: ConfirmDisp
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const isMobile = useIsMobile();
 
-  // FIX: Tambahkan defaultValues untuk menginisialisasi form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -56,7 +55,7 @@ export function ConfirmDispatchDialog({ open, onOpenChange, order }: ConfirmDisp
     try {
       await confirmDispatch(order.id, values);
       toast.success(`Order RO/2025/08/${order.id.toString().padStart(3, '0')} telah disetujui.`);
-      mutate(`/refill-orders/${order.id}`); // Re-fetch data untuk halaman detail
+      mutate(`/refill-orders/${order.id}`);
       onOpenChange(false);
     } catch (error) {
       toast.error('Gagal menyetujui order. Coba lagi.');
@@ -68,13 +67,14 @@ export function ConfirmDispatchDialog({ open, onOpenChange, order }: ConfirmDisp
 
   const content = (
     <Form {...form}>
-      {/* Form dan JSX lainnya tetap sama */}
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <p className="text-sm text-muted-foreground">Masukkan detail pengiriman untuk menyetujui order refill ini. Pastikan semua informasi sudah benar.</p>
         <div className="space-y-3 p-4 bg-muted/50 rounded-lg">
           <div className="flex justify-between">
             <span className="text-sm font-medium">Supplier:</span>
-            <span className="text-sm">{order.supplier.name}</span>
+            <span className="text-sm">
+              {order.supplier.customer_name} {order?.supplier?.company_name !== '' ? `(${order?.supplier?.company_name})` : ''}
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-sm font-medium">Jumlah Tabung:</span>

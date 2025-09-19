@@ -181,7 +181,6 @@ export default function ReceiveRefillOrderView() {
       {showScanner && <BarcodeScanner onScan={handleScan} onClose={() => setShowScanner(false)} />}
       <div className="container mx-auto p-4 md:p-6 space-y-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-          {/* Header */}
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="sm" asChild>
               <Link href={`/refill-orders/${orderId}`}>
@@ -194,14 +193,13 @@ export default function ReceiveRefillOrderView() {
                 <Badge className={`${getStatusBadgeColor(order.status)} flex items-center gap-1 w-fit`}>{getStatusLabel(order.status)}</Badge>
               </div>
               <p className="text-muted-foreground text-sm md:text-base">
-                RO/2025/08/{orderId.toString().padStart(3, '0')} - {order.supplier.name}
+                RO/2025/08/{orderId.toString().padStart(3, '0')} - {order.supplier.customer_name} {order?.supplier?.company_name !== '' ? `(${order?.supplier?.company_name})` : ''} -{' '}
               </p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
             <div className="lg:col-span-2 space-y-6">
-              {/* Scanner Section */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -256,7 +254,6 @@ export default function ReceiveRefillOrderView() {
                 </CardContent>
               </Card>
 
-              {/* Scanned Items */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
@@ -323,9 +320,7 @@ export default function ReceiveRefillOrderView() {
               </Card>
             </div>
 
-            {/* Sidebar */}
             <div className="space-y-6">
-              {/* Summary Card */}
               <Card className="sticky top-6">
                 <CardHeader>
                   <CardTitle>Ringkasan Penerimaan</CardTitle>
@@ -361,7 +356,6 @@ export default function ReceiveRefillOrderView() {
                 </CardContent>
               </Card>
 
-              {/* Order Items Reference */}
               <Card>
                 <CardHeader>
                   <CardTitle>Item dalam Order</CardTitle>
