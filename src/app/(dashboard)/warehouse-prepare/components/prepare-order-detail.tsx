@@ -74,6 +74,11 @@ export default function PrepareOrderDetailClient({ initialOrder }: PrepareOrderD
         return;
       }
 
+      if (item.assignedBarcodes.includes(validation?.cylinder?.barcode_id)) {
+        toast.error('Barcode sudah digunakan untuk item ini.');
+        return;
+      }
+
       setItems((prev) =>
         prev.map((currentItem, index) => {
           if (index === itemIndex) {

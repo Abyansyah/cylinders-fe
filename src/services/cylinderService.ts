@@ -32,6 +32,7 @@ interface GetCylindersParams {
   search?: string;
   status?: string;
   warehouseId?: string;
+  supplierId?: string;
 }
 
 export interface ApiResponse<T> {

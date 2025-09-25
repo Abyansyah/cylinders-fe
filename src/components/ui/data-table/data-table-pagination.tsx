@@ -8,13 +8,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>
+  totalItems?: number
 }
 
-export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
+export function DataTablePagination<TData>({ table, totalItems }: DataTablePaginationProps<TData>) {
   return (
     <div className="flex items-center justify-between px-2">
       <div className="flex-1 text-sm text-muted-foreground">
-        {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s) selected.
+        total data {totalItems} rows
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8 flex-wrap gap-2">
         <div className="flex items-center space-x-2">

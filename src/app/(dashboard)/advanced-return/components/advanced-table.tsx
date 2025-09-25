@@ -1,8 +1,6 @@
 'use client';
 
 import { useDebounce } from '@/hooks/use-debounce';
-import { getCylinders } from '@/services/cylinderService';
-import { Cylinder } from '@/types/cylinder';
 import { PaginationState } from '@tanstack/react-table';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
@@ -10,28 +8,22 @@ import useSWR from 'swr';
 import { getColumns } from './columns';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Plus, Upload } from 'lucide-react';
-import CylinderFilter from './cylinder-filter';
+import { Plus } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { DataTable } from '@/components/ui/data-table/data-table';
-import { BarcodeScanner } from '@/components/features/barcode-scanner';
-import Link from 'next/link';
-import { usePermission } from '@/hooks/use-permission';
-import { PERMISSIONS } from '@/config/permissions';
+import { getAdvancedReturns } from '@/services/advancedReturnService';
+import { AdvancedReturn } from '@/types/advanced-return';
+import AdvancedReturnFilter from './advanced-filter';
 
-export default function CylinderTable() {
+export default function AdvancedTable() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { checkPermission } = usePermission();
-
-  const [showScanner, setShowScanner] = useState(false);
 
   const page = Number(searchParams.get('page')) || 1;
   const limit = Number(searchParams.get('limit')) || 10;
   const search = searchParams.get('search') || '';
-  const status = searchParams.get('status') || '';
-  const supplierId = searchParams.get('supplier_id') || '';
+  const pickupType = searchParams.get('pickup_type') || '';
   const warehouseId = searchParams.get('warehouse_id') || '';
 
   const [localSearch, setLocalSearch] = useState(search);
@@ -56,14 +48,13 @@ export default function CylinderTable() {
   const queryParams = useMemo(() => {
     const params: any = { page, limit };
     if (search) params.search = search;
-    if (status) params.status = status;
-    if (supplierId) params.supplierId = supplierId;
+    if (pickupType) params.pickup_type = pickupType;
     if (warehouseId) params.warehouseId = warehouseId;
     return params;
-  }, [page, limit, search, status, warehouseId, supplierId]);
+  }, [page, limit, search, pickupType, warehouseId]);
 
-  const swrKey = useMemo(() => ['/cylinders', JSON.stringify(queryParams)], [queryParams]);
-  const { data: apiResponse, isLoading } = useSWR(swrKey, () => getCylinders(queryParams), { keepPreviousData: true });
+  const swrKey = useMemo(() => ['/advanced-returns', JSON.stringify(queryParams)], [queryParams]);
+  const { data: apiResponse, isLoading } = useSWR(swrKey, () => getAdvancedReturns(queryParams), { keepPreviousData: true });
 
   const pagination = useMemo<PaginationState>(() => ({ pageIndex: page - 1, pageSize: limit }), [page, limit]);
   const handlePaginationChange = (updater: any) => {
@@ -78,46 +69,32 @@ export default function CylinderTable() {
   const handleResetFilter = () => {
     const params = new URLSearchParams(searchParams.toString());
     params.delete('search');
-    params.delete('status');
+    params.delete('pickup_type');
     params.delete('warehouse_id');
-    params.delete('supplier_id');
     params.set('page', '1');
     router.push(`${pathname}?${params.toString()}`);
   };
-
-  const handleScanBarcode = (barcode: string) => {
-    setShowScanner(false);
-    setLocalSearch(barcode);
-  };
-
-  const canImportData = checkPermission(PERMISSIONS.importDataCylinder.view);
 
   return (
     <div className="space-y-6">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Manajemen Tabung Gas</h1>
-          <p className="text-muted-foreground">Kelola data tabung gas dan pantau status pergerakan tabung</p>
+          <h1 className="text-2xl font-bold">Pickup Tabung</h1>
+          <p className="text-muted-foreground">Kelola return tabung dari pelanggan</p>
         </div>
         <div className="flex gap-2">
-          {canImportData && (
-            <Link href="/cylinders/import" className="focus:outline-none text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 flex items-center font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">
-              <Upload className="mr-2 h-4 w-4" /> Import Data
-            </Link>
-          )}
-
-          <Button onClick={() => router.push('/cylinders/create')} className="w-full sm:w-auto">
+          <Button onClick={() => router.push('/advanced-return/create')} className="w-full sm:w-auto">
             <Plus className="mr-2 h-4 w-4" />
-            Tambah Tabung Gas
+            Buat Return
           </Button>
         </div>
       </motion.div>
-      <CylinderFilter
+
+      <AdvancedReturnFilter
         searchTerm={localSearch}
         selectedWarehouse={warehouseId || ''}
-        customerId={supplierId ? Number(supplierId) : null}
-        selectedStatus={status}
         handleSearch={setLocalSearch}
+        pickupTypeFilter={pickupType || ''}
         setSelectedWarehouse={(value) => {
           const params = new URLSearchParams(searchParams.toString());
           params.set('page', '1');
@@ -128,25 +105,19 @@ export default function CylinderTable() {
           }
           router.push(`${pathname}?${params.toString()}`);
         }}
-        setSelectedStatus={(value) => {
+        setPickupTypeFilter={(value) => {
           const params = new URLSearchParams(searchParams.toString());
           params.set('page', '1');
           if (value === 'all') {
-            params.delete('status');
+            params.delete('pickup_type');
           } else {
-            params.set('status', value);
+            params.set('pickup_type', value);
           }
           router.push(`${pathname}?${params.toString()}`);
         }}
-        setCustomerId={(value) => {
-          const params = new URLSearchParams(searchParams.toString());
-          params.set('page', '1');
-          params.set('supplier_id', value.toString());
-          router.push(`${pathname}?${params.toString()}`);
-        }}
-        setShowScanner={setShowScanner}
         onResetFilter={handleResetFilter}
       />
+
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
         <Card>
           <CardHeader>
@@ -154,19 +125,10 @@ export default function CylinderTable() {
             <CardDescription>Total {apiResponse?.totalItems} tabung gas terdaftar</CardDescription>
           </CardHeader>
           <CardContent>
-            <DataTable<Cylinder, unknown>
-              columns={columns}
-              data={apiResponse?.data || []}
-              isLoading={isLoading}
-              pagination={pagination}
-              onPaginationChange={handlePaginationChange}
-              pageCount={apiResponse?.totalPages ?? 0}
-              totalItems={apiResponse?.totalItems}
-            />
+            <DataTable<AdvancedReturn, unknown> columns={columns} data={apiResponse?.data || []} isLoading={isLoading} pagination={pagination} onPaginationChange={handlePaginationChange} pageCount={apiResponse?.totalPages ?? 0} />
           </CardContent>
         </Card>
       </motion.div>
-      {showScanner && <BarcodeScanner onClose={() => setShowScanner(false)} onScan={handleScanBarcode} />}
     </div>
   );
 }

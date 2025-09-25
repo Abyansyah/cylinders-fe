@@ -1,4 +1,4 @@
-import { BrickWallFire, Building, CalendarSync, CircleGauge, FileText, Flame, IdCard, KeyRound, LayoutDashboard, Package, PackagePlus, ShoppingCart, TrendingUp, Truck, Users, UserSquare, Warehouse, Zap } from 'lucide-react';
+import { BrickWallFire, Building, CalendarSync, CircleGauge, FileText, Flame, IdCard, KeyRound, LayoutDashboard, Orbit, Package, PackagePlus, ShoppingCart, TrendingUp, Truck, Users, UserSquare, Warehouse, Zap } from 'lucide-react';
 import type { SidebarItem } from '@/types/sidebar';
 
 export const SIDEBAR_ITEMS: SidebarItem[] = [
@@ -180,6 +180,13 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     icon: PackagePlus,
     isActive: false,
     permissionKey: 'refillOrderBulk',
+  },
+  {
+    title: 'Pickup Tabung',
+    url: '/advanced-return',
+    icon: Orbit,
+    isActive: false,
+    permissionKey: 'advancedReturn',
   },
   {
     title: 'Manajemen Gudang',

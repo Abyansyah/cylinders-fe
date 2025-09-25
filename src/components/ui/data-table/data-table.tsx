@@ -32,9 +32,10 @@ interface DataTableProps<TData, TValue> {
     }[];
   }[];
   onFilterChange?: (key: string, value: string) => void;
+  totalItems?: number;
 }
 
-export function DataTable<TData, TValue>({ columns, data, isLoading = false, pageCount, pagination, onPaginationChange, filterableColumns = [], search, onFilterChange }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, isLoading = false, pageCount, pagination, onPaginationChange, filterableColumns = [], search, onFilterChange, totalItems }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -105,7 +106,7 @@ export function DataTable<TData, TValue>({ columns, data, isLoading = false, pag
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <DataTablePagination table={table} totalItems={totalItems} />
     </div>
   );
 }

@@ -121,4 +121,8 @@ export const PERMISSIONS = {
   refillOrderBulk: {
     view: 'refill_order:receive_bulk_refill_order',
   },
+  advancedReturn: {
+    view: 'advanced_return:read',
+    create: 'advanced_return:create',
+  },
 } as const;

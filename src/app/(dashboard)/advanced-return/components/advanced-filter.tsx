@@ -1,5 +1,3 @@
-'use client';
-
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Filter, Loader2, ScanLine, Search } from 'lucide-react';
@@ -8,34 +6,23 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import useSWR from 'swr';
 import { getWarehouses } from '@/services/warehouseService';
-import { CYLINDER_STATUSES } from '@/constants/cylinder';
 import { useAuthStore } from '@/stores/authStore';
 import { cn } from '@/lib/utils';
-import { Combobox } from './cylinder-form-create';
-import { useState } from 'react';
-import { useDebounce } from '@/hooks/use-debounce';
-import { getCustomersSelectList } from '@/services/SearchListService';
+import { PICKUP_TYPES } from '@/constants/advanced-return';
 
 interface CylinderFilterProps {
   searchTerm: string;
   selectedWarehouse: string;
-  selectedStatus: string;
-  customerId: number | null;
+  pickupTypeFilter: string;
   handleSearch: (value: string) => void;
   setSelectedWarehouse: (value: string) => void;
-  setSelectedStatus: (value: string) => void;
-  setShowScanner: (value: boolean) => void;
   onResetFilter: () => void;
-  setCustomerId: (value: number) => void;
+  setPickupTypeFilter: (value: string) => void;
 }
 
-export default function CylinderFilter({ searchTerm, customerId, selectedWarehouse, selectedStatus, handleSearch, setSelectedWarehouse, setSelectedStatus, setShowScanner, onResetFilter, setCustomerId }: CylinderFilterProps) {
+export default function AdvancedReturnFilter({ searchTerm, selectedWarehouse, pickupTypeFilter, handleSearch, setSelectedWarehouse, setPickupTypeFilter, onResetFilter }: CylinderFilterProps) {
   const { user } = useAuthStore();
   const isPetugasGudang = user?.role.role_name === 'Petugas Gudang';
-  const [customerSearch, setCustomerSearch] = useState('');
-  const debouncedCustomerSearch = useDebounce(customerSearch, 300);
-
-  const { data: customersResponse, isLoading: isLoadingCustomers } = useSWR(`/select-lists/customers?search=${debouncedCustomerSearch}`, () => getCustomersSelectList({ search: debouncedCustomerSearch, relation_type: 'SUPPLIER' }));
 
   const { data: warehousesResponse, isLoading: isLoadingWarehouses } = useSWR(!isPetugasGudang ? '/warehouses?limit=50' : null, () => getWarehouses({ limit: 50 }), {
     revalidateOnFocus: false,
@@ -49,18 +36,15 @@ export default function CylinderFilter({ searchTerm, customerId, selectedWarehou
             <Filter className="h-5 w-5" />
             Filter & Pencarian
           </CardTitle>
-          <CardDescription>Gunakan filter untuk mencari tabung gas berdasarkan kriteria tertentu</CardDescription>
+          <CardDescription>Gunakan filter untuk mencari berdasarkan kriteria tertentu</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className={cn('grid gap-4', isPetugasGudang ? 'md:grid-cols-3' : 'md:grid-cols-5')}>
+          <div className={cn('grid gap-4', isPetugasGudang ? 'md:grid-cols-3' : 'md:grid-cols-4')}>
             <div className="space-y-2">
               <label className="text-sm font-medium">Pencarian</label>
               <div className="relative">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input placeholder="Cari barcode atau serial..." value={searchTerm} onChange={(e) => handleSearch(e.target.value)} className="pl-8 pr-10" />
-                <Button variant="ghost" size="icon" className="absolute right-1 top-1 h-7 w-7" onClick={() => setShowScanner(true)}>
-                  <ScanLine className="h-4 w-4" />
-                </Button>
+                <Input placeholder="Cari nomor return, pelanggan..." value={searchTerm} onChange={(e) => handleSearch(e.target.value)} className="pl-8 pr-10" />
               </div>
             </div>
 
@@ -93,38 +77,20 @@ export default function CylinderFilter({ searchTerm, customerId, selectedWarehou
             )}
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Status</label>
-              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+              <label className="text-sm font-medium">Pickup Type</label>
+              <Select value={pickupTypeFilter} onValueChange={setPickupTypeFilter}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Pilih status" />
+                  <SelectValue placeholder="Semua Tipe Pickup" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Semua Status</SelectItem>
-                  {CYLINDER_STATUSES.map((status) => (
-                    <SelectItem key={status} value={status}>
-                      {status}
+                  <SelectItem value="all">Semua Tipe Pickup</SelectItem>
+                  {PICKUP_TYPES.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium" htmlFor="customer">
-                Pelanggan *
-              </label>
-
-              <Combobox
-                options={customersResponse?.data.map((g: any) => ({ value: g.value, label: g.label })) || []}
-                value={customerId}
-                onValueChange={setCustomerId}
-                valueSearch={customerSearch}
-                setValueSearch={setCustomerSearch}
-                placeholder="Pilih customer..."
-                searchPlaceholder="Cari customer..."
-                emptyText="Customer tidak ditemukan."
-                isLoading={isLoadingCustomers}
-              />
             </div>
 
             <div className="flex items-end">

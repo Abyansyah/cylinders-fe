@@ -14,6 +14,9 @@ import { LoanCardItem } from '@/types/loan-card';
 import { CustomerSearchCombobox } from '../../loan-adjustments/components/customer-search-combobox';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Combobox } from '../../cylinders/components/cylinder-form-create';
+import { getCustomersSelectList } from '@/services/SearchListService';
+import { Button } from '@/components/ui/button';
 
 interface ProductSummary {
   id_product: number;
@@ -31,6 +34,10 @@ export default function LoanCardView() {
   const [statusFilter, setStatusFilter] = useState('Semua');
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const [activeTab, setActiveTab] = useState('table');
+  const [customerSearch, setCustomerSearch] = useState('');
+  const [customerId, setCustomerId] = useState<number | null>(null);
+
+  const debouncedCustomerSearch = useDebounce(customerSearch, 300);
 
   const debouncedGlobalFilter = useDebounce(globalFilter, 500);
 
@@ -45,8 +52,13 @@ export default function LoanCardView() {
   if (statusFilter !== 'Semua') {
     params.append('status', statusFilter);
   }
+  if (customerId) {
+    params.append('supplierId', customerId.toString());
+  }
 
   const { data: cylindersResponse, isLoading: isLoadingCylinders } = useSWR(canFetchCylinders ? [`/customers/${selectedCustomerId}/cylinders`, params.toString()] : null, () => getCustomerLoanCard(Number(selectedCustomerId), params));
+
+  const { data: customersResponse, isLoading: isLoadingCustomers } = useSWR(`/select-lists/customers?search=${debouncedCustomerSearch}`, () => getCustomersSelectList({ search: debouncedCustomerSearch, relation_type: 'SUPPLIER' }));
 
   const pageCount = cylindersResponse?.totalPages ?? 0;
   const data: LoanCardItem[] = cylindersResponse?.data ?? [];
@@ -83,6 +95,12 @@ export default function LoanCardView() {
     if (status.includes('Sewa')) return 'Dipinjam';
     if (status.includes('Beli')) return 'Dibeli';
     return status;
+  };
+
+  const onResetFilter = () => {
+    setStatusFilter('Semua');
+    setGlobalFilter('');
+    setCustomerId(null);
   };
 
   return (
@@ -128,6 +146,28 @@ export default function LoanCardView() {
                   <div className="flex flex-col gap-2 md:w-80">
                     <label className="text-sm font-medium">Search</label>
                     <Input type="text" value={globalFilter} onChange={(e) => setGlobalFilter(e.target.value)} placeholder="Cari berdasarkan barcode atau nomor tabung..." />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium" htmlFor="customer">
+                      Pelanggan *
+                    </label>
+
+                    <Combobox
+                      options={customersResponse?.data.map((g: any) => ({ value: g.value, label: g.label })) || []}
+                      value={customerId}
+                      onValueChange={setCustomerId}
+                      valueSearch={customerSearch}
+                      setValueSearch={setCustomerSearch}
+                      placeholder="Pilih customer..."
+                      searchPlaceholder="Cari customer..."
+                      emptyText="Customer tidak ditemukan."
+                      isLoading={isLoadingCustomers}
+                    />
+                  </div>
+                  <div className="flex items-end">
+                    <Button onClick={onResetFilter} variant="outline" className="w-full">
+                      Reset Filter
+                    </Button>
                   </div>
                 </div>
               </div>
