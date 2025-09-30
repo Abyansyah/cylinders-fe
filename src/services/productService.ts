@@ -1,4 +1,5 @@
 import api from '@/lib/api';
+import { ImportResponse } from '@/types/customer-import';
 import type { Product, ProductsApiResponse } from '@/types/product';
 import { cache } from 'react';
 
@@ -38,4 +39,21 @@ export const updateProduct = async (id: number, payload: ProductPayload): Promis
 
 export const deleteProduct = async (id: number): Promise<void> => {
   await api.delete(`/products/${id}`);
+};
+
+export const importProducts = async (file: File, onUploadProgress: (progress: number) => void): Promise<ImportResponse> => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const { data } = await api.post('/products/import', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    onUploadProgress: (progressEvent) => {
+      const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total!);
+      onUploadProgress(percentCompleted);
+    },
+  });
+
+  return data;
 };

@@ -23,6 +23,7 @@ import { getCustomersSelectList, getWarehousesSelectList } from '@/services/Sear
 import { useDebounce } from '@/hooks/use-debounce';
 import { DatePicker } from '@/components/ui/date-picker';
 import { format } from 'date-fns';
+import { BarcodeScanner } from '@/components/features/barcode-scanner';
 
 export default function CreateAdvancedReturnForm() {
   const router = useRouter();
@@ -35,6 +36,7 @@ export default function CreateAdvancedReturnForm() {
   const [notes, setNotes] = useState('');
   const [customerSearch, setCustomerSearch] = useState('');
   const [warehouseSearch, setWarehouseSearch] = useState('');
+  const [showScanner, setShowScanner] = useState(false);
 
   const [items, setItems] = useState<AdvancedReturnItem[]>([]);
   const [currentIdentifier, setCurrentIdentifier] = useState('');
@@ -113,6 +115,11 @@ export default function CreateAdvancedReturnForm() {
     }
   };
 
+  const handleScanBarcode = (barcode: string) => {
+    setShowScanner(false);
+    setCurrentIdentifier(barcode);
+  };
+
   return (
     <div className="container mx-auto p-6 space-y-6">
       <motion.div className="space-y-6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
@@ -123,8 +130,8 @@ export default function CreateAdvancedReturnForm() {
             </Link>
           </Button>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Buat Advanced Return</h1>
-            <p className="text-muted-foreground">Buat return tabung baru dari pelanggan</p>
+            <h1 className="text-3xl font-bold tracking-tight">Buat Pickup Baru</h1>
+            <p className="text-muted-foreground">Buat pickup tabung baru dari pelanggan</p>
           </div>
         </div>
 
@@ -225,7 +232,7 @@ export default function CreateAdvancedReturnForm() {
                           }}
                           className="flex-1"
                         />
-                        <Button type="button" variant="outline" size="icon">
+                        <Button onClick={() => setShowScanner(true)} type="button" variant="outline" size="icon">
                           <Scan className="h-4 w-4" />
                         </Button>
                       </div>
@@ -361,6 +368,7 @@ export default function CreateAdvancedReturnForm() {
           </motion.div>
         </div>
       </motion.div>
+      {showScanner && <BarcodeScanner onClose={() => setShowScanner(false)} onScan={handleScanBarcode} />}
     </div>
   );
 }
