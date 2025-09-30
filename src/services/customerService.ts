@@ -9,11 +9,11 @@ export type CustomerPayload = {
   company_name?: string;
   phone_number: string;
   relation_type: 'SUPPLIER' | 'CLIENT' | 'SUPPLIER_AND_CLIENT';
-  email: string;
+  email?: string | null;
   shipping_address_default: string;
   contact_person: string;
   customer_type: 'Individual' | 'Corporate';
-  username: string;
+  username?: string | null;
   password?: string;
   is_active: boolean;
 };

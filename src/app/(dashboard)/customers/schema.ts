@@ -6,13 +6,24 @@ export const createCustomerSchema = z.object({
   customer_name: z.string().min(3, 'Nama pelanggan wajib diisi.'),
   company_name: z.string().optional(),
   phone_number: z.string().min(8, 'Nomor telepon tidak valid.'),
-  email: z.string().email('Format email tidak valid.'),
+  email: z
+    .union([z.string().email('Format email tidak valid.'), z.literal('')])
+    .optional()
+    .transform((val) => (val === '' ? undefined : val)),
+
   shipping_address_default: z.string().min(10, 'Alamat pengiriman wajib diisi.'),
   contact_person: z.string().min(3, 'Kontak person wajib diisi.'),
   customer_type: z.enum(['Individual', 'Corporate'], { required_error: 'Tipe pelanggan wajib dipilih.' }),
   relation_type: z.enum(['SUPPLIER', 'CLIENT', 'SUPPLIER_AND_CLIENT'], { required_error: 'Tipe mitra wajib dipilih.' }),
-  username: z.string().min(5, 'Username minimal 5 karakter.'),
-  password: z.string().min(6, 'Password minimal 6 karakter.'),
+  password: z
+    .union([z.string().min(6, 'Password minimal 6 karakter'), z.literal('')])
+    .optional()
+    .transform((val) => (val === '' ? undefined : val)),
+
+  username: z
+    .union([z.string().min(5, 'Username minimal 5 karakter'), z.literal('')])
+    .optional()
+    .transform((val) => (val === '' ? undefined : val)),
   payment_term_days: z.coerce.number(),
   is_active: z.boolean(),
 });

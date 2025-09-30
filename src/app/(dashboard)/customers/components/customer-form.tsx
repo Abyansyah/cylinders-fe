@@ -42,12 +42,12 @@ export function CustomerForm({ initialData }: { initialData?: Customer | null })
       customer_name: initialData?.customer_name || '',
       company_name: initialData?.company_name || '',
       phone_number: initialData?.phone_number || '',
-      email: initialData?.email || '',
+      email: '',
       relation_type: initialData?.relation_type || 'SUPPLIER',
       shipping_address_default: initialData?.shipping_address_default || '',
       contact_person: initialData?.contact_person || '',
       customer_type: initialData?.customer_type || 'Individual',
-      username: initialData?.userAccount.username || '',
+      username: '',
       password: '',
       is_active: initialData?.userAccount.is_active ?? true,
       payment_term_days: initialData?.payment_term_days || 0,
@@ -137,9 +137,9 @@ export function CustomerForm({ initialData }: { initialData?: Customer | null })
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <RequiredFormLabel>Email</RequiredFormLabel>
+                        <FormLabel>Email (Opsional)</FormLabel>
                         <FormControl>
-                          <Input type="email" placeholder="Contoh: budi.s@gmail.com" {...field} />
+                          <Input type="email" placeholder="Contoh: budi.s@gmail.com" {...field} value={field.value ?? ''} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -248,7 +248,7 @@ export function CustomerForm({ initialData }: { initialData?: Customer | null })
               </div>
 
               <div>
-                <h3 className="text-lg font-medium">Akun Login Pelanggan</h3>
+                <h3 className="text-lg font-medium">Akun Login Pelanggan (Opsional)</h3>
                 <p className="text-sm text-muted-foreground">Detail untuk pelanggan agar bisa login ke sistem.</p>
                 <Separator className="my-4" />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -257,7 +257,7 @@ export function CustomerForm({ initialData }: { initialData?: Customer | null })
                     name="username"
                     render={({ field }) => (
                       <FormItem>
-                        <RequiredFormLabel>Username</RequiredFormLabel>
+                        <FormLabel>Username (Opsional)</FormLabel>
                         <FormControl>
                           <Input placeholder="Username unik..." {...field} disabled={isEditMode} />
                         </FormControl>
@@ -271,7 +271,7 @@ export function CustomerForm({ initialData }: { initialData?: Customer | null })
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Password {!isEditMode && <span className="text-red-500 ml-1">*</span>}</FormLabel>
+                        <FormLabel>Password (Opsional)</FormLabel>
                         <div className="relative">
                           <FormControl>
                             <Input type={showPassword ? 'text' : 'password'} placeholder="******" {...field} />

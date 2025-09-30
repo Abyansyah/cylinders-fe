@@ -43,6 +43,11 @@ export const getColumns = (onDelete: (item: Product) => void): ColumnDef<Product
     cell: ({ row }) => <Badge variant={row.original.is_active ? 'default' : 'destructive'}>{row.original.is_active ? 'Aktif' : 'Nonaktif'}</Badge>,
   },
   {
+    accessorKey: 'description',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Deskripsi" />,
+    cell: ({ row }) => row.original.description || '-',
+  },
+  {
     id: 'actions',
     cell: ({ row }) => {
       const { checkPermission } = usePermission();
