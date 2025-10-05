@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import useSWR from 'swr';
 import { toast } from 'sonner';
-import { Package, Scan, CheckCircle, XCircle, AlertTriangle, Trash2, Send, Building2, Warehouse, BarChart3, Clock, RefreshCw } from 'lucide-react';
+import { Package, Scan, CheckCircle, XCircle, AlertTriangle, Trash2, Send } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,7 +23,7 @@ import { getCustomersSelectList, getWarehousesSelectList } from '@/services/Sear
 import { bulkReceiveFromSupplier, getSuppliersForSelect } from '@/services/refillOrderService';
 import type { BulkReceiveResponse } from '@/types/refill-order';
 import { useDebounce } from '@/hooks/use-debounce';
-import { Combobox } from '../../cylinders/components/cylinder-form-create';
+import { Combobox } from '@/components/combobox';
 
 interface ScannedItem {
   identifier: string;
@@ -148,7 +148,7 @@ export default function BulkReceiveSupplierView() {
       <div className="container mx-auto p-4 md:p-6 space-y-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <div className="space-y-2">
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Penerimaan Masal Supplier</h1>
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Penerimaan Barang</h1>
             <p className="text-muted-foreground">Terima tabung dari supplier secara massal dengan scan barcode atau serial number.</p>
           </div>
 

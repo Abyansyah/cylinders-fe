@@ -14,7 +14,7 @@ import { LoanCardItem } from '@/types/loan-card';
 import { CustomerSearchCombobox } from '../../loan-adjustments/components/customer-search-combobox';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Combobox } from '../../cylinders/components/cylinder-form-create';
+import { Combobox } from '@/components/combobox';
 import { getCustomersSelectList } from '@/services/SearchListService';
 import { Button } from '@/components/ui/button';
 

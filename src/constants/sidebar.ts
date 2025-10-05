@@ -32,6 +32,50 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     ],
   },
   {
+    title: 'Master Customer',
+    icon: UserSquare,
+    url: '/customers',
+    items: [
+      {
+        title: 'Customer',
+        url: '/customers',
+        id: 'customer-list',
+        icon: UserSquare,
+        permissionKey: 'customer',
+      },
+      {
+        title: 'Cabang Customer',
+        url: '/branches',
+        id: 'branch-list',
+        icon: Building,
+        permissionKey: 'branch',
+      },
+    ],
+  },
+  {
+    title: 'Master Order',
+    icon: ShoppingCart,
+    isActive: false,
+    url: '/orders',
+    permissionKey: 'order',
+    items: [
+      {
+        title: 'Buat Order',
+        url: '/orders',
+        id: 'order-list',
+        icon: ShoppingCart,
+        permissionKey: 'order',
+      },
+      {
+        title: 'Refill Order',
+        url: '/refill-orders',
+        id: 'refill-order-list',
+        icon: CircleGauge,
+        permissionKey: 'refillOrder',
+      },
+    ],
+  },
+  {
     title: 'Manajemen Tabung',
     url: '/replacement-barcode',
     icon: BrickWallFire,
@@ -60,27 +104,6 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     ],
   },
   {
-    title: 'Master Customer',
-    icon: UserSquare,
-    url: '/customers',
-    items: [
-      {
-        title: 'Customer',
-        url: '/customers',
-        id: 'customer-list',
-        icon: UserSquare,
-        permissionKey: 'customer',
-      },
-      {
-        title: 'Cabang Customer',
-        url: '/branches',
-        id: 'branch-list',
-        icon: Building,
-        permissionKey: 'branch',
-      },
-    ],
-  },
-  {
     title: 'Kartu Pinjaman',
     url: '/loan-adjustments',
     icon: TrendingUp,
@@ -100,29 +123,6 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
         id: 'loan-card-list',
         icon: IdCard,
         permissionKey: 'loanAdjustment',
-      },
-    ],
-  },
-  {
-    title: 'Master Order',
-    icon: ShoppingCart,
-    isActive: false,
-    url: '/orders',
-    permissionKey: 'order',
-    items: [
-      {
-        title: 'Buat Order',
-        url: '/orders',
-        id: 'order-list',
-        icon: ShoppingCart,
-        permissionKey: 'order',
-      },
-      {
-        title: 'Refill Order',
-        url: '/refill-orders',
-        id: 'refill-order-list',
-        icon: CircleGauge,
-        permissionKey: 'refillOrder',
       },
     ],
   },
@@ -148,7 +148,6 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     icon: Package,
     isActive: false,
     permissionKey: 'returnreceipt',
-    onlyPermission: true,
   },
   {
     title: 'Penerimaan TTBK',
@@ -175,7 +174,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     onlyPermission: true,
   },
   {
-    title: 'Penerimaan Masal Supplier',
+    title: 'Penerimaan Barang',
     url: '/bulk-receive-supplier',
     icon: PackagePlus,
     isActive: false,

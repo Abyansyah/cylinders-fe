@@ -36,7 +36,7 @@ export const createOrder = async (payload: CreateOrderRequest): Promise<Order> =
  * @returns
  */
 export const getProductsByWarehouse = async (warehouseId: number) => {
-  const { data } = await api.get(`/products?warehouse_id=${warehouseId}`);
+  const { data } = await api.get(`/products/warehouse/${warehouseId}`);
   return data;
 };
 

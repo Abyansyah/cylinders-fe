@@ -17,11 +17,11 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { BarcodeScanner } from '@/components/features/barcode-scanner';
 import { DatePicker } from '@/components/ui/date-picker';
-import { getSuppliersForSelect, createRefillOrder } from '@/services/refillOrderService';
+import { createRefillOrder } from '@/services/refillOrderService';
 import type { CreateRefillOrderRequest } from '@/types/refill-order';
 import { getCustomersSelectList, getProductsSelect } from '@/services/SearchListService';
 import { useDebounce } from '@/hooks/use-debounce';
-import { Combobox } from '../../cylinders/components/cylinder-form-create';
+import { Combobox } from '@/components/combobox';
 
 interface OrderItem {
   product_id: number;

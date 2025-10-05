@@ -78,17 +78,13 @@ export default function CreateOrderPage() {
 
   const [customerSearch, setCustomerSearch] = useState('');
   const [warehouseSearch, setWarehouseSearch] = useState('');
-  const [productSearch, setProductSearch] = useState('');
 
   const debouncedCustomerSearch = useDebounce(customerSearch, 300);
   const debouncedWarehouseSearch = useDebounce(warehouseSearch, 300);
-  const debouncedProductSearch = useDebounce(productSearch, 300);
 
   const { data: customersResponse, isLoading: isLoadingCustomers } = useSWR(`/select-lists/customers?search=${debouncedCustomerSearch}`, () => getCustomersSelectList({ search: debouncedCustomerSearch, relation_type: 'CLIENT' }));
   const { data: warehousesResponse, isLoading: isLoadingWarehouses } = useSWR(`/select-lists/warehouses?search=${debouncedWarehouseSearch}`, () => getWarehousesSelectList({ search: debouncedWarehouseSearch }));
-  const { data: productsResponse, isLoading: isLoadingProducts } = useSWR(formData.assigned_warehouse_id > 0 ? `/products?warehouse_id=${formData.assigned_warehouse_id}&search=${debouncedProductSearch}` : null, () =>
-    getProductsByWarehouse(formData.assigned_warehouse_id)
-  );
+  const { data: productsResponse, isLoading: isLoadingProducts } = useSWR(formData.assigned_warehouse_id > 0 ? `/products/warehouse/${formData.assigned_warehouse_id}` : null, () => getProductsByWarehouse(formData.assigned_warehouse_id));
 
   const customers = customersResponse?.data ?? [];
   const warehouses = warehousesResponse?.data ?? [];
@@ -476,9 +472,9 @@ export default function CreateOrderPage() {
                                           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                         </Button>
                                       </PopoverTrigger>
-                                      <PopoverContent className="w-full p-0" align="start">
+                                      <PopoverContent className="w-[400px] p-0" align="start">
                                         <Command>
-                                          <CommandInput placeholder="Cari produk..." value={productSearch} onValueChange={setProductSearch} />
+                                          <CommandInput placeholder="Cari produk..." />
                                           <CommandList>
                                             {isLoadingProducts && <div className="p-2 text-center text-sm">Memuat...</div>}
                                             <CommandEmpty>Produk tidak ditemukan.</CommandEmpty>
@@ -494,13 +490,7 @@ export default function CreateOrderPage() {
                                                   className={item.product_id === product.id ? 'bg-green-100 !hover:bg-green-100' : ''}
                                                 >
                                                   <div className="flex items-center gap-3 py-1">
-                                                    <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg flex items-center justify-center">
-                                                      <Package className="w-5 h-5 text-blue-600" />
-                                                    </div>
-                                                    <div>
-                                                      <div className="font-medium text-sm">{product.name}</div>
-                                                      <div className="text-xs text-gray-500">SKU: {product.sku}</div>
-                                                    </div>
+                                                    <div className="font-medium text-sm">{product.name}</div>
                                                   </div>
                                                 </CommandItem>
                                               ))}

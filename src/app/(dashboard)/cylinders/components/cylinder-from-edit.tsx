@@ -19,7 +19,7 @@ import { id } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { updateCylinderStatus } from '@/services/cylinderService';
 import { toast } from 'sonner';
-import { Combobox } from './cylinder-form-create';
+import { Combobox } from '@/components/combobox';
 import { useDebounce } from '@/hooks/use-debounce';
 import { getCustomersSelectList } from '@/services/SearchListService';
 import useSWR from 'swr';

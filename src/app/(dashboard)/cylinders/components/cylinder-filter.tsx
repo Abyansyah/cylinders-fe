@@ -11,7 +11,7 @@ import { getWarehouses } from '@/services/warehouseService';
 import { CYLINDER_STATUSES } from '@/constants/cylinder';
 import { useAuthStore } from '@/stores/authStore';
 import { cn } from '@/lib/utils';
-import { Combobox } from './cylinder-form-create';
+import { Combobox } from '@/components/combobox';
 import { useState } from 'react';
 import { useDebounce } from '@/hooks/use-debounce';
 import { getCustomersSelectList } from '@/services/SearchListService';

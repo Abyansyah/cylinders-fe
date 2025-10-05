@@ -21,7 +21,7 @@ import { getRefillOrders, viewSummarySuppliers } from '@/services/refillOrderSer
 import { useDebounce } from '@/hooks/use-debounce';
 import { StatCard } from '@/components/stat-card';
 import { getCustomersSelectList } from '@/services/SearchListService';
-import { Combobox } from '../../cylinders/components/cylinder-form-create';
+import { Combobox } from '@/components/combobox';
 
 const REFILL_ORDER_STATUSES = [
   { value: 'PENDING_CONFIRMATION', label: 'Menunggu Konfirmasi' },

@@ -24,7 +24,6 @@ import { BarcodeExistsDialog } from './barcode-exist-dialog';
 import { SuccessDialog } from './success-dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/stores/authStore';
@@ -33,6 +32,7 @@ import { getWarehouses } from '@/services/warehouseService';
 import type { Warehouse } from '@/types/warehouse';
 import { getCustomersSelectList, getProductsSelect } from '@/services/SearchListService';
 import { useDebounce } from '@/hooks/use-debounce';
+import { Combobox } from '@/components/combobox';
 
 const formSchema = z.object({
   barcode_id: z.string().min(1, 'Barcode ID wajib diisi.'),
@@ -47,60 +47,6 @@ const formSchema = z.object({
 });
 
 type FormValues = z.infer<typeof formSchema>;
-
-interface ComboboxProps {
-  options: Array<{ value: number; label: string; description?: string }>;
-  value: number | null | undefined;
-  onValueChange: (value: number) => void;
-  placeholder: string;
-  searchPlaceholder: string;
-  emptyText: string;
-  isLoading?: boolean;
-  valueSearch?: string;
-  setValueSearch?: (value: string) => void;
-}
-
-export function Combobox({ options, value, onValueChange, placeholder, searchPlaceholder, emptyText, isLoading, valueSearch, setValueSearch }: ComboboxProps) {
-  const [open, setOpen] = useState(false);
-  const selectedLabel = options.find((option) => option.value === value)?.label;
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between" disabled={isLoading}>
-          {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : selectedLabel || placeholder}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
-        <Command>
-          <CommandInput placeholder={searchPlaceholder} value={valueSearch} onValueChange={setValueSearch} />
-          <CommandList>
-            <CommandEmpty>{emptyText}</CommandEmpty>
-            <CommandGroup>
-              {options.map((option) => (
-                <CommandItem
-                  key={option.value}
-                  value={option.label}
-                  onSelect={() => {
-                    onValueChange(option.value);
-                    setOpen(false);
-                  }}
-                >
-                  <Check className={cn('mr-2 h-4 w-4', value === option.value ? 'opacity-100' : 'opacity-0')} />
-                  <div>
-                    <p>{option.label}</p>
-                    {option.description && <p className="text-xs text-muted-foreground">{option.description}</p>}
-                  </div>
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  );
-}
 
 export default function CylinderFormCreate() {
   const router = useRouter();
@@ -241,7 +187,7 @@ export default function CylinderFormCreate() {
                         name="serial_number"
                         render={({ field }) => (
                           <FormItem>
-                            <Label>Serial Number *</Label>
+                            <Label>Nomor Tabung *</Label>
                             <Input {...field} placeholder="SN-XXXXXXX" />
                             <FormMessage />
                           </FormItem>
@@ -330,7 +276,7 @@ export default function CylinderFormCreate() {
                       name="owner_customer_id"
                       render={({ field }) => (
                         <FormItem>
-                          <Label>Ownership *</Label>
+                          <Label>Ownership (Diisi jika milik supplier/customer)</Label>
                           <Combobox
                             options={customersResponse?.data.map((g: any) => ({ value: g.value, label: g.label })) || []}
                             value={field.value}

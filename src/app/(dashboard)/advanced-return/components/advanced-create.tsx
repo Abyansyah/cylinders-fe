@@ -17,7 +17,7 @@ import { Separator } from '@/components/ui/separator';
 import { PICKUP_TYPES, CYLINDER_STATUSES } from '@/constants/advanced-return';
 import type { AdvancedReturnItem } from '@/types/advanced-return';
 import { createAdvancedReturn } from '@/services/advancedReturnService';
-import { Combobox } from '../../cylinders/components/cylinder-form-create';
+import { Combobox } from '@/components/combobox';
 import useSWR from 'swr';
 import { getCustomersSelectList, getWarehousesSelectList } from '@/services/SearchListService';
 import { useDebounce } from '@/hooks/use-debounce';
